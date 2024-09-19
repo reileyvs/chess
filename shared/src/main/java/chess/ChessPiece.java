@@ -1,7 +1,12 @@
 package chess;
 
+import chess.moves.BishopMoves;
+import chess.moves.KingMoves;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -13,6 +18,20 @@ public class ChessPiece {
 
     private final ChessGame.TeamColor pieceColor;
     private ChessPiece.PieceType pieceType;
+
+    @Override
+    public boolean equals(Object o)  {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessPiece that=(ChessPiece) o;
+        return pieceColor == that.pieceColor && pieceType == that.pieceType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, pieceType);
+    }
+
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.pieceType = type;
@@ -53,6 +72,22 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        return new ArrayList<>();
+        Collection<ChessMove> moves = new ArrayList<>();
+        if (pieceType == ChessPiece.PieceType.KING) {
+            KingMoves kingMoves = new KingMoves(board, myPosition);
+            moves = kingMoves.CalculatePieceMoves();
+        }
+        else if (pieceType == ChessPiece.PieceType.QUEEN) {}
+        else if (pieceType == ChessPiece.PieceType.BISHOP) {
+            BishopMoves bishopMoves = new BishopMoves(board, myPosition);
+            moves = bishopMoves.CalculatePieceMoves();
+        }
+        else if (pieceType == ChessPiece.PieceType.KNIGHT) {}
+        else if (pieceType == ChessPiece.PieceType.ROOK) {}
+        else if (pieceType == ChessPiece.PieceType.PAWN) {}
+        else {
+            return Collections.emptyList();
+        }
+        return moves;
     }
 }

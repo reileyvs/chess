@@ -1,0 +1,10 @@
+
+š
+java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(ø’òÖøÿÿÿÿJ$20acfb16-9cad-47fc-b356-c20e175bea41
+	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(•¼è£ıÿÿÿÿJ$70049c6d-fb19-460e-b282-f3ec8f9b3025
+“
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 32 to the 15 allowed.(•¼è£ıÿÿÿÿJ$ca8bcd47-daa3-4c13-a988-71301b78c6b8
+s
+java:S1854"8Remove this useless assignment to local variable "type".(‚Ñ&J$6a40f017-c161-47c4-896f-aad276f440d6
+d
+java:S1481")Remove this unused "type" local variable.(‚Ñ&J$4295f2db-8bae-4ee3-afe4-5e7824643d1a
