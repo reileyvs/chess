@@ -1,8 +1,8 @@
 
 7
 pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
-R
-"src/main/java/chess/ChessGame.java,7\3\73bf4fdc57c71c6f70f600b9fea515a646b27eef
+f
+6src/test/java/passoff/chess/piece/BishopMoveTests.java,6\4\647e3d86830d550e7907dcb4f8ca199c4442d021
 S
 #src/main/java/chess/ChessBoard.java,1\3\139d0d4bb2b8e11a4e03dbed5b694452387fb52a
 S
@@ -17,7 +17,9 @@ R
 "src/main/java/chess/ChessMove.java,4\2\429c55da8253d8ee02138d80d1951c5e7d4a468c
 ^
 .src/test/java/passoff/chess/TestUtilities.java,9\5\9545f8b4a46f33bc722576bac5bfe9c00702cdb3
-f
-6src/test/java/passoff/chess/piece/BishopMoveTests.java,6\4\647e3d86830d550e7907dcb4f8ca199c4442d021
+R
+"src/main/java/chess/ChessGame.java,7\3\73bf4fdc57c71c6f70f600b9fea515a646b27eef
+d
+4src/test/java/passoff/chess/piece/KingMoveTests.java,3\8\38ebd7b9921639dfb1e79eae7f090973e8652e69
 c
 3src/main/java/chess/moves/PieceMovesCalculator.java,e\b\eb412e66d9d239f67815e00502bf4852ec9ee15b
