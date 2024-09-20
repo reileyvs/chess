@@ -5,9 +5,9 @@ import chess.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class BishopMoves extends PieceMovesCalculator {
+public class BishopMove extends PieceMovesCalculator {
 
-    public BishopMoves(ChessBoard board, ChessPosition myPosition) {
+    public BishopMove(ChessBoard board, ChessPosition myPosition) {
         super(board, myPosition);
     }
 

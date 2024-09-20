@@ -81,8 +81,8 @@ public class ChessPiece {
             moves = queenMoves.calculatePieceMoves();
         }
         else if (pieceType == ChessPiece.PieceType.BISHOP) {
-            BishopMoves bishopMoves = new BishopMoves(board, myPosition);
-            moves = bishopMoves.calculatePieceMoves();
+            BishopMove bishopMove= new BishopMove(board, myPosition);
+            moves = bishopMove.calculatePieceMoves();
         }
         else if (pieceType == ChessPiece.PieceType.KNIGHT) {
             KnightMove knightMoves = new KnightMove(board, myPosition);
@@ -92,7 +92,10 @@ public class ChessPiece {
             RookMove rookMoves = new RookMove(board, myPosition);
             moves = rookMoves.calculatePieceMoves();
         }
-        else if (pieceType == ChessPiece.PieceType.PAWN) {}
+        else if (pieceType == ChessPiece.PieceType.PAWN) {
+            PawnMove pawnMove = new PawnMove(board, myPosition);
+            moves = pawnMove.calculatePieceMoves();
+        }
         else {
             return Collections.emptyList();
         }

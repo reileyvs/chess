@@ -27,3 +27,15 @@ d
 4src/test/java/passoff/chess/piece/RookMoveTests.java,6\9\69e9785f60de8da7a1625ee0a9db7af2bd25e7cb
 Z
 *src/main/java/chess/moves/BishopMoves.java,e\9\e906744d50de47ea50df57486c5510243baf2f79
+W
+'src/main/java/chess/moves/PawnMove.java,d\5\d59cc2d5297c76f03dc008f5e64be2c2e5dba091
+Y
+)src/main/java/chess/moves/BishopMove.java,1\1\11cf0601e9ca1a7b922af8a371c066c8a5148694
+d
+4src/test/java/passoff/chess/piece/PawnMoveTests.java,6\f\6fe1354a9b6f2adaebc86ce17c85f70c46d74e50
+S
+#src/main/java/chess/ChessBoard.java,1\3\139d0d4bb2b8e11a4e03dbed5b694452387fb52a
+d
+4src/test/java/passoff/chess/piece/KingMoveTests.java,3\8\38ebd7b9921639dfb1e79eae7f090973e8652e69
+f
+6src/test/java/passoff/chess/piece/BishopMoveTests.java,6\4\647e3d86830d550e7907dcb4f8ca199c4442d021
