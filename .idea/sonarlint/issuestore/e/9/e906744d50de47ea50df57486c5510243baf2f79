@@ -1,0 +1,7 @@
+
+ 	java:S135"YReduce the total number of break and continue statements in this loop to use at most one.(ìúúŸøÿÿÿÿ8é©¼ä 2J$c7177fe5-cf85-4501-bbfd-4f0be95aa756
+ 	java:S135%"YReduce the total number of break and continue statements in this loop to use at most one.(ìúúŸøÿÿÿÿ8ê©¼ä 2J$6e751c74-d2f2-4f97-8937-481339fe2265
+ 	java:S1355"YReduce the total number of break and continue statements in this loop to use at most one.(ìúúŸøÿÿÿÿ8ê©¼ä 2J$823510e7-d116-495a-bb15-c4d93ac1ca6c
+ 	java:S135F"YReduce the total number of break and continue statements in this loop to use at most one.(ìúúŸøÿÿÿÿ8ê©¼ä 2J$21218dd8-6e67-4782-b282-bdf969e3b3f2
+•
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 32 to the 15 allowed.(¹ˆá’8«¼ä 2J$1a67830a-4820-4953-886b-926826374030

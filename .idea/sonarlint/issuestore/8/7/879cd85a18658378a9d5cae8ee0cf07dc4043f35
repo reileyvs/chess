@@ -1,0 +1,9 @@
+
+ 	java:S135F"YReduce the total number of break and continue statements in this loop to use at most one.(μϊϊψÿÿÿÿ8¨¤σε 2J$35727881-fc6e-47f8-9874-0f9d52dcb665
+ 	java:S135V"YReduce the total number of break and continue statements in this loop to use at most one.(μϊϊψÿÿÿÿ8¨¤σε 2J$6bb19b37-12fd-41a7-b70d-8b2c31bce772
+ 	java:S135f"YReduce the total number of break and continue statements in this loop to use at most one.(μϊϊψÿÿÿÿ8¨¤σε 2J$d7d82c76-798b-47dc-9e16-101aeb00a899
+ 	java:S135w"YReduce the total number of break and continue statements in this loop to use at most one.(μϊϊψÿÿÿÿ8¨¤σε 2J$80f8c7fb-1445-4926-9b48-22ea94b94139
+•
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 68 to the 15 allowed.(Ήα’8¶κρε 2J$4d527db0-b397-4efc-9cde-194108e464fe
+
+java:S6541"ΖA "Brain Method" was detected. Refactor it to reduce at least one of the following metrics: LOC from 107 to 64, Complexity from 49 to 14, Nesting Level from 3 to 2, Number of Variables from 20 to 6.(Ήα’8Ϊ¥σε 2J$dae1b60b-bd41-4944-aa1b-be4ed673ee74
