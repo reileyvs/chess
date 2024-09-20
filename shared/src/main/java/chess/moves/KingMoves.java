@@ -15,7 +15,7 @@ public class KingMoves extends PieceMovesCalculator {
     super(board, myPosition);
   }
 
-  public Collection<ChessMove> CalculatePieceMoves() {
+  public Collection<ChessMove> calculatePieceMoves() {
     Collection<ChessMove> moves = new ArrayList<>();
     ChessGame.TeamColor myColor = board.getPiece(myPosition).getTeamColor();
     int row = myPosition.getRow()+1;

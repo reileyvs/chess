@@ -1,7 +1,6 @@
 package chess;
 
-import chess.moves.BishopMoves;
-import chess.moves.KingMoves;
+import chess.moves.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -75,15 +74,24 @@ public class ChessPiece {
         Collection<ChessMove> moves = new ArrayList<>();
         if (pieceType == ChessPiece.PieceType.KING) {
             KingMoves kingMoves = new KingMoves(board, myPosition);
-            moves = kingMoves.CalculatePieceMoves();
+            moves = kingMoves.calculatePieceMoves();
         }
-        else if (pieceType == ChessPiece.PieceType.QUEEN) {}
+        else if (pieceType == ChessPiece.PieceType.QUEEN) {
+            QueenMove queenMoves = new QueenMove(board, myPosition);
+            moves = queenMoves.calculatePieceMoves();
+        }
         else if (pieceType == ChessPiece.PieceType.BISHOP) {
             BishopMoves bishopMoves = new BishopMoves(board, myPosition);
-            moves = bishopMoves.CalculatePieceMoves();
+            moves = bishopMoves.calculatePieceMoves();
         }
-        else if (pieceType == ChessPiece.PieceType.KNIGHT) {}
-        else if (pieceType == ChessPiece.PieceType.ROOK) {}
+        else if (pieceType == ChessPiece.PieceType.KNIGHT) {
+            KnightMove knightMoves = new KnightMove(board, myPosition);
+            //moves = knightMoves.calculatePieceMoves();
+        }
+        else if (pieceType == ChessPiece.PieceType.ROOK) {
+            RookMove rookMoves = new RookMove(board, myPosition);
+            moves = rookMoves.calculatePieceMoves();
+        }
         else if (pieceType == ChessPiece.PieceType.PAWN) {}
         else {
             return Collections.emptyList();

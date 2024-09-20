@@ -23,3 +23,15 @@ d
 4src/test/java/passoff/chess/piece/KingMoveTests.java,3\8\38ebd7b9921639dfb1e79eae7f090973e8652e69
 c
 3src/main/java/chess/moves/PieceMovesCalculator.java,e\b\eb412e66d9d239f67815e00502bf4852ec9ee15b
+Y
+)src/main/java/chess/moves/KnightMove.java,4\8\48e0cba9306cffc1e4d114a38ad3838cc485f475
+f
+6src/test/java/passoff/chess/piece/KnightMoveTests.java,e\a\ea923ae5656d777ebbc1ce26adecb7338f8ba7dd
+W
+'src/main/java/chess/moves/RookMove.java,3\7\3739b40c97e7cd573705b26092ea92d0d3c123ae
+d
+4src/test/java/passoff/chess/piece/RookMoveTests.java,6\9\69e9785f60de8da7a1625ee0a9db7af2bd25e7cb
+X
+(src/main/java/chess/moves/QueenMove.java,8\7\879cd85a18658378a9d5cae8ee0cf07dc4043f35
+e
+5src/test/java/passoff/chess/piece/QueenMoveTests.java,0\a\0a959e861aa739d9c24b9e29d313101dcb5e8325
