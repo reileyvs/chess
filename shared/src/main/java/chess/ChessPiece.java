@@ -86,7 +86,7 @@ public class ChessPiece {
         }
         else if (pieceType == ChessPiece.PieceType.KNIGHT) {
             KnightMove knightMoves = new KnightMove(board, myPosition);
-            //moves = knightMoves.calculatePieceMoves();
+            moves = knightMoves.calculatePieceMoves();
         }
         else if (pieceType == ChessPiece.PieceType.ROOK) {
             RookMove rookMoves = new RookMove(board, myPosition);
