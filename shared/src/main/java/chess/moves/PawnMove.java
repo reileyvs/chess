@@ -14,8 +14,8 @@ public class PawnMove extends PieceMovesCalculator {
     public Collection<ChessMove> calculatePieceMoves() {
         Collection<ChessMove> moves = new ArrayList<>();
         ChessGame.TeamColor myColor = board.getPiece(myPosition).getTeamColor();
-        int row = myPosition.getRow()+1;
-        int column = myPosition.getColumn()+1;
+        int row = myPosition.getRow();
+        int column = myPosition.getColumn();
 
         if(myColor == ChessGame.TeamColor.BLACK) {
             if (row > 1) {

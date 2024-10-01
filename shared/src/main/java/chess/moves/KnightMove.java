@@ -17,8 +17,8 @@ public class KnightMove extends PieceMovesCalculator {
     public Collection<ChessMove> calculatePieceMoves() {
         Collection<ChessMove> moves = new ArrayList<>();
         ChessGame.TeamColor myColor = board.getPiece(myPosition).getTeamColor();
-        int row = myPosition.getRow()+1;
-        int column = myPosition.getColumn()+1;
+        int row = myPosition.getRow();
+        int column = myPosition.getColumn();
 
         //Up-left and up-right
         if(row <= 6) {

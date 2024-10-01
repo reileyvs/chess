@@ -18,8 +18,8 @@ public class KingMoves extends PieceMovesCalculator {
   public Collection<ChessMove> calculatePieceMoves() {
     Collection<ChessMove> moves = new ArrayList<>();
     ChessGame.TeamColor myColor = board.getPiece(myPosition).getTeamColor();
-    int row = myPosition.getRow()+1;
-    int column = myPosition.getColumn()+1;
+    int row = myPosition.getRow();
+    int column = myPosition.getColumn();
 
     ChessPosition upRight = new ChessPosition(row+1, column+1);
     if((row < 8 && column < 8)
