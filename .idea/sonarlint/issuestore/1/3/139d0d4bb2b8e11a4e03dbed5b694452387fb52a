@@ -1,3 +1,3 @@
 
-ó
-java:S1186"ÄAdd a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(•∑ûÅ
+h
+java:S2975"SRemove this "clone" implementation; use a copy constructor or copy factory instead.(ôîî 

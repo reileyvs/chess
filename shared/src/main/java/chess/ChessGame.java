@@ -61,31 +61,28 @@ public class ChessGame {
         //InvalidMoveException when King is put in check or when not your turn
 
         Collection<ChessMove> moves = board.getPiece(startPosition).pieceMoves(board, startPosition);
-
-        for (int i = 1; i <= 8; i++) {
-            for (int j=1; j <= 8; j++) {
-                ChessPosition pos = new ChessPosition(i,j);
-                if (board.getPiece(pos) != null) {
-                    for (ChessMove move : board.getPiece(pos).pieceMoves(board, pos)) {
-                        ChessBoard boardClone=null;
-                        ChessBoard boardCloneSafe=null;
-                        try {
-                            boardClone=(ChessBoard) board.clone();
-                            boardCloneSafe=(ChessBoard) board.clone();
-                        } catch (CloneNotSupportedException ex) {
-                            exit(1);
+        //For each move, make move and then check to see which moves DON'T put king in check
+        for(ChessMove move : moves) {
+            ChessBoard boardClone=tryClone();
+            ChessBoard boardCloneSafe=tryClone();
+            movePiece(move, boardClone);
+            for (int i = 1; i <= 8; i++) {
+                for (int j=1; j <= 8; j++) {
+                    ChessPosition pos = new ChessPosition(i,j);
+                    if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamTurn) {
+                        for (ChessMove enemyMove : board.getPiece(pos).pieceMoves(board, pos)) {
+                            boardClone=tryClone();
+                            movePiece(enemyMove, boardClone);
+                            setBoard(boardClone);
+                            if (!isInCheck(teamTurn)) {
+                                validMoves.add(move);
+                            }
+                            setBoard(boardCloneSafe);
                         }
-                        movePiece(move, boardClone);
-                        setBoard(boardClone);
-                        if (!isInCheck(teamTurn)) {
-                            validMoves.add(move);
-                        }
-                        setBoard(boardCloneSafe);
                     }
                 }
             }
         }
-
         return validMoves;
     }
 
@@ -142,16 +139,32 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
-        /*ChessPosition kingPosition = null;
+        boolean isInCheck = false;
+
+        //Get king position
+        ChessPosition kingPosition = getKingPosition();
+        if(kingPosition == null) {
+            System.out.println("The king is gone");
+            exit(2);
+        }
+        //If any move from the enemy lands on your king, you are in check
         for (int i = 1; i <= 8; i++) {
             for (int j=1; j <= 8; j++) {
                 ChessPosition pos = new ChessPosition(i,j);
-                if (board.getPiece(pos).getPieceType() == ChessPiece.PieceType.KING) {
-                    kingPosition = pos;
+                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamTurn) {
+                    for (ChessMove enemyMove : board.getPiece(pos).pieceMoves(board, pos)) {
+                        if(enemyMove.getEndPosition() == kingPosition) {
+                            isInCheck = true;
+                            break;
+                        }
+                    }
                 }
             }
-        }*/
+            if(isInCheck) {
+                break;
+            }
+        }
+        return isInCheck;
     }
 
     /**
@@ -197,5 +210,30 @@ public class ChessGame {
     private void movePiece(ChessMove move, ChessBoard board) {
         board.addPiece(move.getEndPosition(),board.getPiece(move.getStartPosition()));
         board.addPiece(move.getStartPosition(), null);
+    }
+    private ChessBoard tryClone() {
+        ChessBoard board=null;
+        try {
+            board=(ChessBoard) this.board.clone();
+        } catch(CloneNotSupportedException ex) {
+            ex.printStackTrace();
+            System.out.println("Clone failed");
+            exit(1);
+        }
+        return board;
+    }
+    private ChessPosition getKingPosition() {
+        ChessPosition kingPosition=null;
+        for (int i = 1; i <= 8; i++) {
+            for (int j=1; j <= 8; j++) {
+                ChessPosition pos = new ChessPosition(i,j);
+                if (board.getPiece(pos) != null
+                        && board.getPiece(pos).getPieceType() == ChessPiece.PieceType.KING
+                        && board.getPiece(pos).getTeamColor() == teamTurn) {
+                    kingPosition = pos;
+                }
+            }
+        }
+        return kingPosition;
     }
 }
