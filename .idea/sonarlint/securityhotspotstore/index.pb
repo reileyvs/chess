@@ -13,3 +13,11 @@ e
 5src/test/java/passoff/chess/game/ValidMovesTests.java,1\6\16949001d5638f5e744434108e132725a5f8b811
 b
 2src/test/java/passoff/chess/game/FullGameTest.java,0\2\02dd6e6e59e06d1e6f7c5a8d2895605db34075ff
+W
+'src/main/java/chess/moves/RookMove.java,3\7\3739b40c97e7cd573705b26092ea92d0d3c123ae
+Y
+)src/main/java/chess/moves/BishopMove.java,1\1\11cf0601e9ca1a7b922af8a371c066c8a5148694
+W
+'src/main/java/chess/moves/PawnMove.java,d\5\d59cc2d5297c76f03dc008f5e64be2c2e5dba091
+X
+(src/main/java/chess/moves/KingMoves.java,9\8\98037acb78ced452abfe0ea89fb1e8a1fe9b92ef

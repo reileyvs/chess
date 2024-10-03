@@ -19,7 +19,7 @@ public class ChessGame {
     public ChessGame() {
         teamTurn = TeamColor.WHITE;
         board = new ChessBoard();
-        board.resetBoard();
+        //board.resetBoard();
     }
 
     /**
@@ -63,24 +63,36 @@ public class ChessGame {
         Collection<ChessMove> moves = board.getPiece(startPosition).pieceMoves(board, startPosition);
         //For each move, make move and then check to see which moves DON'T put king in check
         for(ChessMove move : moves) {
+            boolean isInCheck = false;
             ChessBoard boardClone=tryClone();
             ChessBoard boardCloneSafe=tryClone();
             movePiece(move, boardClone);
+            setBoard(boardClone);
             for (int i = 1; i <= 8; i++) {
                 for (int j=1; j <= 8; j++) {
                     ChessPosition pos = new ChessPosition(i,j);
                     if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamTurn) {
                         for (ChessMove enemyMove : board.getPiece(pos).pieceMoves(board, pos)) {
-                            boardClone=tryClone();
                             movePiece(enemyMove, boardClone);
                             setBoard(boardClone);
-                            if (!isInCheck(teamTurn)) {
-                                validMoves.add(move);
+                            if (isInCheck(teamTurn)) {
+                                isInCheck = true;
+                                break;
                             }
                             setBoard(boardCloneSafe);
+                            boardClone = tryClone();
                         }
                     }
+                    if(isInCheck) {
+                        break;
+                    }
                 }
+                if(isInCheck) {
+                    break;
+                }
+            }
+            if(!isInCheck) {
+                validMoves.add(move);
             }
         }
         return validMoves;
@@ -106,6 +118,7 @@ public class ChessGame {
         }
 
         Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
+
         if(validMoves.isEmpty() && (isInCheckmate(getTeamTurn()))) {
             throw new InvalidMoveException("No moves available");
         }
@@ -145,7 +158,6 @@ public class ChessGame {
         ChessPosition kingPosition = getKingPosition();
         if(kingPosition == null) {
             System.out.println("The king is gone");
-            exit(2);
         }
         //If any move from the enemy lands on your king, you are in check
         for (int i = 1; i <= 8; i++) {
@@ -208,6 +220,10 @@ public class ChessGame {
     }
 
     private void movePiece(ChessMove move, ChessBoard board) {
+        if(board.getPiece(move.getStartPosition()) != null
+                && board.getPiece(move.getStartPosition()).getPieceType() == ChessPiece.PieceType.KING) {
+            System.out.println("Woah");
+        }
         board.addPiece(move.getEndPosition(),board.getPiece(move.getStartPosition()));
         board.addPiece(move.getStartPosition(), null);
     }
