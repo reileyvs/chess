@@ -58,6 +58,7 @@ public class ChessGame {
         if(board.getPiece(startPosition) == null) {
             return Collections.emptyList();
         }
+        TeamColor pieceColor = board.getPiece(startPosition).getTeamColor();
         //InvalidMoveException when King is put in check or when not your turn
 
         Collection<ChessMove> moves = board.getPiece(startPosition).pieceMoves(board, startPosition);
@@ -68,7 +69,7 @@ public class ChessGame {
             movePiece(move, boardClone);
             setBoard(boardClone);
 
-            if (!isInCheck(teamTurn)) {
+            if (!isInCheck(pieceColor)) {
                 validMoves.add(move);
             }
             setBoard(boardCloneSafe);
@@ -129,14 +130,14 @@ public class ChessGame {
         boolean isInCheck = false;
 
         //Get king position
-        ChessPosition kingPosition = getKingPosition();
+        ChessPosition kingPosition = getKingPosition(teamColor);
         if(kingPosition == null) {
         }
         //If any move from the enemy lands on your king, you are in check
         for (int i = 1; i <= 8; i++) {
             for (int j=1; j <= 8; j++) {
                 ChessPosition pos = new ChessPosition(i,j);
-                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamTurn) {
+                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamColor) {
                     for (ChessMove enemyMove : board.getPiece(pos).pieceMoves(board, pos)) {
                         if(enemyMove.getEndPosition().equals(kingPosition)) {
                             isInCheck = true;
@@ -159,7 +160,30 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        boolean isInCheck = false;
+
+        //Get king position
+        ChessPosition kingPosition = getKingPosition(teamColor);
+        if(kingPosition == null) {
+        }
+        //If no available move from you results in !isInCheck(), you are in checkMate
+        for (int i = 1; i <= 8; i++) {
+            for (int j=1; j <= 8; j++) {
+                ChessPosition pos = new ChessPosition(i,j);
+                if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamColor) {
+                    for (ChessMove enemyMove : board.getPiece(pos).pieceMoves(board, pos)) {
+                        if(enemyMove.getEndPosition().equals(kingPosition)) {
+                            isInCheck = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if(isInCheck) {
+                break;
+            }
+        }
+        return isInCheck;
     }
 
     /**
@@ -210,14 +234,14 @@ public class ChessGame {
         }
         return board;
     }
-    private ChessPosition getKingPosition() {
+    private ChessPosition getKingPosition(TeamColor teamColor) {
         ChessPosition kingPosition=null;
         for (int i = 1; i <= 8; i++) {
             for (int j=1; j <= 8; j++) {
                 ChessPosition pos = new ChessPosition(i,j);
                 if (board.getPiece(pos) != null
                         && board.getPiece(pos).getPieceType() == ChessPiece.PieceType.KING
-                        && board.getPiece(pos).getTeamColor() == teamTurn) {
+                        && board.getPiece(pos).getTeamColor() == teamColor) {
                     kingPosition = pos;
                 }
             }

@@ -97,8 +97,8 @@ public class ChessBoard implements  Cloneable {
 
     public String toString() {
         String boardString = " ";
-        for(int i = 0; i < 8; i++) {
-            for(int j = 7; j >= 0; j--) {
+        for(int i = 7; i >= 0; i--) {
+            for(int j = 0; j < 8; j++) {
                 ChessPiece piece = board[i][j];
                 if(piece == null) boardString = boardString.concat("_");
                 else {

@@ -76,7 +76,7 @@ public class ValidMovesTests {
                     | |k| | | | | | |
                     | | | | | | | | |
                     """));
-
+        //No teamTurn initialized???
         ChessPosition position = new ChessPosition(4, 4);
         Assertions.assertTrue(game.validMoves(position).isEmpty(),
                 "ChessGame validMoves returned valid moves for a trapped piece");

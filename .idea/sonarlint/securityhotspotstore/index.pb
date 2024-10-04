@@ -19,3 +19,9 @@ S
 #src/main/java/chess/ChessPiece.java,8\5\85a88ea4958ed1b3e2cc2a545a3ad992329e985a
 e
 5src/test/java/passoff/chess/game/ValidMovesTests.java,1\6\16949001d5638f5e744434108e132725a5f8b811
+V
+&src/main/java/chess/ChessPosition.java,1\2\12180158e3ed9f2b7cf9588a38f33fca071ee26a
+^
+.src/test/java/passoff/chess/TestUtilities.java,9\5\9545f8b4a46f33bc722576bac5bfe9c00702cdb3
+e
+5src/test/java/passoff/chess/game/GameStatusTests.java,9\5\95005f1bdbc430353aa32dd9ab73d0748d79c4b2
