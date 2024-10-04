@@ -66,6 +66,7 @@ public class ChessGame {
             boolean isInCheck = false;
             ChessBoard boardClone=tryClone();
             ChessBoard boardCloneSafe=tryClone();
+            System.out.println(boardCloneSafe.toString());
             movePiece(move, boardClone);
             setBoard(boardClone);
             for (int i = 1; i <= 8; i++) {
@@ -80,7 +81,7 @@ public class ChessGame {
                                 break;
                             }
                             setBoard(boardCloneSafe);
-                            boardClone = tryClone();
+                            boardClone=tryClone();
                         }
                     }
                     if(isInCheck) {
@@ -94,6 +95,7 @@ public class ChessGame {
             if(!isInCheck) {
                 validMoves.add(move);
             }
+            setBoard(boardCloneSafe);
         }
         return validMoves;
     }
@@ -107,9 +109,6 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         //If a valid move:
         //Set array location of endPos to chessPiece at startPos
-        /*if(isInCheckmate(teamTurn)) {
-            throw new InvalidMoveException("You are in checkmate");
-        }*/
         if(board.getPiece(move.getStartPosition()) == null) {
             throw new InvalidMoveException("No piece to move");
         }
@@ -122,11 +121,10 @@ public class ChessGame {
         if(validMoves.isEmpty() && (isInCheckmate(getTeamTurn()))) {
             throw new InvalidMoveException("No moves available");
         }
-
         boolean isValid = false;
         //Is the move you're making valid as found in validMoves?
         for (ChessMove validMove : validMoves) {
-            if (validMove == move) {
+            if (validMove.equals(move)) {
                 isValid=true;
                 break;
             }
@@ -157,7 +155,6 @@ public class ChessGame {
         //Get king position
         ChessPosition kingPosition = getKingPosition();
         if(kingPosition == null) {
-            System.out.println("The king is gone");
         }
         //If any move from the enemy lands on your king, you are in check
         for (int i = 1; i <= 8; i++) {
@@ -222,7 +219,6 @@ public class ChessGame {
     private void movePiece(ChessMove move, ChessBoard board) {
         if(board.getPiece(move.getStartPosition()) != null
                 && board.getPiece(move.getStartPosition()).getPieceType() == ChessPiece.PieceType.KING) {
-            System.out.println("Woah");
         }
         board.addPiece(move.getEndPosition(),board.getPiece(move.getStartPosition()));
         board.addPiece(move.getStartPosition(), null);

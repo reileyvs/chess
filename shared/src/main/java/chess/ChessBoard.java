@@ -19,8 +19,13 @@ public class ChessBoard implements  Cloneable {
     @Override
     protected Object clone() throws CloneNotSupportedException {
         ChessBoard boardClone = (ChessBoard) super.clone();
+        boardClone.board = new ChessPiece[8][8];
         for(int i = 0; i<8; i++) {
-            System.arraycopy(board[i], 0, boardClone.board[i], 0, 8);
+            for(int j = 0; j<8; j++) {
+                if(board[i][j] != null) {
+                    boardClone.board[i][j]=board[i][j].clone();
+                }
+            }
         }
         return boardClone;
     }
@@ -88,5 +93,47 @@ public class ChessBoard implements  Cloneable {
         board1[0][7] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
 
         board = board1;
+    }
+
+    public String toString() {
+        String boardString = " ";
+        for(int i = 0; i < 8; i++) {
+            for(int j = 7; j >= 0; j--) {
+                ChessPiece piece = board[i][j];
+                if(piece == null) boardString = boardString.concat("_");
+                else {
+                    switch (piece.getPieceType()) {
+                        case ChessPiece.PieceType.PAWN:
+                            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) boardString=boardString.concat("P");
+                            else boardString=boardString.concat("p");
+                            break;
+                        case ChessPiece.PieceType.BISHOP:
+                            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) boardString=boardString.concat("B");
+                            else boardString=boardString.concat("b");
+                            break;
+                        case ChessPiece.PieceType.ROOK:
+                            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) boardString=boardString.concat("R");
+                            else boardString=boardString.concat("r");
+                            break;
+                        case ChessPiece.PieceType.QUEEN:
+                            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) boardString=boardString.concat("Q");
+                            else boardString=boardString.concat("q");
+                            break;
+                        case ChessPiece.PieceType.KNIGHT:
+                            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) boardString=boardString.concat("H");
+                            else boardString=boardString.concat("h");
+                            break;
+                        case ChessPiece.PieceType.KING:
+                            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) boardString=boardString.concat("K");
+                            else boardString=boardString.concat("k");
+                            break;
+                    }
+                }
+            }
+            boardString = boardString.concat("\n ");
+        }
+
+
+        return boardString;
     }
 }

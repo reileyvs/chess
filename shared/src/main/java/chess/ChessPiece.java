@@ -26,6 +26,11 @@ public class ChessPiece {
         return pieceColor == that.pieceColor && pieceType == that.pieceType;
     }
 
+    public ChessPiece clone() {
+        return new ChessPiece(this.pieceColor, this.getPieceType());
+    }
+
+
     @Override
     public int hashCode() {
         return Objects.hash(pieceColor, pieceType);
