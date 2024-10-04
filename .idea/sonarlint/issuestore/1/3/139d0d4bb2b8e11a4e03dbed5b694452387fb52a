@@ -1,3 +1,5 @@
 
-h
-java:S2975"SRemove this "clone" implementation; use a copy constructor or copy factory instead.(ôîî 
+ï
+java:S2975"SRemove this "clone" implementation; use a copy constructor or copy factory instead.(ôîî 8∫Ëùß•2J$bb13ae91-890a-4e02-846e-0f7774b69f4a
+ï
+java:S3776b"RRefactor this method to reduce its Cognitive Complexity from 47 to the 15 allowed.(¡ªõÍ8¿Ëùß•2J$f7e92108-629e-41ca-987b-50b5edbceb2f

@@ -63,36 +63,12 @@ public class ChessGame {
         Collection<ChessMove> moves = board.getPiece(startPosition).pieceMoves(board, startPosition);
         //For each move, make move and then check to see which moves DON'T put king in check
         for(ChessMove move : moves) {
-            boolean isInCheck = false;
             ChessBoard boardClone=tryClone();
             ChessBoard boardCloneSafe=tryClone();
-            System.out.println(boardCloneSafe.toString());
             movePiece(move, boardClone);
             setBoard(boardClone);
-            for (int i = 1; i <= 8; i++) {
-                for (int j=1; j <= 8; j++) {
-                    ChessPosition pos = new ChessPosition(i,j);
-                    if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamTurn) {
-                        for (ChessMove enemyMove : board.getPiece(pos).pieceMoves(board, pos)) {
-                            movePiece(enemyMove, boardClone);
-                            setBoard(boardClone);
-                            if (isInCheck(teamTurn)) {
-                                isInCheck = true;
-                                break;
-                            }
-                            setBoard(boardCloneSafe);
-                            boardClone=tryClone();
-                        }
-                    }
-                    if(isInCheck) {
-                        break;
-                    }
-                }
-                if(isInCheck) {
-                    break;
-                }
-            }
-            if(!isInCheck) {
+
+            if (!isInCheck(teamTurn)) {
                 validMoves.add(move);
             }
             setBoard(boardCloneSafe);
@@ -162,7 +138,7 @@ public class ChessGame {
                 ChessPosition pos = new ChessPosition(i,j);
                 if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamTurn) {
                     for (ChessMove enemyMove : board.getPiece(pos).pieceMoves(board, pos)) {
-                        if(enemyMove.getEndPosition() == kingPosition) {
+                        if(enemyMove.getEndPosition().equals(kingPosition)) {
                             isInCheck = true;
                             break;
                         }
