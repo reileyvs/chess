@@ -63,9 +63,10 @@ class UserServiceTests {
     }
     @Test
     void loginNegative() {
-        UserData tester = new UserData("John", "password","a@byu.org");
+        UserData tester = new UserData("Jon", "password","a@byu.org");
         LoginRequest loginRequest = new LoginRequest(tester.username(), tester.password());
         assertThrows(DataAccessException.class, () -> {
+            userService.register(request);
             userService.login(loginRequest);
         });
     }

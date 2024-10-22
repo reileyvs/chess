@@ -5,10 +5,7 @@ import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
-import request_responses.LoginRequest;
-import request_responses.LogoutRequest;
-import request_responses.RegisterRequest;
-import request_responses.RegisterResponse;
+import request_responses.*;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -21,13 +18,13 @@ public class UserService {
         }
         UserData newUser = new UserData(user.username(), user.password(), user.email());
         UserDAO.createUser(newUser);
-        AuthData userAuth = new AuthData(user.username(),UUID.randomUUID().toString());
+        AuthData userAuth = new AuthData(UUID.randomUUID().toString(),user.username());
         AuthDAO.createAuth(userAuth);
 
-        return new RegisterResponse(userAuth.username(),userAuth.authToken());
+        return new RegisterResponse(userAuth.authToken(),userAuth.username());
     }
 
-    public RegisterResponse login(LoginRequest user) throws DataAccessException {
+    public LoginResponse login(LoginRequest user) throws DataAccessException {
         UserData foundUser = UserDAO.getUser(user.username());
         if(foundUser == null) {
             throw new DataAccessException("No user " + user.username() + " exists");
@@ -36,13 +33,13 @@ public class UserService {
             throw new DataAccessException("Password is incorrect");
         }
 
-        AuthData userAuth = new AuthData(foundUser.username(), UUID.randomUUID().toString());
+        AuthData userAuth = new AuthData(UUID.randomUUID().toString(), foundUser.username());
         AuthDAO.createAuth(userAuth);
 
-        return new RegisterResponse(userAuth.username(), userAuth.authToken());
+        return new LoginResponse(userAuth.authToken(), userAuth.username());
     }
 
-    public void logout(LogoutRequest auth) throws DataAccessException {
+    public LogoutResponse logout(LogoutRequest auth) throws DataAccessException {
         AuthData userAuth = AuthDAO.getAuthByToken(auth.authToken());
         if(userAuth == null) {
             throw new DataAccessException("User is not validated");
@@ -51,6 +48,7 @@ public class UserService {
         if(AuthDAO.getAuthByToken(auth.authToken()) != null) {
             throw new DataAccessException("User cannot be deleted");
         }
+        return new LogoutResponse();
     }
 
     UserData getUser(String username) {
