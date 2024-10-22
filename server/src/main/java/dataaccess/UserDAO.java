@@ -3,14 +3,18 @@ package dataaccess;
 import model.UserData;
 
 public interface UserDAO {
-    public default void clear() {
+    MemoryUserDAO userDb = new MemoryUserDAO();
+    MemoryAuthDAO authDb = new MemoryAuthDAO();
+    public static void clear() {
         //clears all data from database (maybe put in GameDAO)
     }
-    public default void createUser(UserData userData) throws DataAccessException {
-        //creates user in database with username and password
+    public static void createUser(UserData userData) throws DataAccessException {
+        userDb.addUser(userData);
+        if(userDb.getUser(userData.username()) == null) {
+            throw new DataAccessException("User could not be added");
+        }
     }
-    public default UserData getUser(String username) throws DataAccessException {
-        //gets User by username from database and returns a UserData object
-        return new UserData("","","");
+    public static UserData getUser(String username) {
+        return userDb.getUser(username);
     }
 }

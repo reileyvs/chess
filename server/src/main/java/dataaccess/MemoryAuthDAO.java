@@ -1,8 +1,6 @@
 package dataaccess;
 
 import model.AuthData;
-import model.GameData;
-import model.UserData;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -14,11 +12,20 @@ public class MemoryAuthDAO {
         authData = new ArrayList<>();
     }
     public void addUser(AuthData authDatum) {
+        deleteAuthDatum(authDatum.authToken());
         authData.add(authDatum);
     }
-    public AuthData getAuthData(String username) {
+    public AuthData getAuthDataByUsername(String username) {
         for (AuthData authDatum : authData) {
             if(Objects.equals(authDatum.username(), username)) {
+                return authDatum;
+            }
+        }
+        return null;
+    }
+    public AuthData getAuthDataByToken(String authToken) {
+        for (AuthData authDatum : authData) {
+            if(Objects.equals(authDatum.authToken(), authToken)) {
                 return authDatum;
             }
         }

@@ -4,13 +4,14 @@ import model.GameData;
 import model.UserData;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class MemoryGameDAO {
-    private ArrayList<GameData> games;
+    private List<GameData> games;
 
     public MemoryGameDAO() {
-        games = new ArrayList<GameData>();
+        games = new ArrayList<>();
     }
     public void addGame(GameData game) {
         games.add(game);
@@ -22,6 +23,9 @@ public class MemoryGameDAO {
             }
         }
         return null;
+    }
+    public List<GameData> getGames() {
+        return games;
     }
     public void deleteGame(int gameID) {
         games.removeIf(game -> Objects.equals(game.gameID(), gameID));

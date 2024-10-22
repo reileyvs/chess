@@ -3,21 +3,25 @@ package dataaccess;
 import model.AuthData;
 
 public interface AuthDAO {
-    public default void clear() {
+    MemoryAuthDAO authDb = new MemoryAuthDAO();
+    public static void clear() {
         //clears all data from database (maybe put in GameDAO)
     }
-    public default void createAuth(AuthData authData) throws DataAccessException {
+    public static void createAuth(AuthData authData) throws DataAccessException {
         //create authToken and store it in the database as AuthData object
+        authDb.addUser(authData);
+        if(getAuthByToken(authData.authToken()) == null) {
+            throw new DataAccessException("authData could not be saved");
+        }
     }
-    public default AuthData getAuthByToken(String authToken) throws DataAccessException {
+    public static AuthData getAuthByToken(String authToken) {
         //Retrieves AuthData by authToken
-        return new AuthData("","");
+        return authDb.getAuthDataByToken(authToken);
     }
-    public default AuthData getAuthByUsername(String username) throws DataAccessException {
-        //Retrieves AuthData by username
-        return new AuthData("","");
+    public static AuthData getAuthByUsername(String username) {
+        return authDb.getAuthDataByUsername(username);
     }
-    public default void deleteAuth(String authToken) throws DataAccessException {
-        //deletes selected AuthData
+    public static void deleteAuth(String authToken) throws DataAccessException {
+        authDb.deleteAuthDatum(authToken);
     }
 }
