@@ -169,7 +169,7 @@ public class ChessGame {
             for(int j = 1; j <= 8; j++) {
                 ChessPosition pos=new ChessPosition(i, j);
                 ChessPiece piece=board.getPiece(pos);
-                loopCheck(pos, teamColor, inCheckMate, piece);
+                inCheckMate = loopCheck(pos, teamColor, inCheckMate, piece);
                 if(!inCheckMate) {
                     break;
                 }
@@ -212,11 +212,6 @@ public class ChessGame {
         for (int i = 1; i <= 8; i++) {
             for (int j=1; j <= 8; j++) {
                 ChessPosition pos = new ChessPosition(i,j);
-                ChessPiece piece;
-                if(board.getPiece(pos) != null) {
-                    piece=new ChessPiece
-                            (board.getPiece(pos).getTeamColor(), board.getPiece(pos).getPieceType());
-                }
                 if(board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() == teamColor) {
                     areValidMoves = !validMoves(pos).isEmpty();
                 }
