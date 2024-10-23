@@ -1,37 +1,32 @@
 package dataaccess;
 
-import chess.ChessGame;
 import model.GameData;
 import model.SimpleGameData;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public interface GameDAO {
-    MemoryGameDAO gameDb = new MemoryGameDAO();
-    public static void clear() {
-        gameDb.clearGames();
+    MemoryGameDAO GAME_DAO = new MemoryGameDAO();
+    static void clear() {
+        GAME_DAO.clearGames();
     }
-    public static void createGame(GameData gameData) {
+    static void createGame(GameData gameData) {
         //create new game with gameName
-        gameDb.addGame(gameData);
+        GAME_DAO.addGame(gameData);
     }
-    public static GameData getGame(int gameID) {
+    static GameData getGame(int gameID) {
         //returns the game specified by its gameID
-        return gameDb.getGame(gameID);
+        return GAME_DAO.getGame(gameID);
     }
-    public static List<SimpleGameData> listGames() {
+    static List<SimpleGameData> listGames() {
         //returns all games from the database
-        List<GameData> games = gameDb.getGames();
+        List<GameData> games = GAME_DAO.getGames();
         List<SimpleGameData> gamesNoBoard=new ArrayList<>(List.of());
         for (GameData game : games) {
             gamesNoBoard.add(new SimpleGameData(game.gameID(),game.whiteUsername(),
                     game.blackUsername(),game.gameName()));
         }
         return gamesNoBoard;
-    }
-    public default void updateGame(GameData game) {
-        //replace the chess game string corresponding to gameID
     }
 }

@@ -8,17 +8,16 @@ import dataaccess.UserDAO;
 import model.AuthData;
 import model.GameData;
 import model.SimpleGameData;
-import model.UserData;
-import request_responses.*;
+import requestresponses.*;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
 public class GameService {
-    public final String UNAUTHORIZED = "{ \"message\": \"Error: unauthorized\" }";
-    public final String BAD_REQUEST = "{ \"message\": \"Error: bad request\" }";
-    public final String TAKEN = "{ \"message\": \"Error: already taken\" }";
+    public static final String UNAUTHORIZED = "{ \"message\": \"Error: unauthorized\" }";
+    public static final String BAD_REQUEST = "{ \"message\": \"Error: bad request\" }";
+    public static final String TAKEN = "{ \"message\": \"Error: already taken\" }";
     Random random = new Random();
     public List<SimpleGameData> listGames(ListGamesRequest request) throws DataAccessException {
         if(AuthDAO.getAuthByToken(request.authToken()) == null) {
@@ -45,7 +44,7 @@ public class GameService {
         if(userAuth == null) {
             throw new DataAccessException(UNAUTHORIZED);
         }
-        GameData game = GameDAO.getGame(request.GameID());
+        GameData game = GameDAO.getGame(request.gameID());
         GameData updatedGame = null;
         if(game == null) {
             throw new DataAccessException(BAD_REQUEST);

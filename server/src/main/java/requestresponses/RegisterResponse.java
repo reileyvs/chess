@@ -1,4 +1,4 @@
-package request_responses;
+package requestresponses;
 
 public record RegisterResponse(String authToken,String username) {
 }

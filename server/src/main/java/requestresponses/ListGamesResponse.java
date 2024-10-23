@@ -1,9 +1,7 @@
-package request_responses;
+package requestresponses;
 
-import model.GameData;
 import model.SimpleGameData;
 
-import java.util.Collection;
 import java.util.List;
 
 public record ListGamesResponse(List<SimpleGameData> games) {

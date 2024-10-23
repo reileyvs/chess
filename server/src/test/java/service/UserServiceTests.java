@@ -6,15 +6,12 @@ import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
-import request_responses.LoginRequest;
-import request_responses.LogoutRequest;
-import request_responses.RegisterRequest;
-import request_responses.RegisterResponse;
+import requestresponses.LoginRequest;
+import requestresponses.LogoutRequest;
+import requestresponses.RegisterRequest;
+import requestresponses.RegisterResponse;
 
 import static org.junit.jupiter.api.Assertions.*;
 

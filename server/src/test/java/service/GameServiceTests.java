@@ -5,14 +5,12 @@ import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import dataaccess.UserDAO;
-import model.AuthData;
 import model.GameData;
 import model.SimpleGameData;
-import model.UserData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import request_responses.*;
+import requestresponses.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -114,16 +112,16 @@ class GameServiceTests {
 
         @Test
         void clearAllTestPositive() {
-            assertFalse(GameDAO.gameDb.getGames().isEmpty());
-            assertFalse(UserDAO.userDb.getUsers().isEmpty());
-            assertFalse(AuthDAO.authDb.getAllAuthData().isEmpty());
+            assertFalse(GameDAO.GAME_DAO.getGames().isEmpty());
+            assertFalse(UserDAO.USER_DAO.getUsers().isEmpty());
+            assertFalse(AuthDAO.AUTH_DAO.getAllAuthData().isEmpty());
 
             ClearAllRequest req = new ClearAllRequest();
             gameService.clearAll(req);
 
-            assertTrue(GameDAO.gameDb.getGames().isEmpty());
-            assertTrue(UserDAO.userDb.getUsers().isEmpty());
-            assertTrue(AuthDAO.authDb.getAllAuthData().isEmpty());
+            assertTrue(GameDAO.GAME_DAO.getGames().isEmpty());
+            assertTrue(UserDAO.USER_DAO.getUsers().isEmpty());
+            assertTrue(AuthDAO.AUTH_DAO.getAllAuthData().isEmpty());
         }
 
 }

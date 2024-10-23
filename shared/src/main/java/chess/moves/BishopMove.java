@@ -18,69 +18,8 @@ public class BishopMove extends PieceMovesCalculator {
         int column = myPosition.getColumn();
 
         //Diagonal up-right
-            for (int i = 1; i < 8; i++) {
-                ChessPosition pos = new ChessPosition(row+i, column+i);
-                if ((row+i > 8 || column+i > 8) ||
-                        (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() == myColor)) {
-                    break;
-                }
-                else if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != myColor) {
-                    moves.add(new ChessMove(myPosition,pos,null));
-                    break;
-                }
-                else {
-                    moves.add(new ChessMove(myPosition,pos,null));
-                }
-            }
-
-        //Diagonal down-right
-            for (int i = 1; i < 8; i++) {
-                ChessPosition pos = new ChessPosition(row-i, column+i);
-                if ((row-i < 1 || column+i > 8) ||
-                        (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() == myColor)) {
-                    break;
-                }
-                else if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != myColor) {
-                    moves.add(new ChessMove(myPosition,pos,null));
-                    break;
-                }
-                else {
-                    moves.add(new ChessMove(myPosition,pos,null));
-                }
-            }
-
-        //Diagonal up-left
-            for (int i = 1; i < 8; i++) {
-                ChessPosition pos = new ChessPosition(row-i, column-i);
-                if ((row-i < 1 || column-i < 1) ||
-                        (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() == myColor)) {
-                    break;
-                }
-                else if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != myColor) {
-                    moves.add(new ChessMove(myPosition,pos,null));
-                    break;
-                }
-                else {
-                    moves.add(new ChessMove(myPosition,pos,null));
-                }
-
-            }
-
-        //Diagonal down-left
-            for (int i = 1; i < 8; i++) {
-                ChessPosition pos = new ChessPosition(row+i, column-i);
-                if ((row+i > 8 || column-i < 1) ||
-                        (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() == myColor)) {
-                    break;
-                }
-                else if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != myColor) {
-                    moves.add(new ChessMove(myPosition,pos,null));
-                    break;
-                }
-                else {
-                    moves.add(new ChessMove(myPosition,pos,null));
-                }
-            }
+        CalculateDiagonalMoves calc = new CalculateDiagonalMoves(row, column, board, myColor, myPosition, moves);
+        calc.calculate();
         return moves;
     }
 

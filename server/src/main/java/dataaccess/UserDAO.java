@@ -3,18 +3,17 @@ package dataaccess;
 import model.UserData;
 
 public interface UserDAO {
-    MemoryUserDAO userDb = new MemoryUserDAO();
-    MemoryAuthDAO authDb = new MemoryAuthDAO();
-    public static void clear() {
-        userDb.clearUsers();
+    MemoryUserDAO USER_DAO= new MemoryUserDAO();
+    static void clear() {
+        USER_DAO.clearUsers();
     }
-    public static void createUser(UserData userData) throws DataAccessException {
-        userDb.addUser(userData);
-        if(userDb.getUser(userData.username()) == null) {
+    static void createUser(UserData userData) throws DataAccessException {
+        USER_DAO.addUser(userData);
+        if(USER_DAO.getUser(userData.username()) == null) {
             throw new DataAccessException("User could not be added");
         }
     }
-    public static UserData getUser(String username) {
-        return userDb.getUser(username);
+    static UserData getUser(String username) {
+        return USER_DAO.getUser(username);
     }
 }

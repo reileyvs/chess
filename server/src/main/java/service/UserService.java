@@ -5,8 +5,7 @@ import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
-import request_responses.*;
-import server.Server;
+import requestresponses.*;
 
 import java.util.Objects;
 import java.util.UUID;

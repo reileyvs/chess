@@ -1,9 +1,7 @@
 package handlers;
 
-import request_responses.ClearAllRequest;
-import request_responses.ClearAllResponse;
-import request_responses.CreateGameRequest;
-import request_responses.CreateGameResponse;
+import requestresponses.ClearAllRequest;
+import requestresponses.ClearAllResponse;
 import service.GameService;
 import spark.Request;
 
@@ -14,6 +12,6 @@ public class ClearAllHandler implements Handler {
 
         ClearAllRequest req = new ClearAllRequest();
         ClearAllResponse res = gameService.clearAll(req);
-        return serializer.serialize(res);
+        return SERIALIZER.serialize(res);
     }
 }
