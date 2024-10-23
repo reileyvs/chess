@@ -18,7 +18,7 @@ public class GameService {
     public static final String UNAUTHORIZED = "{ \"message\": \"Error: unauthorized\" }";
     public static final String BAD_REQUEST = "{ \"message\": \"Error: bad request\" }";
     public static final String TAKEN = "{ \"message\": \"Error: already taken\" }";
-    Random random = new Random();
+    final Random random = new Random();
     public List<SimpleGameData> listGames(ListGamesRequest request) throws DataAccessException {
         if(AuthDAO.getAuthByToken(request.authToken()) == null) {
             throw new DataAccessException(UNAUTHORIZED);
@@ -76,7 +76,5 @@ public class GameService {
     }
 
 
-    public GameData getGame(int gameID) {
-        return GameDAO.getGame(gameID);
-    }
+
 }

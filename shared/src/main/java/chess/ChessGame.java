@@ -296,14 +296,5 @@ public class ChessGame {
         }
         return false;
     }
-    private Boolean checkSafeMove(ChessPosition pos, ChessPosition kingPos, TeamColor teamColor) {
-        if (board.getPiece(pos) != null && board.getPiece(pos).getTeamColor() != teamColor) {
-            for (ChessMove enemyMove : board.getPiece(pos).pieceMoves(board, pos)) {
-                if (!enemyMove.getEndPosition().equals(kingPos)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+
 }

@@ -21,13 +21,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameServiceTests {
         GameService gameService;
         UserService userService;
-        RegisterRequest user = new RegisterRequest("John","password","a@byu.org");
-        List<GameData> testGames = Arrays.asList(new GameData[]{
+        final RegisterRequest user = new RegisterRequest("John","password","a@byu.org");
+        final List<GameData> testGames = Arrays.asList(new GameData[]{
                 (new GameData(1, "", "", "", new ChessGame())),
                 new GameData(2, "", "Jane", "",new ChessGame()),
                 new GameData(3,"John","","",new ChessGame())});
         RegisterResponse response;
-    GameServiceTests() throws DataAccessException {
+    GameServiceTests() {
     }
 
     @BeforeEach

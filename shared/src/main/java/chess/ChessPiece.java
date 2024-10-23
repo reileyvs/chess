@@ -16,7 +16,7 @@ import java.util.Objects;
 public class ChessPiece {
 
     private final ChessGame.TeamColor pieceColor;
-    private ChessPiece.PieceType pieceType;
+    private final ChessPiece.PieceType pieceType;
 
     @Override
     public boolean equals(Object o)  {

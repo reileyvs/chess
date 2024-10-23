@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class MemoryGameDAO {
-    private List<GameData> games;
+    private final List<GameData> games;
 
     public MemoryGameDAO() {
         games = new ArrayList<>();

@@ -21,7 +21,7 @@ public interface AuthDAO {
     static AuthData getAuthByUsername(String username) {
         return AUTH_DAO.getAuthDataByUsername(username);
     }
-    static void deleteAuth(String authToken) throws DataAccessException {
+    static void deleteAuth(String authToken) {
         AUTH_DAO.deleteAuthDatum(authToken);
     }
 }

@@ -23,9 +23,7 @@ public class MemoryUserDAO {
         }
         return null;
     }
-    public void deleteUser(String username) {
-        users.removeIf(user -> Objects.equals(user.username(), username));
-    }
+
     public void clearUsers() {
         users.clear();
     }
