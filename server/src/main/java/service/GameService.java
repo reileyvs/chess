@@ -9,7 +9,6 @@ import model.AuthData;
 import model.GameData;
 import model.SimpleGameData;
 import model.UserData;
-import org.jetbrains.annotations.NotNull;
 import request_responses.*;
 
 import java.util.List;
