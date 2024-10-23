@@ -111,3 +111,16 @@ d
 4src/main/java/requestresponses/JoinGameResponse.java,1\4\14ceea29ef0d48dec06c6fa31c9228934d238121
 \
 ,src/main/java/requestresponses/Response.java,1\1\11ce47564a80d88846307b4a20aa1b1b2cc6fe90
+S
+#src/main/java/chess/ChessPiece.java,8\5\85a88ea4958ed1b3e2cc2a545a3ad992329e985a
+R
+"src/main/java/chess/ChessGame.java,7\3\73bf4fdc57c71c6f70f600b9fea515a646b27eef
+:
+
+client.iml,8\1\81276a78d81379d1349e1ff0f16babcbe4db95cc
+e
+5src/test/java/passoff/chess/piece/QueenMoveTests.java,0\a\0a959e861aa739d9c24b9e29d313101dcb5e8325
+W
+'src/main/java/chess/moves/RookMove.java,3\7\3739b40c97e7cd573705b26092ea92d0d3c123ae
+e
+5src/main/java/chess/moves/CalculateCardinalMoves.java,1\9\19fec41cc43675e2afee74daf1c1f8c0fd658faf

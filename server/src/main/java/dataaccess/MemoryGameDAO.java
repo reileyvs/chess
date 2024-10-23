@@ -28,9 +28,6 @@ public class MemoryGameDAO {
     public List<GameData> getGames() {
         return games;
     }
-    public void deleteGame(int gameID) {
-        games.removeIf(game -> Objects.equals(game.gameID(), gameID));
-    }
     public void clearGames() {
         games.clear();
     }
