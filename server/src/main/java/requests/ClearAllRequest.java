@@ -1,4 +1,4 @@
-package requestresponses;
+package requests;
 
 public record ClearAllRequest() {
 }

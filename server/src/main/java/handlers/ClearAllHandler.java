@@ -1,7 +1,7 @@
 package handlers;
 
-import requestresponses.ClearAllRequest;
-import requestresponses.ClearAllResponse;
+import requests.ClearAllRequest;
+import responses.ClearAllResponse;
 import service.GameService;
 import spark.Request;
 

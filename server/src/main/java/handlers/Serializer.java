@@ -1,10 +1,7 @@
 package handlers;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import requestresponses.*;
-
-import java.util.List;
+import requests.*;
 
 public class Serializer<T> {
     final Gson serializer = new Gson();

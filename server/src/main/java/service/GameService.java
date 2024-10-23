@@ -8,7 +8,10 @@ import dataaccess.UserDAO;
 import model.AuthData;
 import model.GameData;
 import model.SimpleGameData;
-import requestresponses.*;
+import requests.*;
+import responses.ClearAllResponse;
+import responses.CreateGameResponse;
+import responses.JoinGameResponse;
 
 import java.util.List;
 import java.util.Objects;

@@ -2,8 +2,8 @@ package handlers;
 
 import dataaccess.DataAccessException;
 import model.SimpleGameData;
-import requestresponses.ListGamesRequest;
-import requestresponses.ListGamesResponse;
+import requests.ListGamesRequest;
+import responses.ListGamesResponse;
 import service.GameService;
 import spark.Request;
 

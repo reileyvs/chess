@@ -8,10 +8,10 @@ import model.UserData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import requestresponses.LoginRequest;
-import requestresponses.LogoutRequest;
-import requestresponses.RegisterRequest;
-import requestresponses.RegisterResponse;
+import requests.LoginRequest;
+import requests.LogoutRequest;
+import requests.RegisterRequest;
+import responses.RegisterResponse;
 
 import static org.junit.jupiter.api.Assertions.*;
 

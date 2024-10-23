@@ -5,15 +5,18 @@ import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
-import requestresponses.*;
+import requests.*;
+import responses.LoginResponse;
+import responses.LogoutResponse;
+import responses.RegisterResponse;
 
 import java.util.Objects;
 import java.util.UUID;
 
 public class UserService {
-    public final String UNAUTHORIZED = "{ \"message\": \"Error: unauthorized\" }";
-    public final String BAD_REQUEST = "{ \"message\": \"Error: bad request\" }";
-    public final String TAKEN = "{ \"message\": \"Error: already taken\" }";
+    public static final String UNAUTHORIZED = "{ \"message\": \"Error: unauthorized\" }";
+    public static final String BAD_REQUEST = "{ \"message\": \"Error: bad request\" }";
+    public static final String TAKEN = "{ \"message\": \"Error: already taken\" }";
 
     public RegisterResponse register(RegisterRequest user) throws DataAccessException {
         if(Objects.equals(user.username(), "") || Objects.equals(user.password(), "")

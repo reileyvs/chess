@@ -10,7 +10,9 @@ import model.SimpleGameData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import requestresponses.*;
+import requests.*;
+import responses.CreateGameResponse;
+import responses.RegisterResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;

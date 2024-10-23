@@ -32,8 +32,12 @@ public class ChessBoard implements  Cloneable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ChessBoard that=(ChessBoard) o;
         return Objects.deepEquals(board, that.board);
     }
@@ -96,44 +100,16 @@ public class ChessBoard implements  Cloneable {
     }
 
     public String toString() {
-        String boardString = " ";
-        for(int i = 7; i >= 0; i--) {
-            for(int j = 0; j < 8; j++) {
-                ChessPiece piece = board[i][j];
-                if(piece == null) boardString = boardString.concat("_");
-                else {
-                    switch (piece.getPieceType()) {
-                        case ChessPiece.PieceType.PAWN:
-                            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) boardString=boardString.concat("P");
-                            else boardString=boardString.concat("p");
-                            break;
-                        case ChessPiece.PieceType.BISHOP:
-                            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) boardString=boardString.concat("B");
-                            else boardString=boardString.concat("b");
-                            break;
-                        case ChessPiece.PieceType.ROOK:
-                            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) boardString=boardString.concat("R");
-                            else boardString=boardString.concat("r");
-                            break;
-                        case ChessPiece.PieceType.QUEEN:
-                            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) boardString=boardString.concat("Q");
-                            else boardString=boardString.concat("q");
-                            break;
-                        case ChessPiece.PieceType.KNIGHT:
-                            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) boardString=boardString.concat("H");
-                            else boardString=boardString.concat("h");
-                            break;
-                        case ChessPiece.PieceType.KING:
-                            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) boardString=boardString.concat("K");
-                            else boardString=boardString.concat("k");
-                            break;
-                    }
+        String boardString=" ";
+        for (int i=7; i >= 0; i--) {
+            for (int j=0; j < 8; j++) {
+                ChessPiece piece=board[i][j];
+                if (piece == null) {
+                    boardString=boardString.concat("_");
                 }
             }
-            boardString = boardString.concat("\n ");
+            boardString=boardString.concat("\n ");
         }
-
-
         return boardString;
     }
 }
