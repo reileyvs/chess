@@ -20,7 +20,7 @@ public class GameService {
     public final String BAD_REQUEST = "{ \"message\": \"Error: bad request\" }";
     public final String TAKEN = "{ \"message\": \"Error: already taken\" }";
     Random random = new Random();
-    public List<GameData> listGames(ListGamesRequest request) throws DataAccessException {
+    public List<String[]> listGames(ListGamesRequest request) throws DataAccessException {
         if(AuthDAO.getAuthByToken(request.authToken()) == null) {
             throw new DataAccessException(UNAUTHORIZED);
         }
@@ -30,14 +30,14 @@ public class GameService {
         if(AuthDAO.getAuthByToken(request.authToken()) == null) {
             throw new DataAccessException(UNAUTHORIZED);
         }
-
-        GameData game = new GameData(random.nextInt(),"","",
+        int gameID =random.nextInt();
+        GameData game = new GameData(gameID,"","",
                 request.gameName(), new ChessGame());
         GameDAO.createGame(game);
         if(GameDAO.getGame(game.gameID()) == null) {
             throw new DataAccessException("Game not saved");
         }
-        return new CreateGameResponse(random.nextInt());
+        return new CreateGameResponse(gameID);
     }
     public JoinGameResponse joinGame(JoinGameRequest request) throws DataAccessException {
         //find game (if it doesn't exist ex), delete game, add updated game with new player/info

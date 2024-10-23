@@ -50,9 +50,9 @@ class GameServiceTests {
         @Test
         void listGamesTestPositive() {
             try {
-                    List<GameData> games=gameService.listGames(new ListGamesRequest(response.authToken()));
+                    List<String[]> games=gameService.listGames(new ListGamesRequest(response.authToken()));
                     for (int i=0; i < testGames.size(); i++) {
-                            assertEquals(games.get(i).gameID(), testGames.get(i).gameID());
+                            assertEquals(games.get(i)[0], Integer.toString(testGames.get(i).gameID()));
                     }
             } catch(DataAccessException ex) {
                     System.out.println(ex.getMessage());
@@ -61,7 +61,7 @@ class GameServiceTests {
         @Test
         void listGamesTestNegative() {
             assertThrows(DataAccessException.class, () -> {
-                    List<GameData> games=gameService.listGames(new ListGamesRequest("authTokenWrong"));
+                    List<String[]> games=gameService.listGames(new ListGamesRequest("authTokenWrong"));
             });
         }
 

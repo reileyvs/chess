@@ -1,4 +1,4 @@
 package request_responses;
 
-public record CreateBody(String name) {
+public record CreateBody(String gameName) {
 }

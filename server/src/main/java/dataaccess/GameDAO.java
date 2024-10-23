@@ -20,9 +20,15 @@ public interface GameDAO {
         //returns the game specified by its gameID
         return gameDb.getGame(gameID);
     }
-    public static List<GameData> listGames() {
+    public static List<String[]> listGames() {
         //returns all games from the database
-        return gameDb.getGames();
+        List<GameData> games = gameDb.getGames();
+        List<String[]> gamesNoBoard=new ArrayList<>(List.of());
+        for (GameData game : games) {
+            gamesNoBoard.add(new String[]{String.valueOf(game.gameID()),game.whiteUsername(),
+                    game.blackUsername(),game.gameName()});
+        }
+        return gamesNoBoard;
     }
     public default void updateGame(GameData game) {
         //replace the chess game string corresponding to gameID

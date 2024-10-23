@@ -77,7 +77,7 @@ public class Server {
             response.type("application/json");
             LogoutHandler handler = new LogoutHandler();
 
-            String res=null;
+            String res;
             try {
                 res=handler.deserialize(request);
             } catch(DataAccessException ex) {
@@ -132,7 +132,7 @@ public class Server {
             return res;
         }));
         //Join game
-        Spark.put("/join",((request, response) -> {
+        Spark.put("/game",((request, response) -> {
             response.type("application/json");
             JoinGameHandler handler = new JoinGameHandler();
             String res=null;
@@ -150,10 +150,14 @@ public class Server {
             }
             return res;
         }));
-//        //Clear all
-//        Spark.delete("/db",((request, response) -> {
-//
-//        }));
+        //Clear all
+        Spark.delete("/db",((request, response) -> {
+            response.type("application/json");
+            ClearAllHandler handler = new ClearAllHandler();
+            String res=null;
+            res=handler.deserialize(request);
+            return res;
+        }));
 
     }
 
