@@ -2,6 +2,7 @@ package dataaccess;
 
 import chess.ChessGame;
 import model.GameData;
+import model.SimpleGameData;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -20,13 +21,13 @@ public interface GameDAO {
         //returns the game specified by its gameID
         return gameDb.getGame(gameID);
     }
-    public static List<String[]> listGames() {
+    public static List<SimpleGameData> listGames() {
         //returns all games from the database
         List<GameData> games = gameDb.getGames();
-        List<String[]> gamesNoBoard=new ArrayList<>(List.of());
+        List<SimpleGameData> gamesNoBoard=new ArrayList<>(List.of());
         for (GameData game : games) {
-            gamesNoBoard.add(new String[]{String.valueOf(game.gameID()),game.whiteUsername(),
-                    game.blackUsername(),game.gameName()});
+            gamesNoBoard.add(new SimpleGameData(game.gameID(),game.whiteUsername(),
+                    game.blackUsername(),game.gameName()));
         }
         return gamesNoBoard;
     }

@@ -2,6 +2,7 @@ package handlers;
 
 import dataaccess.DataAccessException;
 import model.GameData;
+import model.SimpleGameData;
 import request_responses.ListGamesRequest;
 import request_responses.ListGamesResponse;
 import request_responses.LogoutRequest;
@@ -17,7 +18,7 @@ public class ListGamesHandler implements Handler{
     public String deserialize(Request json) throws DataAccessException {
         GameService gameService = new GameService();
         ListGamesRequest req = new ListGamesRequest(json.headers("Authorization"));
-        List<String[]> gameList = gameService.listGames(req);
+        List<SimpleGameData> gameList = gameService.listGames(req);
         ListGamesResponse res = new ListGamesResponse(gameList);
         return serializer.serialize(res);
     }

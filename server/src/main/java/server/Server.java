@@ -143,6 +143,12 @@ public class Server {
                     case UNAUTHORIZED:
                         response.status(401);
                         return ex.getMessage();
+                    case BAD_REQUEST:
+                        response.status(400);
+                        return ex.getMessage();
+                    case TAKEN:
+                        response.status(403);
+                        return ex.getMessage();
                     default:
                         response.status(500);
                         return "{ \"message\": \"Error:" + ex.getMessage() + "\" }";

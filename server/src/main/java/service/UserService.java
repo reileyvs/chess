@@ -18,7 +18,8 @@ public class UserService {
 
     public RegisterResponse register(RegisterRequest user) throws DataAccessException {
         if(Objects.equals(user.username(), "") || Objects.equals(user.password(), "")
-                || Objects.equals(user.email(), "")) {
+                || Objects.equals(user.email(), "") || user.username() == null
+                || user.password() == null || user.email() == null) {
             throw new DataAccessException(BAD_REQUEST);
         }
         UserData foundUser = UserDAO.getUser(user.username());

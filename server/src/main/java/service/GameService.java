@@ -7,6 +7,7 @@ import dataaccess.GameDAO;
 import dataaccess.UserDAO;
 import model.AuthData;
 import model.GameData;
+import model.SimpleGameData;
 import model.UserData;
 import org.jetbrains.annotations.NotNull;
 import request_responses.*;
@@ -20,7 +21,7 @@ public class GameService {
     public final String BAD_REQUEST = "{ \"message\": \"Error: bad request\" }";
     public final String TAKEN = "{ \"message\": \"Error: already taken\" }";
     Random random = new Random();
-    public List<String[]> listGames(ListGamesRequest request) throws DataAccessException {
+    public List<SimpleGameData> listGames(ListGamesRequest request) throws DataAccessException {
         if(AuthDAO.getAuthByToken(request.authToken()) == null) {
             throw new DataAccessException(UNAUTHORIZED);
         }
@@ -30,8 +31,8 @@ public class GameService {
         if(AuthDAO.getAuthByToken(request.authToken()) == null) {
             throw new DataAccessException(UNAUTHORIZED);
         }
-        int gameID =random.nextInt();
-        GameData game = new GameData(gameID,"","",
+        int gameID =Math.abs(random.nextInt());
+        GameData game = new GameData(gameID,null,null,
                 request.gameName(), new ChessGame());
         GameDAO.createGame(game);
         if(GameDAO.getGame(game.gameID()) == null) {
@@ -48,20 +49,22 @@ public class GameService {
         GameData game = GameDAO.getGame(request.GameID());
         GameData updatedGame = null;
         if(game == null) {
-            throw new DataAccessException("No game exists");
+            throw new DataAccessException(BAD_REQUEST);
         }
         if(Objects.equals(request.playerColor(), "WHITE")) {
-            if(!Objects.equals(game.whiteUsername(), "")) {
+            if(!Objects.equals(game.whiteUsername(), null)) {
                 throw new DataAccessException(TAKEN);
             }
             updatedGame = new GameData(game.gameID(), userAuth.username(), game.blackUsername(),
                     game.gameName(), game.game());
         } else if (Objects.equals(request.playerColor(), "BLACK")) {
-            if(!Objects.equals(game.blackUsername(), "")) {
+            if(!Objects.equals(game.blackUsername(), null)) {
                 throw new DataAccessException(TAKEN);
             }
             updatedGame = new GameData(game.gameID(), game.whiteUsername(), userAuth.username(),
                     game.gameName(), game.game());
+        } else {
+            throw new DataAccessException(BAD_REQUEST);
         }
         GameDAO.createGame(updatedGame);
         return new JoinGameResponse();

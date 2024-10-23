@@ -61,3 +61,9 @@ a
 1src/main/java/dataaccess/DataAccessException.java,6\e\6e09ec32b48351089b4f11f02293c0f806a5c04f
 S
 #src/main/java/handlers/Handler.java,f\3\f3a55ad05571a2a4dcee0a9834f9b27c3a8da3e2
+f
+6src/main/java/request_responses/ListGamesResponse.java,d\1\d186a2a48ddd071d48a8d642e866ff7407215e48
+b
+2src/test/java/passoff/server/StandardAPITests.java,4\4\44865688478e7de6876fba6fab89c554392767d8
+W
+'src/main/java/model/SimpleGameData.java,8\a\8a30f7eac3ffd4420fab9166a7a0d200af1fce4c

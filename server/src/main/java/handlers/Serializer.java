@@ -1,13 +1,19 @@
 package handlers;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import request_responses.*;
+
+import java.util.List;
 
 public class Serializer<T> {
     Gson serializer = new Gson();
 
     public String serialize(T response) {
         return serializer.toJson(response);
+    }
+    public String serializeStringArray(ListGamesResponse response) {
+        return serializer.toJson(response, new TypeToken<List<String>[]>() {}.getType());
     }
     public RegisterRequest deserializeRegister(String json) {
         return serializer.fromJson(json, RegisterRequest.class);

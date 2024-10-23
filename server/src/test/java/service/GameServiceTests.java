@@ -7,12 +7,14 @@ import dataaccess.GameDAO;
 import dataaccess.UserDAO;
 import model.AuthData;
 import model.GameData;
+import model.SimpleGameData;
 import model.UserData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import request_responses.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -50,9 +52,9 @@ class GameServiceTests {
         @Test
         void listGamesTestPositive() {
             try {
-                    List<String[]> games=gameService.listGames(new ListGamesRequest(response.authToken()));
+                List<SimpleGameData> games=(ArrayList<SimpleGameData>) gameService.listGames(new ListGamesRequest(response.authToken()));
                     for (int i=0; i < testGames.size(); i++) {
-                            assertEquals(games.get(i)[0], Integer.toString(testGames.get(i).gameID()));
+                            assertEquals(games.get(i).gameID(), testGames.get(i).gameID());
                     }
             } catch(DataAccessException ex) {
                     System.out.println(ex.getMessage());
@@ -61,7 +63,7 @@ class GameServiceTests {
         @Test
         void listGamesTestNegative() {
             assertThrows(DataAccessException.class, () -> {
-                    List<String[]> games=gameService.listGames(new ListGamesRequest("authTokenWrong"));
+                List<SimpleGameData> games=gameService.listGames(new ListGamesRequest("authTokenWrong"));
             });
         }
 
