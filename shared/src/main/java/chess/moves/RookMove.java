@@ -20,7 +20,8 @@ public class RookMove extends PieceMovesCalculator {
         int row = myPosition.getRow();
         int column = myPosition.getColumn();
         //Up
-        CalculateDiagonalMoves calc = new CalculateDiagonalMoves(row, column, board, myColor, myPosition, moves);
+        CalculateCardinalMoves calc = new CalculateCardinalMoves(row, column, board, myColor, myPosition, moves);
+        calc.calculate();
 
         return moves;
     }

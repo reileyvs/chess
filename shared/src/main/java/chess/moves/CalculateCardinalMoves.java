@@ -11,17 +11,21 @@ import java.util.Collection;
 public class CalculateCardinalMoves {
     private final ChessBoard board;
     private final ChessPosition myPosition;
+    private final int row;
+    private final int column;
+    private final ChessGame.TeamColor myColor;
+    private final Collection<ChessMove> moves;
 
     public CalculateCardinalMoves(int row, int column, ChessBoard board, ChessGame.TeamColor myColor,
                                   ChessPosition myPosition, Collection<ChessMove> moves) {
         this.board=board;
         this.myPosition=myPosition;
+        this.row=row;
+        this.column=column;
+        this.myColor=myColor;
+        this.moves=moves;
     }
     public void calculate() {
-        Collection<ChessMove> moves=new ArrayList<>();
-        ChessGame.TeamColor myColor = board.getPiece(myPosition).getTeamColor();
-        int row = myPosition.getRow();
-        int column = myPosition.getColumn();
         //Up
         for(int i = 1; i < 8; i++) {
             ChessPosition up=new ChessPosition(row + i, column);

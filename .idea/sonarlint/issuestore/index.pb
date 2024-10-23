@@ -23,3 +23,7 @@ W
 'src/main/java/chess/moves/RookMove.java,3\7\3739b40c97e7cd573705b26092ea92d0d3c123ae
 P
  src/main/java/server/Server.java,4\c\4c405aa622276106ee9ef8c3a2fbee4e76dcafbb
+d
+4src/test/java/passoff/chess/piece/RookMoveTests.java,6\9\69e9785f60de8da7a1625ee0a9db7af2bd25e7cb
+Y
+)src/main/java/chess/moves/BishopMove.java,1\1\11cf0601e9ca1a7b922af8a371c066c8a5148694
