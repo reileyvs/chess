@@ -25,9 +25,9 @@ class GameServiceTests {
         UserService userService;
         final RegisterRequest user = new RegisterRequest("John","password","a@byu.org");
         final List<GameData> testGames = Arrays.asList(new GameData[]{
-                (new GameData(1, "", "", "", new ChessGame())),
-                new GameData(2, "", "Jane", "",new ChessGame()),
-                new GameData(3,"John","","",new ChessGame())});
+                (new GameData(1, null, null, "one", new ChessGame())),
+                new GameData(2, null, "Jane", "two",new ChessGame()),
+                new GameData(3,"John",null,"three",new ChessGame())});
         RegisterResponse response;
     GameServiceTests() {
     }
