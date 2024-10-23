@@ -169,25 +169,29 @@ public class ChessGame {
             for(int j = 1; j <= 8; j++) {
                 ChessPosition pos=new ChessPosition(i, j);
                 ChessPiece piece=board.getPiece(pos);
-                for (ChessMove move : validMoves(pos)) {
-                    if (board.getPiece(move.getStartPosition()) != null
-                            && board.getPiece(move.getStartPosition()).getTeamColor() == teamColor) {
-                        ChessBoard clone=tryClone();
-                        movePiece(move, board, move.getPromotionPiece());
-                        if(!isInCheck(teamColor)) {
-                            inCheckMate = false;
-                            break;
-                        }
-                        isInCheck(piece.getTeamColor());
-                        setBoard(clone);
-                    }
-                }
+                loopCheck(pos, teamColor, inCheckMate, piece);
                 if(!inCheckMate) {
                     break;
                 }
             }
             if(!inCheckMate) {
                 break;
+            }
+        }
+        return inCheckMate;
+    }
+    private boolean loopCheck(ChessPosition pos, TeamColor teamColor, boolean inCheckMate, ChessPiece piece) {
+        for (ChessMove move : validMoves(pos)) {
+            if (board.getPiece(move.getStartPosition()) != null
+                    && board.getPiece(move.getStartPosition()).getTeamColor() == teamColor) {
+                ChessBoard clone=tryClone();
+                movePiece(move, board, move.getPromotionPiece());
+                if(!isInCheck(teamColor)) {
+                    inCheckMate = false;
+                    break;
+                }
+                isInCheck(piece.getTeamColor());
+                setBoard(clone);
             }
         }
         return inCheckMate;

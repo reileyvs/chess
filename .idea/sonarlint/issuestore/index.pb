@@ -27,3 +27,5 @@ d
 4src/test/java/passoff/chess/piece/RookMoveTests.java,6\9\69e9785f60de8da7a1625ee0a9db7af2bd25e7cb
 Y
 )src/main/java/chess/moves/BishopMove.java,1\1\11cf0601e9ca1a7b922af8a371c066c8a5148694
+R
+"src/main/java/chess/ChessGame.java,7\3\73bf4fdc57c71c6f70f600b9fea515a646b27eef
