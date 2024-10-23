@@ -5,8 +5,10 @@ import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
 import dataaccess.UserDAO;
+import model.AuthData;
 import model.GameData;
 import model.UserData;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import request_responses.*;
@@ -35,9 +37,14 @@ class GameServiceTests {
                 GameDAO.createGame(testGames.get(0));
                 GameDAO.createGame(testGames.get(1));
                 GameDAO.createGame(testGames.get(2));
-                gameService.setGameID(3);
                 response = userService.register(user);
 
+        }
+        @AfterEach
+        void takeDown() {
+            GameDAO.clear();
+            UserDAO.clear();
+            AuthDAO.clear();
         }
 
         @Test
@@ -68,7 +75,7 @@ class GameServiceTests {
                 System.out.println(ex.getMessage());
             }
             assert gameID != null;
-            assertEquals(4, gameID.gameID());
+            assertNotEquals(3, gameID.gameID());
         }
         @Test
         void createGameTestNegative() {

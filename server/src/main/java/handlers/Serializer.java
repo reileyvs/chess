@@ -25,15 +25,15 @@ public class Serializer<T> {
         return serializer.fromJson(json,ListGamesRequest.class);
     }
 
-    public CreateGameRequest deserializeCreateGame(String json) {
-        return serializer.fromJson(json,CreateGameRequest.class);
+    public CreateBody deserializeCreateGame(String json) {
+        return serializer.fromJson(json, CreateBody.class);
     }
 
-    public JoinGameRequest deserializeJoinGame(String json) {
-        return serializer.fromJson(json,JoinGameRequest.class);
+    public JoinBody deserializeJoinGame(String json) {
+        return serializer.fromJson(json, JoinBody.class);
     }
 
-    public ClearAllRequest deserializeClearAll(String json) {
-        return serializer.fromJson(json,ClearAllRequest.class);
+    public CreateBody deserializeClearAll(String json) {
+        return serializer.fromJson(json, CreateBody.class);
     }
 }

@@ -10,9 +10,9 @@ import spark.Request;
 
 public class LogoutHandler implements Handler{
 
-    public String deserialize(String json) throws DataAccessException {
+    public String deserialize(Request json) throws DataAccessException {
         UserService userService = new UserService();
-        LogoutRequest req = new LogoutRequest(json);
+        LogoutRequest req = new LogoutRequest(json.headers("Authorization"));
         LogoutResponse res = userService.logout(req);
         return serializer.serialize(res);
     }

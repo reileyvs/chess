@@ -1,8 +1,11 @@
 package service;
 
+import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
+import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +25,11 @@ class UserServiceTests {
     void setup() {
         userService = new UserService();
         request = new RegisterRequest("John","password", "a@byu.org");
+    }
+    @AfterEach
+    void takeDown() {
+        UserDAO.clear();
+        AuthDAO.clear();
     }
     @Test
     void registerPositive() {

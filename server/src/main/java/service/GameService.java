@@ -13,33 +13,37 @@ import request_responses.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class GameService {
-    private int gameID = 0;
+    public final String UNAUTHORIZED = "{ \"message\": \"Error: unauthorized\" }";
+    public final String BAD_REQUEST = "{ \"message\": \"Error: bad request\" }";
+    public final String TAKEN = "{ \"message\": \"Error: already taken\" }";
+    Random random = new Random();
     public List<GameData> listGames(ListGamesRequest request) throws DataAccessException {
         if(AuthDAO.getAuthByToken(request.authToken()) == null) {
-            throw new DataAccessException("Error: unauthorized");
+            throw new DataAccessException(UNAUTHORIZED);
         }
         return GameDAO.listGames();
     }
-    public CreateGameResponse createGame(@NotNull CreateGameRequest request) throws DataAccessException {
+    public CreateGameResponse createGame(CreateGameRequest request) throws DataAccessException {
         if(AuthDAO.getAuthByToken(request.authToken()) == null) {
-            throw new DataAccessException("Error: unauthorized");
+            throw new DataAccessException(UNAUTHORIZED);
         }
-        gameID += 1;
-        GameData game = new GameData(gameID,"","",
+
+        GameData game = new GameData(random.nextInt(),"","",
                 request.gameName(), new ChessGame());
         GameDAO.createGame(game);
-        if(GameDAO.getGame(gameID) == null) {
+        if(GameDAO.getGame(game.gameID()) == null) {
             throw new DataAccessException("Game not saved");
         }
-        return new CreateGameResponse(gameID);
+        return new CreateGameResponse(random.nextInt());
     }
     public JoinGameResponse joinGame(JoinGameRequest request) throws DataAccessException {
         //find game (if it doesn't exist ex), delete game, add updated game with new player/info
         AuthData userAuth = AuthDAO.getAuthByToken(request.authToken());
         if(userAuth == null) {
-            throw new DataAccessException("Error: unauthorized");
+            throw new DataAccessException(UNAUTHORIZED);
         }
         GameData game = GameDAO.getGame(request.GameID());
         GameData updatedGame = null;
@@ -48,13 +52,13 @@ public class GameService {
         }
         if(Objects.equals(request.playerColor(), "WHITE")) {
             if(!Objects.equals(game.whiteUsername(), "")) {
-                throw new DataAccessException("already taken");
+                throw new DataAccessException(TAKEN);
             }
             updatedGame = new GameData(game.gameID(), userAuth.username(), game.blackUsername(),
                     game.gameName(), game.game());
         } else if (Objects.equals(request.playerColor(), "BLACK")) {
             if(!Objects.equals(game.blackUsername(), "")) {
-                throw new DataAccessException("already taken");
+                throw new DataAccessException(TAKEN);
             }
             updatedGame = new GameData(game.gameID(), game.whiteUsername(), userAuth.username(),
                     game.gameName(), game.game());
@@ -73,8 +77,5 @@ public class GameService {
 
     public GameData getGame(int gameID) {
         return GameDAO.getGame(gameID);
-    }
-    public void setGameID(int gameID) {
-        this.gameID = gameID;
     }
 }
