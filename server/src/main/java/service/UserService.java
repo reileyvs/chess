@@ -6,15 +6,24 @@ import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
 import request_responses.*;
+import server.Server;
 
 import java.util.Objects;
 import java.util.UUID;
 
 public class UserService {
+    public final String UNAUTHORIZED = "{ \"message\": \"Error: unauthorized\" }";
+    public final String BAD_REQUEST = "{ \"message\": \"Error: bad request\" }";
+    public final String TAKEN = "{ \"message\": \"Error: already taken\" }";
+
     public RegisterResponse register(RegisterRequest user) throws DataAccessException {
+        if(Objects.equals(user.username(), "") || Objects.equals(user.password(), "")
+                || Objects.equals(user.email(), "")) {
+            throw new DataAccessException(BAD_REQUEST);
+        }
         UserData foundUser = UserDAO.getUser(user.username());
         if(foundUser != null) {
-            throw new DataAccessException("User already exists.");
+            throw new DataAccessException(TAKEN);
         }
         UserData newUser = new UserData(user.username(), user.password(), user.email());
         UserDAO.createUser(newUser);
@@ -26,11 +35,8 @@ public class UserService {
 
     public LoginResponse login(LoginRequest user) throws DataAccessException {
         UserData foundUser = UserDAO.getUser(user.username());
-        if(foundUser == null) {
-            throw new DataAccessException("No user " + user.username() + " exists");
-        }
-        if(!Objects.equals(foundUser.password(), user.password())) {
-            throw new DataAccessException("Password is incorrect");
+        if(foundUser == null || !Objects.equals(foundUser.password(), user.password())) {
+            throw new DataAccessException(UNAUTHORIZED);
         }
 
         AuthData userAuth = new AuthData(UUID.randomUUID().toString(), foundUser.username());
@@ -42,7 +48,7 @@ public class UserService {
     public LogoutResponse logout(LogoutRequest auth) throws DataAccessException {
         AuthData userAuth = AuthDAO.getAuthByToken(auth.authToken());
         if(userAuth == null) {
-            throw new DataAccessException("User is not validated");
+            throw new DataAccessException(UNAUTHORIZED);
         }
         AuthDAO.deleteAuth(userAuth.authToken());
         if(AuthDAO.getAuthByToken(auth.authToken()) != null) {

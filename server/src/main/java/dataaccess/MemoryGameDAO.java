@@ -14,6 +14,7 @@ public class MemoryGameDAO {
         games = new ArrayList<>();
     }
     public void addGame(GameData game) {
+        games.removeIf(thisGame -> Objects.equals(thisGame.gameID(), game.gameID()));
         games.add(game);
     }
     public GameData getGame(int gameID) {

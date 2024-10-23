@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface GameDAO {
     MemoryGameDAO gameDb = new MemoryGameDAO();
-    public default void clear() {
-        //clears all data from database (maybe put in GameDAO)
+    public static void clear() {
+        gameDb.clearGames();
     }
     public static void createGame(GameData gameData) {
         //create new game with gameName
@@ -18,7 +18,7 @@ public interface GameDAO {
     }
     public static GameData getGame(int gameID) {
         //returns the game specified by its gameID
-        return new GameData(1,"","","",new ChessGame());
+        return gameDb.getGame(gameID);
     }
     public static List<GameData> listGames() {
         //returns all games from the database

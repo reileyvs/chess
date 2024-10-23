@@ -29,4 +29,8 @@ public class MemoryUserDAO {
     public void clearUsers() {
         users.clear();
     }
+
+    public ArrayList<UserData> getUsers() {
+        return users;
+    }
 }

@@ -37,4 +37,8 @@ public class MemoryAuthDAO {
     public void clearAuthData(){
         authData.clear();
     }
+
+    public ArrayList<AuthData> getAllAuthData() {
+        return authData;
+    }
 }

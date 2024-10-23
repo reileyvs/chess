@@ -1,8 +1,10 @@
 package service;
 
 import chess.ChessGame;
+import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.GameDAO;
+import dataaccess.UserDAO;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
@@ -78,16 +80,41 @@ class GameServiceTests {
 
         @Test
         void joinGamePositiveTest() {
-
+            int gameID = 1;
+            JoinGameRequest req = new JoinGameRequest(response.authToken(), "WHITE", gameID);
+            assertDoesNotThrow(() -> {
+                gameService.joinGame(req);
+            });
+            assertNotEquals("", GameDAO.getGame(gameID).whiteUsername());
+            assertEquals(GameDAO.getGame(gameID).whiteUsername(), response.username());
         }
         @Test
         void joinGameNegativeTest() {
+            int gameID = 3;
+            JoinGameRequest req = new JoinGameRequest(response.authToken(), "WHITE", gameID);
+            assertThrows(DataAccessException.class, () -> {
+                gameService.joinGame(req);
+            }, "already taken");
 
+            gameID = 1;
+            JoinGameRequest req2 = new JoinGameRequest("WrongAuthToken", "WHITE", gameID);
+            assertThrows(DataAccessException.class, () -> {
+                gameService.joinGame(req2);
+            }, "Auth problem");
         }
 
         @Test
         void clearAllTestPositive() {
+            assertFalse(GameDAO.gameDb.getGames().isEmpty());
+            assertFalse(UserDAO.userDb.getUsers().isEmpty());
+            assertFalse(AuthDAO.authDb.getAllAuthData().isEmpty());
 
+            ClearAllRequest req = new ClearAllRequest();
+            gameService.clearAll(req);
+
+            assertTrue(GameDAO.gameDb.getGames().isEmpty());
+            assertTrue(UserDAO.userDb.getUsers().isEmpty());
+            assertTrue(AuthDAO.authDb.getAllAuthData().isEmpty());
         }
 
 }

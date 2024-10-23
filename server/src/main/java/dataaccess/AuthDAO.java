@@ -5,7 +5,7 @@ import model.AuthData;
 public interface AuthDAO {
     MemoryAuthDAO authDb = new MemoryAuthDAO();
     public static void clear() {
-        //clears all data from database (maybe put in GameDAO)
+        authDb.clearAuthData();
     }
     public static void createAuth(AuthData authData) throws DataAccessException {
         //create authToken and store it in the database as AuthData object

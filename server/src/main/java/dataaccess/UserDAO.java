@@ -6,7 +6,7 @@ public interface UserDAO {
     MemoryUserDAO userDb = new MemoryUserDAO();
     MemoryAuthDAO authDb = new MemoryAuthDAO();
     public static void clear() {
-        //clears all data from database (maybe put in GameDAO)
+        userDb.clearUsers();
     }
     public static void createUser(UserData userData) throws DataAccessException {
         userDb.addUser(userData);
