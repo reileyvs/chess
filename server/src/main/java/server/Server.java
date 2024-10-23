@@ -20,8 +20,7 @@ public class Server {
 
         // Register your endpoints and handle exceptions here.
         createRoutes();
-        //This line initializes the server and can be removed once you have a functioning endpoint 
-        Spark.init();
+        //This line initializes the server and can be removed once you have a functioning endpoint
 
         Spark.awaitInitialization();
         return Spark.port();
