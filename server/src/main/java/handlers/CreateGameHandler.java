@@ -1,6 +1,6 @@
 package handlers;
 
-import dataaccess.DataAccessException;
+import Exceptions.DataAccessException;
 import requests.CreateBody;
 import requests.CreateGameRequest;
 import responses.CreateGameResponse;

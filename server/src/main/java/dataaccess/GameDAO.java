@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface GameDAO {
     MemoryGameDAO GAME_DAO = new MemoryGameDAO();
+
+
     static void clear() {
         GAME_DAO.clearGames();
     }

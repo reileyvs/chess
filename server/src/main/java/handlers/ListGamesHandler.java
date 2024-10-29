@@ -1,6 +1,6 @@
 package handlers;
 
-import dataaccess.DataAccessException;
+import Exceptions.DataAccessException;
 import model.SimpleGameData;
 import requests.ListGamesRequest;
 import responses.ListGamesResponse;

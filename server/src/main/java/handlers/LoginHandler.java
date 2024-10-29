@@ -1,6 +1,6 @@
 package handlers;
 
-import dataaccess.DataAccessException;
+import Exceptions.DataAccessException;
 import requests.LoginRequest;
 import responses.LoginResponse;
 import service.UserService;
