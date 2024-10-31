@@ -4,6 +4,7 @@ import chess.ChessGame;
 import dataaccess.AuthDAO;
 import Exceptions.DataAccessException;
 import dataaccess.GameDAO;
+import dataaccess.MySqlAuthDAO;
 import dataaccess.UserDAO;
 import model.AuthData;
 import model.GameData;
@@ -22,6 +23,7 @@ public class GameService {
     public static final String BAD_REQUEST = "{ \"message\": \"Error: bad request\" }";
     public static final String TAKEN = "{ \"message\": \"Error: already taken\" }";
     final Random random = new Random();
+
     public List<SimpleGameData> listGames(ListGamesRequest request) throws DataAccessException {
         if(AuthDAO.getAuthByToken(request.authToken()) == null) {
             throw new DataAccessException(UNAUTHORIZED);

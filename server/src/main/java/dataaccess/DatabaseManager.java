@@ -39,7 +39,7 @@ public class DatabaseManager {
     /**
      * Creates the database if it does not already exist.
      */
-    static void createDatabase() throws DataAccessException {
+    public static void createDatabase() throws DataAccessException {
         try {
             var statement = "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME;
             var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
@@ -48,6 +48,17 @@ public class DatabaseManager {
             }
         } catch (SQLException e) {
             throw new RecordException(e.getMessage());
+        }
+        try {
+            var conn = DriverManager.getConnection(CONNECTION_URL,USER,PASSWORD);
+            conn.setCatalog(DATABASE_NAME);
+            for(var tableStatement : sqlStatements) {
+                var preparedStatement = conn.prepareStatement(tableStatement);
+                preparedStatement.executeUpdate();
+            }
+        } catch(SQLException ex) {
+            ex.printStackTrace();
+            throw new RecordException(ex.getMessage());
         }
     }
 
@@ -71,4 +82,34 @@ public class DatabaseManager {
             throw new DataAccessException(e.getMessage());
         }
     }
+
+    private static final String[] sqlStatements = {
+            """
+            CREATE TABLE IF NOT EXISTS auth (
+                `authToken` VARCHAR(255) NOT NULL,
+                `username` VARCHAR(255) NOT NULL,
+                PRIMARY KEY (`username`)
+            );
+            
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS user (
+                `username` VARCHAR(255) NOT NULL,
+                `password` VARCHAR(255) NOT NULL,
+                `email` VARCHAR(255) NOT NULL,
+                PRIMARY KEY (`username`)
+            );
+            
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS game (
+                      `gameId` INT NOT NULL AUTO_INCREMENT,
+                      `whiteUser` VARCHAR(255),
+                      `blackUser` VARCHAR(255),
+                      `gameName` VARCHAR(255) NOT NULL,
+                      `game` TEXT NOT NULL,
+                      PRIMARY KEY (`gameId`)
+                  );
+            """
+    };
 }

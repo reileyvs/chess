@@ -1,8 +1,12 @@
 package server;
 
 import Exceptions.DataAccessException;
+import dataaccess.DatabaseManager;
+import dataaccess.MySqlAuthDAO;
 import handlers.*;
 import spark.*;
+
+import static java.lang.System.exit;
 
 
 public class Server {
@@ -18,15 +22,20 @@ public class Server {
 
         Spark.staticFiles.location("web");
 
-        // Register your endpoints and handle exceptions here.
+        // create SQL database
+        try {
+            DatabaseManager.createDatabase();
+            var authDAO = new MySqlAuthDAO();
+        } catch(DataAccessException ex) {
+            ex.getStackTrace();
+            exit(1);
+        }
         createRoutes();
-        //This line initializes the server and can be removed once you have a functioning endpoint
 
         Spark.awaitInitialization();
         return Spark.port();
     }
     public void createRoutes() {
-
         //Create user
         Spark.post("/user",((request, response) -> {
             response.type(JSON);
