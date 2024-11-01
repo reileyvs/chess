@@ -23,10 +23,10 @@ class UserServiceTests {
     AuthDAO authDAO;
     @BeforeEach
     void setup() throws DataAccessException {
+        DatabaseManager.createDatabase();
         userService = new UserService();
         request = new RegisterRequest("John","password", "a@byu.org");
         authDAO = new AuthDAO();
-        DatabaseManager.createDatabase();
     }
     @AfterEach
     void takeDown() {

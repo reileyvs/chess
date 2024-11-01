@@ -19,7 +19,7 @@ public class MySqlAuthDAO {
     }
 
     public void addUser(AuthData authDatum) throws DataAccessException {
-        deleteAuthDatumByUsername(authDatum.username());
+        //deleteAuthDatumByUsername(authDatum.username());
         var statement = "INSERT INTO auth (authToken, username) VALUES(?, ?);";
         executeUpdate(statement, authDatum.authToken(), authDatum.username());
 
@@ -68,7 +68,7 @@ public class MySqlAuthDAO {
         executeUpdate(statement, username);
     }
     public void clearAuthData() throws DataAccessException {
-        var statement = "DROP TABLE IF EXISTS auth";
+        var statement = "TRUNCATE TABLE auth";
         executeUpdate(statement);
     }
 
@@ -109,7 +109,7 @@ public class MySqlAuthDAO {
 
                 return 0;
             } catch (SQLException ex) {
-                throw new RecordException("executeUpdate error");
+                throw new RecordException(ex.getMessage());
             }
     }
 

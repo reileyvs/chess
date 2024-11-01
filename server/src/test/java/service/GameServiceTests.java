@@ -3,6 +3,7 @@ package service;
 import chess.ChessGame;
 import dataaccess.AuthDAO;
 import Exceptions.DataAccessException;
+import dataaccess.DatabaseManager;
 import dataaccess.GameDAO;
 import dataaccess.UserDAO;
 import model.AuthData;
@@ -32,106 +33,104 @@ class GameServiceTests {
                 new GameData(2, null, "Jane", "two",new ChessGame()),
                 new GameData(3,"John",null,"three",new ChessGame())});
         RegisterResponse response;
-    GameServiceTests() {
-    }
 
     @BeforeEach
-        void setup() throws DataAccessException {
-                gameService = new GameService();
-                userService = new UserService();
-                authDAO = new AuthDAO();
-                GameDAO.createGame(testGames.get(0));
-                GameDAO.createGame(testGames.get(1));
-                GameDAO.createGame(testGames.get(2));
-                response = userService.register(user);
+    void setup() throws DataAccessException {
+            DatabaseManager.createDatabase();
+            gameService = new GameService();
+            userService = new UserService();
+            authDAO = new AuthDAO();
+            GameDAO.createGame(testGames.get(0));
+            GameDAO.createGame(testGames.get(1));
+            GameDAO.createGame(testGames.get(2));
+            response = userService.register(user);
+    }
+    @AfterEach
+    void takeDown() {
+        try {
+            GameDAO.clear();
+            UserDAO.clear();
+            authDAO.clear();
+        } catch(DataAccessException ex) {
+            assertEquals(1,2);
+        }
+    }
 
-        }
-        @AfterEach
-        void takeDown() {
-            try {
-                GameDAO.clear();
-                UserDAO.clear();
-                authDAO.clear();
-            } catch(DataAccessException ex) {
-                assertEquals(1,2);
-            }
-        }
-
-        @Test
-        void listGamesTestPositive() {
-            try {
-                List<SimpleGameData> games=(ArrayList<SimpleGameData>) gameService.listGames(new ListGamesRequest(response.authToken()));
-                    for (int i=0; i < testGames.size(); i++) {
-                            assertEquals(games.get(i).gameID(), testGames.get(i).gameID());
-                    }
-            } catch(DataAccessException ex) {
-                    System.out.println(ex.getMessage());
-            }
-        }
-        @Test
-        void listGamesTestNegative() {
-            assertThrows(DataAccessException.class, () -> {
-                List<SimpleGameData> games=gameService.listGames(new ListGamesRequest("authTokenWrong"));
-            });
-        }
-
-        @Test
-        void createGameTestPositive() {
-            CreateGameResponse gameID=null;
-            try {
-                CreateGameRequest req = new CreateGameRequest(response.authToken(), "newGame");
-                gameID = gameService.createGame(req);
-            } catch(DataAccessException ex) {
+    @Test
+    void listGamesTestPositive() {
+        try {
+            List<SimpleGameData> games=(ArrayList<SimpleGameData>) gameService.listGames(new ListGamesRequest(response.authToken()));
+                for (int i=0; i < testGames.size(); i++) {
+                        assertEquals(games.get(i).gameID(), testGames.get(i).gameID());
+                }
+        } catch(DataAccessException ex) {
                 System.out.println(ex.getMessage());
-            }
-            assert gameID != null;
-            assertNotEquals(3, gameID.gameID());
         }
-        @Test
-        void createGameTestNegative() {
-            assertThrows(DataAccessException.class, () -> {
-                CreateGameRequest req = new CreateGameRequest("WrongAuthToken", "newGame");
-                CreateGameResponse gameID = gameService.createGame(req);
-            });
+    }
+    @Test
+    void listGamesTestNegative() {
+        assertThrows(DataAccessException.class, () -> {
+            List<SimpleGameData> games=gameService.listGames(new ListGamesRequest("authTokenWrong"));
+        });
+    }
+
+    @Test
+    void createGameTestPositive() {
+        CreateGameResponse gameID=null;
+        try {
+            CreateGameRequest req = new CreateGameRequest(response.authToken(), "newGame");
+            gameID = gameService.createGame(req);
+        } catch(DataAccessException ex) {
+            System.out.println(ex.getMessage());
         }
+        assert gameID != null;
+        assertNotEquals(3, gameID.gameID());
+    }
+    @Test
+    void createGameTestNegative() {
+        assertThrows(DataAccessException.class, () -> {
+            CreateGameRequest req = new CreateGameRequest("WrongAuthToken", "newGame");
+            CreateGameResponse gameID = gameService.createGame(req);
+        });
+    }
 
-        @Test
-        void joinGamePositiveTest() {
-            int gameID = 1;
-            JoinGameRequest req = new JoinGameRequest(response.authToken(), "WHITE", gameID);
-            assertDoesNotThrow(() -> {
-                gameService.joinGame(req);
-            });
-            assertNotEquals("", GameDAO.getGame(gameID).whiteUsername());
-            assertEquals(GameDAO.getGame(gameID).whiteUsername(), response.username());
-        }
-        @Test
-        void joinGameNegativeTest() {
-            int gameID = 3;
-            JoinGameRequest req = new JoinGameRequest(response.authToken(), "WHITE", gameID);
-            assertThrows(DataAccessException.class, () -> {
-                gameService.joinGame(req);
-            }, "already taken");
+    @Test
+    void joinGamePositiveTest() {
+        int gameID = 1;
+        JoinGameRequest req = new JoinGameRequest(response.authToken(), "WHITE", gameID);
+        assertDoesNotThrow(() -> {
+            gameService.joinGame(req);
+        });
+        assertNotEquals("", GameDAO.getGame(gameID).whiteUsername());
+        assertEquals(GameDAO.getGame(gameID).whiteUsername(), response.username());
+    }
+    @Test
+    void joinGameNegativeTest() {
+        int gameID = 3;
+        JoinGameRequest req = new JoinGameRequest(response.authToken(), "WHITE", gameID);
+        assertThrows(DataAccessException.class, () -> {
+            gameService.joinGame(req);
+        }, "already taken");
 
-            gameID = 1;
-            JoinGameRequest req2 = new JoinGameRequest("WrongAuthToken", "WHITE", gameID);
-            assertThrows(DataAccessException.class, () -> {
-                gameService.joinGame(req2);
-            }, "Auth problem");
-        }
+        gameID = 1;
+        JoinGameRequest req2 = new JoinGameRequest("WrongAuthToken", "WHITE", gameID);
+        assertThrows(DataAccessException.class, () -> {
+            gameService.joinGame(req2);
+        }, "Auth problem");
+    }
 
-        @Test
-        void clearAllTestPositive() throws DataAccessException {
-            assertFalse(GameDAO.GAME_DAO.getGames().isEmpty());
-            assertFalse(UserDAO.USER_DAO.getUsers().isEmpty());
-            assertEquals(AuthDAO.AUTH_DAO.getAllAuthData(), new ArrayList<AuthData>());
+    @Test
+    void clearAllTestPositive() throws DataAccessException {
+        assertFalse(GameDAO.GAME_DAO.getGames().isEmpty());
+        assertFalse(UserDAO.USER_DAO.getUsers().isEmpty());
+        assertFalse(AuthDAO.AUTH_DAO.getAllAuthData().isEmpty());
 
-            ClearAllRequest req = new ClearAllRequest();
-            gameService.clearAll(req);
+        ClearAllRequest req = new ClearAllRequest();
+        gameService.clearAll(req);
 
-            assertTrue(GameDAO.GAME_DAO.getGames().isEmpty());
-            assertTrue(UserDAO.USER_DAO.getUsers().isEmpty());
-            assertTrue(AuthDAO.AUTH_DAO.getAllAuthData().isEmpty());
-        }
+        assertTrue(GameDAO.GAME_DAO.getGames().isEmpty());
+        assertTrue(UserDAO.USER_DAO.getUsers().isEmpty());
+        assertTrue(AuthDAO.AUTH_DAO.getAllAuthData().isEmpty());
+    }
 
 }
