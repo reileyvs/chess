@@ -9,10 +9,10 @@ import java.util.Objects;
 
 public class MemoryGameDAO {
     private final List<GameData> games;
-
     public MemoryGameDAO() {
         games = new ArrayList<>();
     }
+
     public void addGame(GameData game) {
         games.removeIf(thisGame -> Objects.equals(thisGame.gameID(), game.gameID()));
         games.add(game);

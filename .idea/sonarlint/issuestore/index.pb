@@ -25,3 +25,9 @@ Y
 +src/test/java/service/GameServiceTests.java,2\2\22411add9652d3764f0e8a1478d03508a1879682
 X
 (src/main/java/bcrypt/PasswordHasher.java,5\9\597a208699d11920f832e14f529487f3ade16ce1
+V
+&src/main/java/service/UserService.java,f\2\f2bf6a3d9f14ae9a85e78a6ec1a3f81261e3329c
+[
++src/main/java/handlers/ClearAllHandler.java,3\d\3d79726b5cf72e8ca2f66e4c5cea52a7a6328044
+[
++src/test/java/service/UserServiceTests.java,5\7\5715fe8ca66b9cde7a0dae424e8b1eb37410f0ea

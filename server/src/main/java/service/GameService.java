@@ -23,15 +23,19 @@ public class GameService {
     public static final String BAD_REQUEST = "{ \"message\": \"Error: bad request\" }";
     public static final String TAKEN = "{ \"message\": \"Error: already taken\" }";
     final Random random = new Random();
+    public AuthDAO authDAO;
+    public GameService() throws DataAccessException {
+        authDAO = new AuthDAO();
+    }
 
     public List<SimpleGameData> listGames(ListGamesRequest request) throws DataAccessException {
-        if(AuthDAO.getAuthByToken(request.authToken()) == null) {
+        if(authDAO.getAuthByToken(request.authToken()) == null) {
             throw new DataAccessException(UNAUTHORIZED);
         }
         return GameDAO.listGames();
     }
     public CreateGameResponse createGame(CreateGameRequest request) throws DataAccessException {
-        if(AuthDAO.getAuthByToken(request.authToken()) == null) {
+        if(authDAO.getAuthByToken(request.authToken()) == null) {
             throw new DataAccessException(UNAUTHORIZED);
         }
         int gameID =Math.abs(random.nextInt());
@@ -45,7 +49,7 @@ public class GameService {
     }
     public JoinGameResponse joinGame(JoinGameRequest request) throws DataAccessException {
         //find game (if it doesn't exist ex), delete game, add updated game with new player/info
-        AuthData userAuth = AuthDAO.getAuthByToken(request.authToken());
+        AuthData userAuth = authDAO.getAuthByToken(request.authToken());
         if(userAuth == null) {
             throw new DataAccessException(UNAUTHORIZED);
         }
@@ -73,8 +77,8 @@ public class GameService {
         return new JoinGameResponse();
     }
 
-    public ClearAllResponse clearAll(ClearAllRequest request) {
-        AuthDAO.clear();
+    public ClearAllResponse clearAll(ClearAllRequest request) throws DataAccessException {
+        authDAO.clear();
         GameDAO.clear();
         UserDAO.clear();
         return new ClearAllResponse();

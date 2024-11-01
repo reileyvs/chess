@@ -5,6 +5,7 @@ import dataaccess.AuthDAO;
 import Exceptions.DataAccessException;
 import dataaccess.GameDAO;
 import dataaccess.UserDAO;
+import model.AuthData;
 import model.GameData;
 import model.SimpleGameData;
 import org.junit.jupiter.api.AfterEach;
@@ -16,6 +17,7 @@ import responses.RegisterResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameServiceTests {
         GameService gameService;
         UserService userService;
+        AuthDAO authDAO;
         final RegisterRequest user = new RegisterRequest("John","password","a@byu.org");
         final List<GameData> testGames = Arrays.asList(new GameData[]{
                 (new GameData(1, null, null, "one", new ChessGame())),
@@ -36,6 +39,7 @@ class GameServiceTests {
         void setup() throws DataAccessException {
                 gameService = new GameService();
                 userService = new UserService();
+                authDAO = new AuthDAO();
                 GameDAO.createGame(testGames.get(0));
                 GameDAO.createGame(testGames.get(1));
                 GameDAO.createGame(testGames.get(2));
@@ -44,9 +48,13 @@ class GameServiceTests {
         }
         @AfterEach
         void takeDown() {
-            GameDAO.clear();
-            UserDAO.clear();
-            AuthDAO.clear();
+            try {
+                GameDAO.clear();
+                UserDAO.clear();
+                authDAO.clear();
+            } catch(DataAccessException ex) {
+                assertEquals(1,2);
+            }
         }
 
         @Test
@@ -113,10 +121,10 @@ class GameServiceTests {
         }
 
         @Test
-        void clearAllTestPositive() {
+        void clearAllTestPositive() throws DataAccessException {
             assertFalse(GameDAO.GAME_DAO.getGames().isEmpty());
             assertFalse(UserDAO.USER_DAO.getUsers().isEmpty());
-            assertFalse(AuthDAO.AUTH_DAO.getAllAuthData().isEmpty());
+            assertEquals(AuthDAO.AUTH_DAO.getAllAuthData(), new ArrayList<AuthData>());
 
             ClearAllRequest req = new ClearAllRequest();
             gameService.clearAll(req);

@@ -1,7 +1,9 @@
 package service;
 
+import Exceptions.RecordException;
 import dataaccess.AuthDAO;
 import Exceptions.DataAccessException;
+import dataaccess.DatabaseManager;
 import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
@@ -18,15 +20,22 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserServiceTests {
     UserService userService;
     RegisterRequest request;
+    AuthDAO authDAO;
     @BeforeEach
-    void setup() {
+    void setup() throws DataAccessException {
         userService = new UserService();
         request = new RegisterRequest("John","password", "a@byu.org");
+        authDAO = new AuthDAO();
+        DatabaseManager.createDatabase();
     }
     @AfterEach
     void takeDown() {
-        UserDAO.clear();
-        AuthDAO.clear();
+        try {
+            UserDAO.clear();
+            authDAO.clear();
+        } catch(DataAccessException ex) {
+            assertEquals(1,2);
+        }
     }
     @Test
     void registerPositive() {
@@ -77,7 +86,7 @@ class UserServiceTests {
     }
 
     @Test
-    void logoutPositive() {
+    void logoutPositive() throws RecordException {
         UserData tester = new UserData(request.username(),request.password(),request.email());
         try {
             RegisterResponse response = userService.register(request);

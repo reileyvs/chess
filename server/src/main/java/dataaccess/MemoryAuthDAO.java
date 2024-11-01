@@ -7,10 +7,10 @@ import java.util.Objects;
 
 public class MemoryAuthDAO {
     private final ArrayList<AuthData> authData;
-
     public MemoryAuthDAO() {
         authData = new ArrayList<>();
     }
+
     public void addUser(AuthData authDatum) {
         deleteAuthDatum(authDatum.authToken());
         authData.add(authDatum);
