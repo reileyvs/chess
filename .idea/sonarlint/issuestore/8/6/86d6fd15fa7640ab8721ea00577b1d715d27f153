@@ -1,9 +1,3 @@
 
 ‹
-java:S1192$"JDefine a constant instead of duplicating this literal "authToken" 3 times.(ÅîøˆøÿÿÿÿJ$050f8100-38b5-4a83-a8f4-d3c9e43284b3
-o
-java:S1128",Remove this unused import 'chess.ChessGame'.(†¶ØŸ8ú³Õ®2J$bae6ed71-fcdc-4fcd-bfac-ddc3f04839ae
-q
-java:S1128".Remove this unused import 'java.util.Objects'.(¼¸õ›8ú³Õ®2J$a95b3cfa-1336-4233-ba79-d8c1ea2ede3b
-x
-java:S1128"0Remove this unused import 'java.sql.Types.NULL'.(¸İÿúÿÿÿÿ8ú³Õ®2J$e07f12ea-87f4-40c7-a194-33861819b044
+java:S1192!"JDefine a constant instead of duplicating this literal "authToken" 3 times.(ÅîøˆøÿÿÿÿJ$00513b08-dec6-4a4f-b773-adf5f7f52f51

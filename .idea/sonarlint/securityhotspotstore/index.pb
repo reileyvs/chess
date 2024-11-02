@@ -65,3 +65,9 @@ Z
 *src/test/java/dataaccess/UserDAOTests.java,c\f\cf17a52c625302bc435327442d4ac52c04541845
 Z
 *src/test/java/dataaccess/AuthDAOTests.java,c\3\c344eef27fce3bec173f632f5864e5909ff6ad0d
+Y
+)src/main/java/server/GlobalVariables.java,b\6\b6d3097993fc987ef968dd9b223a207f28d820e9
+a
+1src/main/java/exceptions/DataAccessException.java,3\3\332a3302b5889da206160be7e40e19ca72a57829
+]
+-src/main/java/exceptions/RecordException.java,1\c\1c81625db8c428dec80290826eec7b0c82bcb70e

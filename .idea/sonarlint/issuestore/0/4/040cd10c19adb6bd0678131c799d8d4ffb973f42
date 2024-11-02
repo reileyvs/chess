@@ -1,11 +1,5 @@
 
-	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(†¦ì–ıÿÿÿÿ8œì…Í®2J$1b512dd8-5af7-4569-8846-86c3adbda03f
-	java:S112#"FDefine and throw a dedicated exception instead of using a generic one.(ëêßûÿÿÿÿ8œì…Í®2J$03f67b5b-6b58-460b-93ed-d6cce54e9c9b
-‹
-java:S20955"HUse try-with-resources or close this "Connection" in a "finally" clause.(ÎÃç–8Ãì…Í®2J$1bfb8600-ffad-4bbb-9e67-45d862d0d5bc
-—
-java:S20958"OUse try-with-resources or close this "PreparedStatement" in a "finally" clause.(”Ã‰ÿÿÿÿÿ8Ãì…Í®2J$97573b67-46aa-427d-bd3e-72a4dc978621
-‹
-java:S2095P"HUse try-with-resources or close this "Connection" in a "finally" clause.(½¢Öú8Ãì…Í®2J$98618a62-f77f-4fcc-9a37-235ee960a87a
+	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(†¦ì–ıÿÿÿÿ8œì…Í®2J$8fe6549a-8ae5-4d26-87ba-e281a624d42f
+	java:S112#"FDefine and throw a dedicated exception instead of using a generic one.(ëêßûÿÿÿÿ8œì…Í®2J$0b67bb35-45f2-4a01-8dd9-3a7ea417b4d9
 ‚
-java:S1118	":Add a private constructor to hide the implicit public one.( ùÓ‹ÿÿÿÿÿ8Åì…Í®2J$fe5f0a65-a4a0-42c7-b7cc-e50b369e9e9a
+java:S1118	":Add a private constructor to hide the implicit public one.( ùÓ‹ÿÿÿÿÿ8Åì…Í®2J$717c273d-f0f7-4860-a2b1-9a44ec396a1b

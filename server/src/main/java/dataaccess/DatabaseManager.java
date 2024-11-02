@@ -52,7 +52,7 @@ public class DatabaseManager {
         try {
             var conn = DriverManager.getConnection(CONNECTION_URL,USER,PASSWORD);
             conn.setCatalog(DATABASE_NAME);
-            for(var tableStatement : sqlStatements) {
+            for(var tableStatement : SQL_STATEMENTS) {
                 var preparedStatement = conn.prepareStatement(tableStatement);
                 preparedStatement.executeUpdate();
             }
@@ -85,7 +85,7 @@ public class DatabaseManager {
         }
     }
 
-    private static final String[] sqlStatements = {
+    private static final String[] SQL_STATEMENTS = {
             """
             CREATE TABLE IF NOT EXISTS auth (
                 `authToken` VARCHAR(255) NOT NULL,
