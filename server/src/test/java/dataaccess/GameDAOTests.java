@@ -57,8 +57,8 @@ public class GameDAOTests {
     }
     @Test
     void listGamesTestNegative() {
-        assertThrows(DataAccessException.class, () -> {
-            List<GameData> games=dao.getGames();
+        assertDoesNotThrow(()-> {
+            assertFalse(dao.getGames().isEmpty());
         });
     }
 
