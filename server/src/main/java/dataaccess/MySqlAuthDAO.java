@@ -1,17 +1,14 @@
 package dataaccess;
 
-import Exceptions.DataAccessException;
-import Exceptions.RecordException;
-import chess.ChessGame;
+import exceptions.DataAccessException;
+import exceptions.RecordException;
 import model.AuthData;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Objects;
 
 import static dataaccess.Update.executeUpdate;
-import static java.sql.Types.NULL;
 
 public class MySqlAuthDAO {
     private Connection conn;

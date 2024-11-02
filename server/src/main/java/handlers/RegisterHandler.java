@@ -1,6 +1,6 @@
 package handlers;
 
-import Exceptions.DataAccessException;
+import exceptions.DataAccessException;
 import dataaccess.*;
 import requests.RegisterRequest;
 import responses.RegisterResponse;

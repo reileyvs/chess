@@ -1,9 +1,9 @@
 package service;
 
-import Exceptions.RecordException;
+import exceptions.RecordException;
 import bcrypt.PasswordHasher;
 import dataaccess.AuthDAO;
-import Exceptions.DataAccessException;
+import exceptions.DataAccessException;
 import dataaccess.MySqlAuthDAO;
 import dataaccess.MySqlUserDAO;
 import dataaccess.UserDAO;

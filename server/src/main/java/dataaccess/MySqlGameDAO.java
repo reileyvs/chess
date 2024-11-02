@@ -1,7 +1,6 @@
 package dataaccess;
 
-import Exceptions.DataAccessException;
-import bcrypt.PasswordHasher;
+import exceptions.DataAccessException;
 import chess.ChessGame;
 import handlers.Serializer;
 import model.GameData;

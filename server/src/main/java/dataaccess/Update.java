@@ -1,7 +1,7 @@
 package dataaccess;
 
-import Exceptions.DataAccessException;
-import Exceptions.RecordException;
+import exceptions.DataAccessException;
+import exceptions.RecordException;
 import chess.ChessGame;
 
 import java.sql.Connection;

@@ -1,4 +1,4 @@
-package Exceptions;
+package exceptions;
 
 /**
  * Indicates there was an error connecting to the database (specifically 500 exceptions)

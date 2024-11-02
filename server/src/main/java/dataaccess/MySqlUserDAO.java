@@ -1,7 +1,7 @@
 package dataaccess;
 
-import Exceptions.DataAccessException;
-import Exceptions.RecordException;
+import exceptions.DataAccessException;
+import exceptions.RecordException;
 import bcrypt.PasswordHasher;
 import model.UserData;
 

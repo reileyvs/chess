@@ -2,8 +2,7 @@ package service;
 
 import chess.ChessGame;
 import dataaccess.*;
-import Exceptions.DataAccessException;
-import model.AuthData;
+import exceptions.DataAccessException;
 import model.GameData;
 import model.SimpleGameData;
 import org.junit.jupiter.api.AfterEach;
@@ -15,7 +14,6 @@ import responses.RegisterResponse;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;

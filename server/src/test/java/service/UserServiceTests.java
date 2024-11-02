@@ -1,9 +1,9 @@
 package service;
 
-import Exceptions.RecordException;
+import exceptions.RecordException;
 import bcrypt.PasswordHasher;
 import dataaccess.*;
-import Exceptions.DataAccessException;
+import exceptions.DataAccessException;
 import model.AuthData;
 import model.UserData;
 import org.junit.jupiter.api.AfterEach;

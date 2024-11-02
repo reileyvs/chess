@@ -1,4 +1,4 @@
-package Exceptions;
+package exceptions;
 
 public class RecordException extends DataAccessException {
     public static final int NUM = 500;
