@@ -11,7 +11,7 @@ import java.sql.Statement;
 import static java.sql.Types.NULL;
 
 public interface Update {
-    static int executeUpdate(String statement, Connection conn, Object... params) throws DataAccessException {
+    static void executeUpdate(String statement, Connection conn, Object... params) throws DataAccessException {
         try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
             for (var i=0; i < params.length; i++) {
                 var param = params[i];
@@ -30,12 +30,6 @@ public interface Update {
             }
             ps.executeUpdate();
 
-            var rs = ps.getGeneratedKeys();
-            if(rs.next()) {
-                return rs.getInt(1);
-            }
-
-            return 0;
         } catch (SQLException ex) {
             throw new RecordException(ex.getMessage());
         }

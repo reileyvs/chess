@@ -8,8 +8,8 @@ import service.UserService;
 import spark.Request;
 
 public class LoginHandler implements Handler {
-    private MySqlAuthDAO authDAO;
-    private MySqlUserDAO userDAO;
+    private final MySqlAuthDAO authDAO;
+    private final MySqlUserDAO userDAO;
     public LoginHandler(MySqlAuthDAO authDAO, MySqlUserDAO userDAO) {
         this.authDAO=authDAO;
         this.userDAO=userDAO;

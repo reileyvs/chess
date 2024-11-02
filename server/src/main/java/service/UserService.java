@@ -24,7 +24,7 @@ public class UserService {
     public MySqlAuthDAO dao;
     public MySqlUserDAO use;
     public PasswordHasher hasher = new PasswordHasher();
-    public UserService(MySqlAuthDAO authDAO, MySqlUserDAO userDAO) throws DataAccessException {
+    public UserService(MySqlAuthDAO authDAO, MySqlUserDAO userDAO) {
         this.dao= authDAO;
         this.use = userDAO;
 

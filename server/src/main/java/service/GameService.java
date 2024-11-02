@@ -20,10 +20,10 @@ public class GameService {
     public static final String BAD_REQUEST = "{ \"message\": \"Error: bad request\" }";
     public static final String TAKEN = "{ \"message\": \"Error: already taken\" }";
     final Random random = new Random();
-    public MySqlAuthDAO dao;
-    public MySqlUserDAO use;
-    public MySqlGameDAO gameDAO;
-    public GameService(MySqlAuthDAO authDAO, MySqlUserDAO userDAO, MySqlGameDAO gameDAO) throws DataAccessException {
+    public final MySqlAuthDAO dao;
+    public final MySqlUserDAO use;
+    public final MySqlGameDAO gameDAO;
+    public GameService(MySqlAuthDAO authDAO, MySqlUserDAO userDAO, MySqlGameDAO gameDAO) {
         this.dao = authDAO;
         this.use = userDAO;
         this.gameDAO = gameDAO;

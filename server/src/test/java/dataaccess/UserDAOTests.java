@@ -53,7 +53,7 @@ public class UserDAOTests {
         });
     }
     @Test
-    void getUserNegativeTest() throws DataAccessException {
+    void getUserNegativeTest() {
         assertDoesNotThrow(()->{
             assertNull(use.getUser("baaa"));
         });

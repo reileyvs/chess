@@ -9,9 +9,9 @@ import service.GameService;
 import spark.Request;
 
 public class CreateGameHandler implements Handler {
-    private MySqlAuthDAO authDAO;
-    private MySqlUserDAO userDAO;
-    private MySqlGameDAO gameDAO;
+    private final MySqlAuthDAO authDAO;
+    private final MySqlUserDAO userDAO;
+    private final MySqlGameDAO gameDAO;
     public CreateGameHandler(MySqlAuthDAO authDAO, MySqlUserDAO userDAO, MySqlGameDAO gameDAO) {
         this.authDAO=authDAO;
         this.userDAO=userDAO;
