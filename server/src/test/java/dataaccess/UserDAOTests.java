@@ -66,4 +66,14 @@ public class UserDAOTests {
             assertNull(use.getUser("baaa"));
         });
     }
+
+    @Test
+    void clearTestPositive() throws DataAccessException {
+        use.addUser(new UserData("bob","pass","@email.com"));
+        assertFalse(use.getUsers().isEmpty());
+
+        use.clearUsers();
+
+        assertTrue(use.getUsers().isEmpty());
+    }
 }

@@ -65,11 +65,16 @@ public class GameDAOTests {
     @Test
     void createGameTestPositive() {
         try {
-            dao.addGame(new GameData(4,"Job","Jack","name",new ChessGame()));
+            ChessGame.TeamColor teamColor = ChessGame.TeamColor.BLACK;
+            ChessGame chessGame = new ChessGame();
+            chessGame.setTeamTurn(teamColor);
+            dao.addGame(new GameData(4,"Job","Jack","name",chessGame));
         } catch(DataAccessException ex) {
             System.out.println(ex.getMessage());
         }
         assertDoesNotThrow(() -> {
+            GameData game = dao.getGame(4);
+            assertEquals(ChessGame.TeamColor.BLACK, game.game().getTeamTurn());
             assertNotEquals(3, dao.getGame(4).gameID());
         });
     }

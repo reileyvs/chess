@@ -1,13 +1,9 @@
 
 ‹
-java:S1192%"JDefine a constant instead of duplicating this literal "authToken" 3 times.(ÅîøˆøÿÿÿÿJ$44e31dd2-4229-4e33-b6d0-128b1870a0e8
-ƒ	java:S125"<This block of commented-out lines of code should be removed.(†Ê‚¶şÿÿÿÿ8ÑƒÏÀ®2J$c6ff428c-c545-4f1e-b1f4-009948c6173b
-w	java:S125g"<This block of commented-out lines of code should be removed.(ãàƒõJ$e006d15d-cf7b-46fc-8575-683dda1ce00f
+java:S1192$"JDefine a constant instead of duplicating this literal "authToken" 3 times.(ÅîøˆøÿÿÿÿJ$050f8100-38b5-4a83-a8f4-d3c9e43284b3
 o
-java:S1128",Remove this unused import 'chess.ChessGame'.(†¶ØŸ8Ø×ğÍ®2J$7da2b8fa-03b1-493f-9cde-1764135d9c55
+java:S1128",Remove this unused import 'chess.ChessGame'.(†¶ØŸ8ú³Õ®2J$bae6ed71-fcdc-4fcd-bfac-ddc3f04839ae
 q
-java:S1128".Remove this unused import 'java.util.Objects'.(¼¸õ›8Ø×ğÍ®2J$5b8c61a6-5e85-4701-a071-0c6c7a21b098
+java:S1128".Remove this unused import 'java.util.Objects'.(¼¸õ›8ú³Õ®2J$a95b3cfa-1336-4233-ba79-d8c1ea2ede3b
 x
-java:S1128"0Remove this unused import 'java.sql.Types.NULL'.(¸İÿúÿÿÿÿ8Ù×ğÍ®2J$9769f1b0-d620-4410-befd-82543d258f2d
-†
-java:S1144C">Remove this unused private "deleteAuthDatumByUsername" method.(ÇæŸ¨ÿÿÿÿÿ8âƒÏÀ®2J$cbfa4c52-28c9-459a-8e04-535cd552dd48
+java:S1128"0Remove this unused import 'java.sql.Types.NULL'.(¸İÿúÿÿÿÿ8ú³Õ®2J$e07f12ea-87f4-40c7-a194-33861819b044

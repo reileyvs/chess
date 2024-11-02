@@ -13,14 +13,13 @@ import java.util.Objects;
 import static dataaccess.Update.executeUpdate;
 import static java.sql.Types.NULL;
 
-public class MySqlAuthDAO implements AutoCloseable {
+public class MySqlAuthDAO {
     private Connection conn;
     public MySqlAuthDAO() throws DataAccessException {
         conn = DatabaseManager.getConnection();
     }
 
     public void addUser(AuthData authDatum) throws DataAccessException {
-        //deleteAuthDatumByUsername(authDatum.username());
         var statement = "INSERT INTO auth (authToken, username) VALUES(?, ?);";
         executeUpdate(statement, conn, authDatum.authToken(), authDatum.username());
 
@@ -64,10 +63,6 @@ public class MySqlAuthDAO implements AutoCloseable {
         var statement = "DELETE FROM auth WHERE authToken=?";
         executeUpdate(statement, conn, authToken);
     }
-    private void deleteAuthDatumByUsername(String username) throws DataAccessException {
-        var statement = "DELETE FROM auth WHERE username=?";
-        executeUpdate(statement, conn, username);
-    }
     public void clearAuthData() throws DataAccessException {
         var statement = "TRUNCATE TABLE auth";
         executeUpdate(statement,conn);
@@ -91,29 +86,4 @@ public class MySqlAuthDAO implements AutoCloseable {
         }
         return authData;
     }
-
-    @Override
-    public void close() throws Exception {
-        if (conn != null && !conn.isClosed()) {
-            conn.close();
-        }
-    }
-
-
-    /*private void configureDatabase() throws DataAccessException {
-        try {
-            DatabaseManager.createDatabase();
-        } catch(DataAccessException ex) {
-            throw new RecordException("Database Error");
-        }
-        try(var conn = DatabaseManager.getConnection()) {
-            for (var statement : createStatements) {
-                try(var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch(SQLException ex) {
-            throw new RecordException("Database Error");
-        }
-    }*/
 }

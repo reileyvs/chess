@@ -63,3 +63,5 @@ _
 /src/test/java/passoff/chess/ChessMoveTests.java,4\c\4caa1f49c8660a1fcde5ee5c0ce76b72000c0403
 Z
 *src/test/java/dataaccess/UserDAOTests.java,c\f\cf17a52c625302bc435327442d4ac52c04541845
+Z
+*src/test/java/dataaccess/AuthDAOTests.java,c\3\c344eef27fce3bec173f632f5864e5909ff6ad0d
