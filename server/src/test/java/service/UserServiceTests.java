@@ -1,10 +1,9 @@
 package service;
 
 import Exceptions.RecordException;
-import dataaccess.AuthDAO;
+import bcrypt.PasswordHasher;
+import dataaccess.*;
 import Exceptions.DataAccessException;
-import dataaccess.DatabaseManager;
-import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
 import org.junit.jupiter.api.AfterEach;
@@ -20,25 +19,29 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserServiceTests {
     UserService userService;
     RegisterRequest request;
-    AuthDAO authDAO;
+    MySqlAuthDAO auth;
+    MySqlUserDAO use;
+    PasswordHasher hasher = new PasswordHasher();
     @BeforeEach
     void setup() throws DataAccessException {
         DatabaseManager.createDatabase();
-        userService = new UserService();
+        auth = new MySqlAuthDAO();
+        use = new MySqlUserDAO();
+        userService = new UserService(auth, use);
         request = new RegisterRequest("John","password", "a@byu.org");
-        authDAO = new AuthDAO();
+
     }
     @AfterEach
     void takeDown() {
         try {
-            UserDAO.clear();
-            authDAO.clear();
+            UserDAO.clear(use);
+            AuthDAO.clear(auth);
         } catch(DataAccessException ex) {
             assertEquals(1,2);
         }
     }
     @Test
-    void registerPositive() {
+    void registerPositive() throws DataAccessException {
         try {
             userService.register(request);
         } catch(DataAccessException ex) {
@@ -61,7 +64,7 @@ class UserServiceTests {
     }
 
     @Test
-    void loginPositive() {
+    void loginPositive() throws DataAccessException {
         UserData tester = new UserData("John", "password","a@byu.org");
         LoginRequest loginRequest = new LoginRequest(tester.username(), tester.password());
         try {
@@ -72,8 +75,8 @@ class UserServiceTests {
         }
         UserData user = userService.getUser(tester.username());
         assertNotNull(user);
-        assertEquals(user.username(), tester.username());
-        assertEquals(user.password(), tester.password());
+        assertEquals(tester.username(), user.username());
+        assertTrue(hasher.checkHash(tester.password(), user.password()));
     }
     @Test
     void loginNegative() {

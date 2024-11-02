@@ -1,15 +1,21 @@
 package handlers;
 
 import Exceptions.DataAccessException;
+import dataaccess.*;
 import requests.LoginRequest;
 import responses.LoginResponse;
 import service.UserService;
 import spark.Request;
 
 public class LoginHandler implements Handler {
-
+    private MySqlAuthDAO authDAO;
+    private MySqlUserDAO userDAO;
+    public LoginHandler(MySqlAuthDAO authDAO, MySqlUserDAO userDAO) {
+        this.authDAO=authDAO;
+        this.userDAO=userDAO;
+    }
     public String deserialize(Request json) throws DataAccessException {
-        UserService userService = new UserService();
+        UserService userService = new UserService(authDAO, userDAO);
         LoginRequest newRequest = SERIALIZER.deserializeLogin(json.body());
         LoginResponse res = userService.login(newRequest);
         return SERIALIZER.serialize(res);

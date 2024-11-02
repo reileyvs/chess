@@ -1,5 +1,6 @@
 package dataaccess;
 
+import Exceptions.DataAccessException;
 import model.GameData;
 import model.SimpleGameData;
 
@@ -7,23 +8,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface GameDAO {
-    MemoryGameDAO GAME_DAO = new MemoryGameDAO();
 
-
-    static void clear() {
-        GAME_DAO.clearGames();
+    static void clear(MySqlGameDAO dao) throws DataAccessException {
+        dao.clearGames();
     }
-    static void createGame(GameData gameData) {
+    static void createGame(GameData gameData, MySqlGameDAO dao) throws DataAccessException {
         //create new game with gameName
-        GAME_DAO.addGame(gameData);
+        if(dao.getGame(gameData.gameID()) != null) {
+            dao.deleteGame(gameData.gameID());
+        }
+        dao.addGame(gameData);
     }
-    static GameData getGame(int gameID) {
+    static GameData getGame(int gameID, MySqlGameDAO dao) throws DataAccessException {
         //returns the game specified by its gameID
-        return GAME_DAO.getGame(gameID);
+        return dao.getGame(gameID);
     }
-    static List<SimpleGameData> listGames() {
+    static List<SimpleGameData> listGames(MySqlGameDAO dao) throws DataAccessException {
         //returns all games from the database
-        List<GameData> games = GAME_DAO.getGames();
+        List<GameData> games = dao.getGames();
         List<SimpleGameData> gamesNoBoard=new ArrayList<>(List.of());
         for (GameData game : games) {
             gamesNoBoard.add(new SimpleGameData(game.gameID(),game.whiteUsername(),

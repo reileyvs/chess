@@ -4,32 +4,26 @@ import Exceptions.DataAccessException;
 import Exceptions.RecordException;
 import model.AuthData;
 
-import static java.lang.System.exit;
+public interface AuthDAO {
 
-public class AuthDAO {
-    public static MySqlAuthDAO AUTH_DAO;
-
-    public AuthDAO() throws DataAccessException {
-        AUTH_DAO = new MySqlAuthDAO();
+    public static void clear(MySqlAuthDAO dao) throws DataAccessException {
+        dao.clearAuthData();
     }
-    public void clear() throws DataAccessException {
-        AUTH_DAO.clearAuthData();
-    }
-    public void createAuth(AuthData authData) throws DataAccessException {
+    public static void createAuth(AuthData authData, MySqlAuthDAO dao) throws DataAccessException {
         //create authToken and store it in the database as AuthData object
-        AUTH_DAO.addUser(authData);
-        if(getAuthByToken(authData.authToken()) == null) {
+        dao.addUser(authData);
+        if(getAuthByToken(authData.authToken(), dao) == null) {
             throw new DataAccessException("authData could not be saved");
         }
     }
-    public AuthData getAuthByToken(String authToken) throws RecordException {
+    public static AuthData getAuthByToken(String authToken, MySqlAuthDAO dao) throws RecordException {
         //Retrieves AuthData by authToken
-        return AUTH_DAO.getAuthDataByToken(authToken);
+        return dao.getAuthDataByToken(authToken);
     }
-    public AuthData getAuthByUsername(String username) throws RecordException {
-        return AUTH_DAO.getAuthDataByUsername(username);
+    public static AuthData getAuthByUsername(String username, MySqlAuthDAO dao) throws RecordException {
+        return dao.getAuthDataByUsername(username);
     }
-    public void deleteAuth(String authToken) throws DataAccessException {
-        AUTH_DAO.deleteAuthDatum(authToken);
+    public static void deleteAuth(String authToken, MySqlAuthDAO dao) throws DataAccessException {
+        dao.deleteAuthDatum(authToken);
     }
 }

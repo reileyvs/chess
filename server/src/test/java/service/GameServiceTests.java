@@ -1,11 +1,8 @@
 package service;
 
 import chess.ChessGame;
-import dataaccess.AuthDAO;
+import dataaccess.*;
 import Exceptions.DataAccessException;
-import dataaccess.DatabaseManager;
-import dataaccess.GameDAO;
-import dataaccess.UserDAO;
 import model.AuthData;
 import model.GameData;
 import model.SimpleGameData;
@@ -26,7 +23,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class GameServiceTests {
         GameService gameService;
         UserService userService;
-        AuthDAO authDAO;
+        MySqlAuthDAO auth;
+        MySqlUserDAO use;
+        MySqlGameDAO dao;
         final RegisterRequest user = new RegisterRequest("John","password","a@byu.org");
         final List<GameData> testGames = Arrays.asList(new GameData[]{
                 (new GameData(1, null, null, "one", new ChessGame())),
@@ -37,20 +36,22 @@ class GameServiceTests {
     @BeforeEach
     void setup() throws DataAccessException {
             DatabaseManager.createDatabase();
-            gameService = new GameService();
-            userService = new UserService();
-            authDAO = new AuthDAO();
-            GameDAO.createGame(testGames.get(0));
-            GameDAO.createGame(testGames.get(1));
-            GameDAO.createGame(testGames.get(2));
+            use = new MySqlUserDAO();
+            auth = new MySqlAuthDAO();
+            dao = new MySqlGameDAO();
+            gameService = new GameService(auth,use,dao);
+            userService = new UserService(auth,use);
+            GameDAO.createGame(testGames.get(0), dao);
+            GameDAO.createGame(testGames.get(1), dao);
+            GameDAO.createGame(testGames.get(2), dao);
             response = userService.register(user);
     }
     @AfterEach
     void takeDown() {
         try {
-            GameDAO.clear();
-            UserDAO.clear();
-            authDAO.clear();
+            GameDAO.clear(dao);
+            UserDAO.clear(use);
+            AuthDAO.clear(auth);
         } catch(DataAccessException ex) {
             assertEquals(1,2);
         }
@@ -95,14 +96,14 @@ class GameServiceTests {
     }
 
     @Test
-    void joinGamePositiveTest() {
+    void joinGamePositiveTest() throws DataAccessException {
         int gameID = 1;
         JoinGameRequest req = new JoinGameRequest(response.authToken(), "WHITE", gameID);
         assertDoesNotThrow(() -> {
             gameService.joinGame(req);
         });
-        assertNotEquals("", GameDAO.getGame(gameID).whiteUsername());
-        assertEquals(GameDAO.getGame(gameID).whiteUsername(), response.username());
+        assertNotEquals("", GameDAO.getGame(gameID,dao).whiteUsername());
+        assertEquals(response.username(), GameDAO.getGame(gameID, dao).whiteUsername());
     }
     @Test
     void joinGameNegativeTest() {
@@ -121,16 +122,16 @@ class GameServiceTests {
 
     @Test
     void clearAllTestPositive() throws DataAccessException {
-        assertFalse(GameDAO.GAME_DAO.getGames().isEmpty());
-        assertFalse(UserDAO.USER_DAO.getUsers().isEmpty());
-        assertFalse(AuthDAO.AUTH_DAO.getAllAuthData().isEmpty());
+        assertFalse(dao.getGames().isEmpty());
+        assertFalse(use.getUsers().isEmpty());
+        assertFalse(auth.getAllAuthData().isEmpty());
 
         ClearAllRequest req = new ClearAllRequest();
         gameService.clearAll(req);
 
-        assertTrue(GameDAO.GAME_DAO.getGames().isEmpty());
-        assertTrue(UserDAO.USER_DAO.getUsers().isEmpty());
-        assertTrue(AuthDAO.AUTH_DAO.getAllAuthData().isEmpty());
+        assertTrue(dao.getGames().isEmpty());
+        assertTrue(use.getUsers().isEmpty());
+        assertTrue(auth.getAllAuthData().isEmpty());
     }
 
 }

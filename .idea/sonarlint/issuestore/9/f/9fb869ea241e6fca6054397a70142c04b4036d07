@@ -1,9 +1,13 @@
 
+—
+java:S1104"OMake dao a static final constant or non-public and provide accessors if needed.(öİ˜“üÿÿÿÿ8£‘Ò®2J$d1b499a5-dcfb-4256-b1cf-56950deee419
+’
+java:S1104"OMake use a static final constant or non-public and provide accessors if needed.(Ëûõ‚8£‘Ò®2J$ec4b77d2-1cf5-4212-8bc9-a51742d1fb77
 –
-java:S1104"SMake authDAO a static final constant or non-public and provide accessors if needed.(†şĞß8¨ø½¨®2J$91da821d-d232-4170-b21a-80ce109de9fb
-[
-java:S2676)"Use the original value instead.(¼»ÏÂJ$c783d639-bda3-423c-abf0-89eca027ce37
-o
-java:S1172P".Remove this unused method parameter "request".(õû¦­şÿÿÿÿJ$128b6586-34c6-42cd-8e65-2c80ec67539c
-w
-java:S1128"4Remove this unused import 'dataaccess.MySqlAuthDAO'.(×µô8¦–¾¨®2J$3922b9a9-b282-42ed-b382-5a9b8b1a78bb
+java:S1104"SMake gameDAO a static final constant or non-public and provide accessors if needed.(Ğ´ªÓ8£‘Ò®2J$132b0c4c-42b2-4c5d-afce-d845ded60cd5
+¾
+java:S1130"|Remove the declaration of thrown exception 'Exceptions.DataAccessException', as it cannot be thrown from constructor's body.(¢Ò8²‘Ò®2J$91e826b7-0534-4469-b393-29c17ae591ec
+b
+java:S2676*"Use the original value instead.(¼»ÏÂ8´‘Ò®2J$b327426d-7546-4eb9-8927-114c3b801962
+v
+java:S1172Q".Remove this unused method parameter "request".(õû¦­şÿÿÿÿ8»‘Ò®2J$da92f37f-e099-4c3f-abef-47864099fb4e

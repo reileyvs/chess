@@ -21,7 +21,10 @@ public class ChessGame {
         board = new ChessBoard();
         board.resetBoard();
     }
-
+    public ChessGame(ChessGame game) {
+        this.teamTurn = game.teamTurn;
+        this.board = game.board;
+    }
     /**
      * @return Which team's turn it is
      */

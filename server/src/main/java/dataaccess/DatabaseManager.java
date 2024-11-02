@@ -56,6 +56,7 @@ public class DatabaseManager {
                 var preparedStatement = conn.prepareStatement(tableStatement);
                 preparedStatement.executeUpdate();
             }
+            conn.close();
         } catch(SQLException ex) {
             ex.printStackTrace();
             throw new RecordException(ex.getMessage());

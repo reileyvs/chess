@@ -1,11 +1,8 @@
 package service;
 
 import chess.ChessGame;
-import dataaccess.AuthDAO;
+import dataaccess.*;
 import Exceptions.DataAccessException;
-import dataaccess.GameDAO;
-import dataaccess.MySqlAuthDAO;
-import dataaccess.UserDAO;
 import model.AuthData;
 import model.GameData;
 import model.SimpleGameData;
@@ -23,37 +20,41 @@ public class GameService {
     public static final String BAD_REQUEST = "{ \"message\": \"Error: bad request\" }";
     public static final String TAKEN = "{ \"message\": \"Error: already taken\" }";
     final Random random = new Random();
-    public AuthDAO authDAO;
-    public GameService() throws DataAccessException {
-        authDAO = new AuthDAO();
+    public MySqlAuthDAO dao;
+    public MySqlUserDAO use;
+    public MySqlGameDAO gameDAO;
+    public GameService(MySqlAuthDAO authDAO, MySqlUserDAO userDAO, MySqlGameDAO gameDAO) throws DataAccessException {
+        this.dao = authDAO;
+        this.use = userDAO;
+        this.gameDAO = gameDAO;
     }
 
     public List<SimpleGameData> listGames(ListGamesRequest request) throws DataAccessException {
-        if(authDAO.getAuthByToken(request.authToken()) == null) {
+        if(AuthDAO.getAuthByToken(request.authToken(), dao) == null) {
             throw new DataAccessException(UNAUTHORIZED);
         }
-        return GameDAO.listGames();
+        return GameDAO.listGames(gameDAO);
     }
     public CreateGameResponse createGame(CreateGameRequest request) throws DataAccessException {
-        if(authDAO.getAuthByToken(request.authToken()) == null) {
+        if(AuthDAO.getAuthByToken(request.authToken(), dao) == null) {
             throw new DataAccessException(UNAUTHORIZED);
         }
         int gameID =Math.abs(random.nextInt());
         GameData game = new GameData(gameID,null,null,
                 request.gameName(), new ChessGame());
-        GameDAO.createGame(game);
-        if(GameDAO.getGame(game.gameID()) == null) {
+        GameDAO.createGame(game,gameDAO);
+        if(GameDAO.getGame(game.gameID(), gameDAO) == null) {
             throw new DataAccessException("Game not saved");
         }
         return new CreateGameResponse(gameID);
     }
     public JoinGameResponse joinGame(JoinGameRequest request) throws DataAccessException {
         //find game (if it doesn't exist ex), delete game, add updated game with new player/info
-        AuthData userAuth = authDAO.getAuthByToken(request.authToken());
+        AuthData userAuth = AuthDAO.getAuthByToken(request.authToken(), dao);
         if(userAuth == null) {
             throw new DataAccessException(UNAUTHORIZED);
         }
-        GameData game = GameDAO.getGame(request.gameID());
+        GameData game = GameDAO.getGame(request.gameID(), gameDAO);
         GameData updatedGame = null;
         if(game == null) {
             throw new DataAccessException(BAD_REQUEST);
@@ -73,14 +74,14 @@ public class GameService {
         } else {
             throw new DataAccessException(BAD_REQUEST);
         }
-        GameDAO.createGame(updatedGame);
+        GameDAO.createGame(updatedGame, gameDAO);
         return new JoinGameResponse();
     }
 
     public ClearAllResponse clearAll(ClearAllRequest request) throws DataAccessException {
-        authDAO.clear();
-        GameDAO.clear();
-        UserDAO.clear();
+        AuthDAO.clear(dao);
+        GameDAO.clear(gameDAO);
+        UserDAO.clear(use);
         return new ClearAllResponse();
     }
 

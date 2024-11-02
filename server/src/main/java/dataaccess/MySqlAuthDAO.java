@@ -10,9 +10,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
+import static dataaccess.Update.executeUpdate;
 import static java.sql.Types.NULL;
 
-public class MySqlAuthDAO {
+public class MySqlAuthDAO implements AutoCloseable {
     private Connection conn;
     public MySqlAuthDAO() throws DataAccessException {
         conn = DatabaseManager.getConnection();
@@ -21,13 +22,13 @@ public class MySqlAuthDAO {
     public void addUser(AuthData authDatum) throws DataAccessException {
         //deleteAuthDatumByUsername(authDatum.username());
         var statement = "INSERT INTO auth (authToken, username) VALUES(?, ?);";
-        executeUpdate(statement, authDatum.authToken(), authDatum.username());
+        executeUpdate(statement, conn, authDatum.authToken(), authDatum.username());
 
 
     }
 
     public AuthData getAuthDataByUsername(String username) throws RecordException {
-        var statement = "SELECT * FROM auth WHERE username=\'" + username + "\'";
+        var statement ="SELECT * FROM auth WHERE username='" + username + "'";
         AuthData authData=null;
         ResultSet set;
         try(PreparedStatement preparedStatement = conn.prepareStatement(statement)) {
@@ -61,15 +62,15 @@ public class MySqlAuthDAO {
     }
     public void deleteAuthDatum(String authToken) throws DataAccessException {
         var statement = "DELETE FROM auth WHERE authToken=?";
-        executeUpdate(statement, authToken);
+        executeUpdate(statement, conn, authToken);
     }
     private void deleteAuthDatumByUsername(String username) throws DataAccessException {
         var statement = "DELETE FROM auth WHERE username=?";
-        executeUpdate(statement, username);
+        executeUpdate(statement, conn, username);
     }
     public void clearAuthData() throws DataAccessException {
         var statement = "TRUNCATE TABLE auth";
-        executeUpdate(statement);
+        executeUpdate(statement,conn);
     }
 
     public Collection<AuthData> getAllAuthData() throws DataAccessException {
@@ -91,26 +92,11 @@ public class MySqlAuthDAO {
         return authData;
     }
 
-    private int executeUpdate(String statement, Object... params) throws DataAccessException {
-            try (var ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS)) {
-                for (var i=0; i < params.length; i++) {
-                    var param = params[i];
-                    if (param instanceof String p) ps.setString(i+1,p);
-                    else if (param instanceof Integer p) ps.setInt(i+1,p);
-                    else if (param instanceof ChessGame p) ps.setString(i+1,p.toString());
-                    else if (param == null) ps.setNull(i+1,NULL);
-                }
-                ps.executeUpdate();
-
-                var rs = ps.getGeneratedKeys();
-                if(rs.next()) {
-                    return rs.getInt(1);
-                }
-
-                return 0;
-            } catch (SQLException ex) {
-                throw new RecordException(ex.getMessage());
-            }
+    @Override
+    public void close() throws Exception {
+        if (conn != null && !conn.isClosed()) {
+            conn.close();
+        }
     }
 
 

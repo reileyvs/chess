@@ -1,5 +1,6 @@
 package handlers;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import requests.*;
 
@@ -19,7 +20,9 @@ public class Serializer<T> {
     }
 
 
-
+    public ChessGame deserializeChessGame(String json) {
+        return serializer.fromJson(json, ChessGame.class);
+    }
 
 
     public CreateBody deserializeCreateGame(String json) {

@@ -1,8 +1,11 @@
 package service;
 
 import Exceptions.RecordException;
+import bcrypt.PasswordHasher;
 import dataaccess.AuthDAO;
 import Exceptions.DataAccessException;
+import dataaccess.MySqlAuthDAO;
+import dataaccess.MySqlUserDAO;
 import dataaccess.UserDAO;
 import model.AuthData;
 import model.UserData;
@@ -18,9 +21,13 @@ public class UserService {
     public static final String UNAUTHORIZED = "{ \"message\": \"Error: unauthorized\" }";
     public static final String BAD_REQUEST = "{ \"message\": \"Error: bad request\" }";
     public static final String TAKEN = "{ \"message\": \"Error: already taken\" }";
-    public AuthDAO authDAO;
-    public UserService() throws DataAccessException {
-        authDAO = new AuthDAO();
+    public MySqlAuthDAO dao;
+    public MySqlUserDAO use;
+    public PasswordHasher hasher = new PasswordHasher();
+    public UserService(MySqlAuthDAO authDAO, MySqlUserDAO userDAO) throws DataAccessException {
+        this.dao= authDAO;
+        this.use = userDAO;
+
     }
     public RegisterResponse register(RegisterRequest user) throws DataAccessException {
         if(Objects.equals(user.username(), "") || Objects.equals(user.password(), "")
@@ -28,46 +35,46 @@ public class UserService {
                 || user.password() == null || user.email() == null) {
             throw new DataAccessException(BAD_REQUEST);
         }
-        UserData foundUser = UserDAO.getUser(user.username());
+        UserData foundUser = UserDAO.getUser(user.username(), use);
         if(foundUser != null) {
             throw new DataAccessException(TAKEN);
         }
         UserData newUser = new UserData(user.username(), user.password(), user.email());
-        UserDAO.createUser(newUser);
+        UserDAO.createUser(newUser, use);
         AuthData userAuth = new AuthData(UUID.randomUUID().toString(),user.username());
-        authDAO.createAuth(userAuth);
+        AuthDAO.createAuth(userAuth, dao);
 
         return new RegisterResponse(userAuth.authToken(),userAuth.username());
     }
 
     public LoginResponse login(LoginRequest user) throws DataAccessException {
-        UserData foundUser = UserDAO.getUser(user.username());
-        if(foundUser == null || !Objects.equals(foundUser.password(), user.password())) {
+        UserData foundUser = UserDAO.getUser(user.username(), use);
+        if(foundUser == null || !hasher.checkHash(user.password(), foundUser.password())) {
             throw new DataAccessException(UNAUTHORIZED);
         }
 
         AuthData userAuth = new AuthData(UUID.randomUUID().toString(), foundUser.username());
-        authDAO.createAuth(userAuth);
+        AuthDAO.createAuth(userAuth, dao);
 
         return new LoginResponse(userAuth.authToken(), userAuth.username());
     }
 
     public LogoutResponse logout(LogoutRequest auth) throws DataAccessException {
-        AuthData userAuth = authDAO.getAuthByToken(auth.authToken());
+        AuthData userAuth = AuthDAO.getAuthByToken(auth.authToken(), dao);
         if(userAuth == null) {
             throw new DataAccessException(UNAUTHORIZED);
         }
-        authDAO.deleteAuth(userAuth.authToken());
-        if(authDAO.getAuthByToken(auth.authToken()) != null) {
+        AuthDAO.deleteAuth(userAuth.authToken(), dao);
+        if(AuthDAO.getAuthByToken(auth.authToken(), dao) != null) {
             throw new DataAccessException("User cannot be deleted");
         }
         return new LogoutResponse();
     }
 
-    UserData getUser(String username) {
-        return UserDAO.getUser(username);
+    UserData getUser(String username) throws DataAccessException {
+        return UserDAO.getUser(username, use);
     }
     AuthData getAuth(String username) throws RecordException {
-        return authDAO.getAuthByUsername(username);
+        return AuthDAO.getAuthByUsername(username, dao);
     }
 }
