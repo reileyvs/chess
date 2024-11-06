@@ -24,3 +24,9 @@ U
 :
 
 client.iml,8\1\81276a78d81379d1349e1ff0f16babcbe4db95cc
+V
+&src/main/java/client/ServerFacade.java,f\9\f93e641c237cc7bc5d1ac95b4ab90bc842130f38
+Y
+)src/main/java/client/ClientException.java,1\9\19883e8b83fa5d65659fad146ed56f229fe2ae3c
+a
+1src/main/java/exceptions/DataAccessException.java,3\3\332a3302b5889da206160be7e40e19ca72a57829

@@ -80,6 +80,15 @@ public class AuthDAOTests {
     }
 
     @Test
+    void getAllAuthDataPositive() throws DataAccessException {
+        assertEquals(0, auth.getAllAuthData().size());
+    }
+    @Test
+    void getAllAuthDataNegative() throws DataAccessException {
+        assertNotEquals(1,auth.getAllAuthData().size());
+    }
+
+    @Test
     void clearTestPositive() throws DataAccessException {
         assertDoesNotThrow(()->{
             auth.addUser(authData);
