@@ -5,14 +5,19 @@ import com.google.gson.JsonParseException;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
-public interface ClientCommunicator {
+public class ClientCommunicator {
     static final Gson gson = new Gson();
-
-    static <T> T makeCall(String path, String method, String authToken, Object req, Class<T> result) throws ClientException {
+    String serverUrl;
+    public ClientCommunicator(String url) {
+        serverUrl = url;
+    }
+    public <T> T makeCall(String path, String method, String authToken, Object req, Class<T> result) throws ClientException {
         try {
-            URL url = new URL(path);
+            URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection conn;
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod(method);
@@ -32,12 +37,14 @@ public interface ClientCommunicator {
 
             conn.connect();
             return doPost(conn, path, method, result);
-        } catch (IOException var9) {
+        } catch (IOException ex) {
             throw new ClientException(String.format("Failed to connect to server on %s %s", method, path));
+        } catch (URISyntaxException ex) {
+            throw new ClientException(String.format("URI failed"));
         }
     }
 
-    static <T> T doPost(HttpURLConnection conn, String path, String method, Class<T> result) throws IOException, ClientException {
+    private <T> T doPost(HttpURLConnection conn, String path, String method, Class<T> result) throws IOException, ClientException {
         int statusCode = conn.getResponseCode();
         if (statusCode != 404 && statusCode != 405) {
             String json = doGet(conn, statusCode);
@@ -55,7 +62,7 @@ public interface ClientCommunicator {
         }
     }
 
-    static String doGet(HttpURLConnection conn, int statusCode) throws IOException {
+    private String doGet(HttpURLConnection conn, int statusCode) throws IOException {
         InputStream iStream;
         if (statusCode / 100 == 2) {
             iStream = conn.getInputStream();
