@@ -14,7 +14,7 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessPiece {
-
+    private char pieceLetter;
     private final ChessGame.TeamColor pieceColor;
     private final ChessPiece.PieceType pieceType;
 
@@ -43,6 +43,14 @@ public class ChessPiece {
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
         this.pieceType = type;
+        switch (this.pieceType) {
+            case KING -> this.pieceLetter = 'K';
+            case QUEEN -> this.pieceLetter = 'Q';
+            case BISHOP -> this.pieceLetter = 'B';
+            case KNIGHT -> this.pieceLetter = 'H';
+            case ROOK -> this.pieceLetter = 'R';
+            case PAWN -> this.pieceLetter = 'P';
+        }
 
     }
 
@@ -109,5 +117,8 @@ public class ChessPiece {
             return Collections.emptyList();
         }
         return moves;
+    }
+    public char getPieceLetter() {
+        return this.pieceLetter;
     }
 }
