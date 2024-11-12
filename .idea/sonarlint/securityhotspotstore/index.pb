@@ -17,3 +17,13 @@ G
 src/main/java/Main.java,e\4\e44a8606ce010ad9b89aafdfcee2ab49afbf6d10
 V
 &src/main/java/client/ServerFacade.java,f\9\f93e641c237cc7bc5d1ac95b4ab90bc842130f38
+[
++src/test/java/client/ServerFacadeTests.java,1\5\15ed76843373412ef09df4eda6fd4f94cd64533b
+P
+ src/main/java/server/Server.java,4\c\4c405aa622276106ee9ef8c3a2fbee4e76dcafbb
+]
+-src/main/java/responses/RegisterResponse.java,7\f\7f4c679763e11e6befff1396a7bde4d3e05fd6c4
+V
+&src/main/java/service/UserService.java,f\2\f2bf6a3d9f14ae9a85e78a6ec1a3f81261e3329c
+Z
+*src/main/java/responses/LoginResponse.java,2\d\2d73b5e7869ed259d28448deb15bf9ea30ca9880
