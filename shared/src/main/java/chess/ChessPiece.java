@@ -119,6 +119,7 @@ public class ChessPiece {
         return moves;
     }
     public char getPieceLetter() {
+        //For ui letter representation on the chessboard
         return this.pieceLetter;
     }
 }
