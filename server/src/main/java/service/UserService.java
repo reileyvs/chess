@@ -44,7 +44,7 @@ public class UserService {
         AuthData userAuth = new AuthData(UUID.randomUUID().toString(),user.username());
         AuthDAO.createAuth(userAuth, dao);
 
-        return new RegisterResponse(userAuth.authToken(),userAuth.username());
+        return new RegisterResponse(userAuth.authToken(),userAuth.username(), null);
     }
 
     public LoginResponse login(LoginRequest user) throws DataAccessException {
@@ -56,7 +56,7 @@ public class UserService {
         AuthData userAuth = new AuthData(UUID.randomUUID().toString(), foundUser.username());
         AuthDAO.createAuth(userAuth, dao);
 
-        return new LoginResponse(userAuth.authToken(), userAuth.username());
+        return new LoginResponse(userAuth.authToken(), userAuth.username(),null);
     }
 
     public LogoutResponse logout(LogoutRequest auth) throws DataAccessException {
