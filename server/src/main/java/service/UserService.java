@@ -68,7 +68,7 @@ public class UserService {
         if(AuthDAO.getAuthByToken(auth.authToken(), dao) != null) {
             throw new DataAccessException("User cannot be deleted");
         }
-        return new LogoutResponse();
+        return new LogoutResponse(null);
     }
 
     UserData getUser(String username) throws DataAccessException {

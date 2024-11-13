@@ -23,7 +23,7 @@ public class ListGamesHandler implements Handler{
         GameService gameService = new GameService(authDAO, userDAO, gameDAO);
         ListGamesRequest req = new ListGamesRequest(json.headers("Authorization"));
         List<SimpleGameData> gameList = gameService.listGames(req);
-        ListGamesResponse res = new ListGamesResponse(gameList);
+        ListGamesResponse res = new ListGamesResponse(gameList, null);
         return SERIALIZER.serialize(res);
     }
 }

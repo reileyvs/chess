@@ -43,12 +43,12 @@ public class ServerFacade {
         return client.makeCall("/game", "GET", authToken, null, ListGamesResponse.class);
     }
 
-    public CreateGameResponse createGame(CreateGameRequest req, String authToken) throws ClientException {
-        return client.makeCall("/game", "POST", authToken, req, CreateGameResponse.class);
+    public CreateGameResponse createGame(CreateGameRequest req) throws ClientException {
+        return client.makeCall("/game", "POST", req.authToken(), req, CreateGameResponse.class);
     }
 
-    public JoinGameResponse joinPlayer(JoinGameRequest req, String authToken) throws ClientException {
-        return client.makeCall("/game", "PUT", authToken, req, JoinGameResponse.class);
+    public JoinGameResponse joinPlayer(JoinGameRequest req) throws ClientException {
+        return client.makeCall("/game", "PUT", req.authToken(), req, JoinGameResponse.class);
     }
 
     public ClearAllResponse clear() throws ClientException {

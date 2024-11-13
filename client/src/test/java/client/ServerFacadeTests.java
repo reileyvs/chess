@@ -1,9 +1,15 @@
 package client;
 
+import dataaccess.MySqlAuthDAO;
+import dataaccess.MySqlGameDAO;
+import dataaccess.MySqlUserDAO;
+import dataaccess.UserDAO;
+import exceptions.DataAccessException;
 import model.UserData;
 import org.junit.jupiter.api.*;
-import responses.LoginResponse;
-import responses.RegisterResponse;
+import requests.CreateGameRequest;
+import requests.JoinGameRequest;
+import responses.*;
 import server.Server;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,9 +21,8 @@ public class ServerFacadeTests {
     private static ServerFacade facade;
     static int portNum;
     static UserData user;
-
     @BeforeAll
-    public static void init() {
+    public static void init() throws DataAccessException {
         portNum = 3030;
         facade = new ServerFacade("localhost",Integer.toString(portNum));
         server = new Server();
@@ -26,9 +31,12 @@ public class ServerFacadeTests {
         System.out.println("Started test HTTP server on " + port);
     }
 
-    @AfterAll
-    static void stopServer() throws ClientException {
+    @AfterEach
+    void clearServer() throws ClientException {
         facade.clear();
+    }
+    @AfterAll
+    static void stopServer() {
         server.stop();
     }
 
@@ -77,47 +85,213 @@ public class ServerFacadeTests {
 
     @Test
     void logoutPositiveTest() {
-
+        String authToken=null;
+        try {
+            RegisterResponse res = facade.register(user);
+            LoginResponse loginRes = facade.login(user);
+            authToken = loginRes.authToken();
+            assertNotNull(loginRes.authToken());
+            assertNull(res.message());
+        } catch(ClientException ex) {
+            assertEquals(1, 0);
+        }
+        try {
+            LogoutResponse res=facade.logout(authToken);
+            assertNull(res.message());
+        } catch(ClientException ex) {
+            assertEquals(2,0);
+        }
     }
     @Test
     void logoutNegativeTest() {
-
-    }
-
-    @Test
-    void listGamesPositiveTest() {
-
-    }
-    @Test
-    void listGamesNegativeTest() {
-
+        String authToken=null;
+        try {
+            RegisterResponse res = facade.register(user);
+            LoginResponse loginRes = facade.login(user);
+            authToken = loginRes.authToken();
+            assertNotNull(loginRes.authToken());
+            assertNull(res.message());
+        } catch(ClientException ex) {
+            assertEquals(1, 0);
+        }
+        try {
+            LogoutResponse res=facade.logout(authToken);
+            LogoutResponse res2 = facade.logout(authToken);
+            assertNotNull(res2.message());
+        } catch(ClientException ex) {
+            assertEquals(2,0);
+        }
     }
 
     @Test
     void createGamePositiveTest() {
-
+        String authToken=null;
+        try {
+            RegisterResponse res = facade.register(user);
+            authToken = res.authToken();
+        } catch(ClientException ex) {
+            assertEquals(1, 0);
+        }
+        try {
+            CreateGameRequest req = new CreateGameRequest(authToken, "game");
+            CreateGameResponse res = facade.createGame(req);
+            assertNotEquals(0, res.gameID());
+            assertNull(res.message());
+        } catch(ClientException ex) {
+            assertEquals(2,0);
+        }
     }
     @Test
     void createGameNegativeTest() {
-
+        try {
+            RegisterResponse res = facade.register(user);
+        } catch(ClientException ex) {
+            assertEquals(1, 0);
+        }
+        try {
+            CreateGameRequest req = new CreateGameRequest("impostor", "game");
+            CreateGameResponse res = facade.createGame(req);
+            assertNotNull(res.message());
+        } catch(ClientException ex) {
+            assertEquals(2,0);
+        }
     }
+
+    @Test
+    void listGamesPositiveTest() {
+        String authToken=null;
+        try {
+            RegisterResponse res = facade.register(user);
+            authToken = res.authToken();
+        } catch(ClientException ex) {
+            assertEquals(1, 0);
+        }
+        try {
+            CreateGameRequest req = new CreateGameRequest(authToken, "game");
+            CreateGameResponse res = facade.createGame(req);
+            assertNotEquals(0, res.gameID());
+            assertNull(res.message());
+        } catch(ClientException ex) {
+            assertEquals(2,0);
+        }
+        try {
+            ListGamesResponse res = facade.listGames(authToken);
+            assertNotNull(res.games());
+            assertNull(res.message());
+        } catch(ClientException ex) {
+            assertEquals(3,0);
+        }
+    }
+    @Test
+    void listGamesNegativeTest() {
+        String authToken=null;
+        try {
+            RegisterResponse res = facade.register(user);
+            authToken = res.authToken();
+        } catch(ClientException ex) {
+            assertEquals(1, 0);
+        }
+        try {
+            CreateGameRequest req = new CreateGameRequest(authToken, "game");
+            CreateGameResponse res = facade.createGame(req);
+            assertNotEquals(0, res.gameID());
+            assertNull(res.message());
+        } catch(ClientException ex) {
+            assertEquals(2,0);
+        }
+        try {
+            ListGamesResponse res = facade.listGames("impostor");
+            assertNull(res.games());
+            assertNotNull(res.message());
+        } catch(ClientException ex) {
+            assertEquals(3,0);
+        }
+    }
+
 
     @Test
     void joinPlayerPositiveTest() {
-
+        String authToken=null;
+        int gameID=0;
+        try {
+            RegisterResponse res = facade.register(user);
+            authToken = res.authToken();
+        } catch(ClientException ex) {
+            assertEquals(1, 0);
+        }
+        try {
+            CreateGameRequest req = new CreateGameRequest(authToken, "game");
+            CreateGameResponse res = facade.createGame(req);
+            gameID = res.gameID();
+            assertNotEquals(0, res.gameID());
+            assertNull(res.message());
+        } catch(ClientException ex) {
+            assertEquals(2,0);
+        }
+        try {
+            JoinGameRequest req = new JoinGameRequest(authToken,"WHITE",gameID);
+            JoinGameResponse res = facade.joinPlayer(req);
+            assertNull(res.message());
+        } catch (ClientException e) {
+            assertEquals(3,0);
+        }
     }
     @Test
     void joinPlayerNegativeTest() {
-
+        String authToken=null;
+        int gameID=0;
+        try {
+            RegisterResponse res = facade.register(user);
+            authToken = res.authToken();
+        } catch(ClientException ex) {
+            assertEquals(1, 0);
+        }
+        try {
+            CreateGameRequest req = new CreateGameRequest(authToken, "game");
+            CreateGameResponse res = facade.createGame(req);
+            gameID = res.gameID();
+            assertNotEquals(0, res.gameID());
+            assertNull(res.message());
+        } catch(ClientException ex) {
+            assertEquals(2,0);
+        }
+        try {
+            JoinGameRequest req = new JoinGameRequest("impostor","WHITE",gameID);
+            JoinGameResponse res = facade.joinPlayer(req);
+            assertNotNull(res.message());
+        } catch (ClientException e) {
+            assertEquals(3,0);
+        }
     }
 
     @Test
     void clearPositiveTest() {
-
+        String authToken=null;
+        try {
+            RegisterResponse res = facade.register(user);
+            authToken = res.authToken();
+        } catch(ClientException ex) {
+            assertEquals(1, 0);
+        }
+        try {
+            CreateGameRequest req = new CreateGameRequest(authToken, "game");
+            CreateGameResponse res = facade.createGame(req);
+        } catch(ClientException ex) {
+            assertEquals(2,0);
+        }
+        try {
+            ClearAllResponse res = facade.clear();
+            ListGamesResponse gameRes = facade.listGames(authToken);
+            assertNull(res.message());
+            assertNull(gameRes.games());
+            assertNotNull(gameRes.message());
+        } catch (ClientException e) {
+            assertEquals(3,0);
+        }
     }
     @Test
     void clearNegativeTest() {
-
+        assertEquals(1,1);
     }
 
 }

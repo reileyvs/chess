@@ -46,7 +46,7 @@ public class GameService {
         if(GameDAO.getGame(game.gameID(), gameDAO) == null) {
             throw new DataAccessException("Game not saved");
         }
-        return new CreateGameResponse(gameID);
+        return new CreateGameResponse(gameID, null);
     }
     public JoinGameResponse joinGame(JoinGameRequest request) throws DataAccessException {
         //find game (if it doesn't exist ex), delete game, add updated game with new player/info
@@ -75,14 +75,14 @@ public class GameService {
             throw new DataAccessException(BAD_REQUEST);
         }
         GameDAO.createGame(updatedGame, gameDAO);
-        return new JoinGameResponse();
+        return new JoinGameResponse(null);
     }
 
     public ClearAllResponse clearAll(ClearAllRequest request) throws DataAccessException {
         AuthDAO.clear(dao);
         GameDAO.clear(gameDAO);
         UserDAO.clear(use);
-        return new ClearAllResponse();
+        return new ClearAllResponse(null);
     }
 
 

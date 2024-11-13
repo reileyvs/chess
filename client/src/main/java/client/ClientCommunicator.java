@@ -40,7 +40,7 @@ public class ClientCommunicator {
         } catch (IOException ex) {
             throw new ClientException(String.format("Failed to connect to server on %s %s", method, path));
         } catch (URISyntaxException ex) {
-            throw new ClientException(String.format("URI failed"));
+            throw new ClientException("URI failed");
         }
     }
 
