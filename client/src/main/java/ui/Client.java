@@ -1,7 +1,10 @@
 package ui;
 
 import chess.ChessGame;
+import client.ClientException;
 import client.ServerFacade;
+import model.UserData;
+import responses.RegisterResponse;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -46,7 +49,7 @@ public class Client {
             try {
                 switch(line) {
                     case "1":
-                        //registerLoop();
+                        register();
                         break;
                     case "2":
                         //loginLoop();
@@ -65,5 +68,28 @@ public class Client {
                 out.println("That is invalid input");
             }
         }
+    }
+
+    private void register() {
+        UserData user = printRegisterHelp();
+        try {
+            RegisterResponse res = serverFacade.register(user);
+            if(res.message() != null) {
+                out.println(res.message() + " (this user may already be taken)");
+            }
+        } catch(ClientException ex) {
+            out.println("There was an error signing you in");
+        }
+    }
+    private UserData printRegisterHelp() {
+        out.println("Type your username:");
+        Scanner scanner = new Scanner(System.in);
+        String username = scanner.nextLine();
+        out.println("Type your new password:");
+        out.flush();
+        String password = scanner.nextLine();
+        out.println("Type your email:");
+        String email = scanner.nextLine();
+        return new UserData(username, password, email);
     }
 }
