@@ -25,6 +25,7 @@ public class Client {
         out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
     }
     public void initialMenu() {
+        out.print(EscapeSequences.RESET_TEXT_COLOR);
         out.println("Welcome to chess. Sign in or register to start");
         boolean successful=false;
         while(!successful){
@@ -44,6 +45,7 @@ public class Client {
         board.drawChessBoard(team);
     }
     public void printInitPrompt() {
+        out.print(EscapeSequences.RESET_TEXT_COLOR);
         out.println("\nType the number corresponding to the action you want:");
         out.println("1. Register");
         out.println("2. Log in");
@@ -90,12 +92,14 @@ public class Client {
         try {
             RegisterResponse res = serverFacade.register(user);
             if(res.message() != null) {
+                out.print(EscapeSequences.SET_TEXT_COLOR_RED);
                 out.println(res.message() + " (this user may already be taken)");
             } else {
                 userAuthtoken = res.authToken();
                 return true;
             }
         } catch(ClientException ex) {
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
             out.println("There was an error signing you in");
         }
         return false;
@@ -117,12 +121,14 @@ public class Client {
             LoginRequest req = printLoginHelp();
             LoginResponse res = serverFacade.login(req);
             if(res.message() != null) {
+                out.print(EscapeSequences.SET_TEXT_COLOR_RED);
                 out.println(res.message() + " (you probably put your username or password wrong)");
             } else {
                 userAuthtoken = res.authToken();
                 return true;
             }
         } catch(ClientException ex) {
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
             out.println("There was an error logging you in");
         }
         return false;
@@ -170,17 +176,24 @@ public class Client {
                     break;
                 //logout
                 case "5":
+                    logout();
                     break;
                 //quit
                 case "6":
                     quit = true;
                     break;
+                case "7":
+                    printPostHelp();
+                    break;
                 default:
+                    out.print(EscapeSequences.SET_TEXT_COLOR_RED);
                     out.println("Invalid input");
+                    printPostHelp();
                     printPostPrompt();
             }
             return quit;
         } catch(Exception ex) {
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
             out.println("That is invalid input");
         }
         return quit;
@@ -193,12 +206,18 @@ public class Client {
         out.println("3. Play game");
         out.println("4. Observe game");
         out.println("5. Logout");
-        out.println("6. Quit\n");
+        out.println("6. Quit");
+        out.println("7. Help\n");
     }
     private void createGame(String userAuthtoken) {
         Scanner scanner = new Scanner(System.in);
         out.println("What would you like to name this game?");
         String gameName = scanner.nextLine();
+        if(gameName.equals(null) || gameName.equals("")) {
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            out.println("Game was not created. You must put a game name!");
+            return;
+        }
         CreateGameRequest req = new CreateGameRequest(userAuthtoken, gameName);
         try {
             CreateGameResponse res=serverFacade.createGame(req);
@@ -208,6 +227,7 @@ public class Client {
                 out.println("Game " + gameName + " created!");
             }
         } catch(ClientException ex) {
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
             out.println("There was an error while creating your game");
         }
     }
@@ -220,12 +240,15 @@ public class Client {
                 out.println("Game list:");
                 for(int i = 0; i < res.games().size(); i++) {
                     GameData game = res.games().get(i);
+                    String white = (game.whiteUsername() != null) ? game.whiteUsername() : "---";
+                    String black = (game.blackUsername() != null) ? game.blackUsername() : "---";
                     out.println(i+1 + ") " + game.gameName());
-                    out.println("\tWhite player: " + game.whiteUsername());
-                    out.println("\tBlack player: " + game.blackUsername());
+                    out.println("\tWhite player: " + white);
+                    out.println("\tBlack player: " + black);
                 }
             }
         } catch(ClientException ex) {
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
             out.println("There was an error while creating your game");
         }
     }
@@ -236,6 +259,7 @@ public class Client {
         out.println("What color player do you want to be? WHITE or BLACK");
         String teamColor = scanner.nextLine();
         if(!teamColor.equals("WHITE") && !teamColor.equals("BLACK")) {
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
             out.println("Invalid color");
             return;
         }
@@ -245,6 +269,7 @@ public class Client {
                 out.println(res.message());
             } else {
                 if(gameIndex > res.games().size() || gameIndex < 1) {
+                    out.print(EscapeSequences.SET_TEXT_COLOR_RED);
                     out.println("Invalid game number. There are currently only " + res.games().size() + " games");
                 } else {
                     GameData game = res.games().get(gameIndex-1);
@@ -259,6 +284,7 @@ public class Client {
                 }
             }
         } catch(ClientException ex) {
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
             out.println("There was an error joining the game");
         }
     }
@@ -272,6 +298,7 @@ public class Client {
                 out.println(res.message());
             } else {
                 if(gameIndex > res.games().size() || gameIndex < 1) {
+                    out.print(EscapeSequences.SET_TEXT_COLOR_RED);
                     out.println("Invalid game number. There are currently only " + res.games().size() + " games");
                 } else {
                     GameData game = res.games().get(gameIndex-1);
@@ -280,7 +307,18 @@ public class Client {
                 }
             }
         } catch(ClientException ex) {
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
             out.println("There was an error joining the game");
         }
+    }
+    private void logout() {
+        LogoutResponse res = new LogoutResponse(null);
+        if(res.message() != null) {
+            out.println(res.message());
+        }
+        initialMenu();
+    }
+    private void printPostHelp() {
+        out.println("1 to create game, 2 to list games, 3 to play games, 4 to observe a game, 5 to logout, 6 to quit");
     }
 }
