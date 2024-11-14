@@ -1,14 +1,14 @@
 package main;
 
 import exceptions.DataAccessException;
-import server.Server;
+//import server.Server;
 import ui.Client;
 
 public class Main {
     public static void main(String[] args) throws DataAccessException {
-        Server server = new Server();
-        int port = server.run(0);
-        Client client = new Client("http://localhost:" + port);
-        client.initialMenu();
+       // Server server = new Server();
+       // int port = server.run(0);
+        //Client client = new Client("http://localhost:" + port);
+        //client.initialMenu();
     }
 }
