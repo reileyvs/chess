@@ -10,7 +10,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 public class ClientCommunicator {
-    static final Gson gson = new Gson();
+    static final Gson GSON = new Gson();
     String serverUrl;
     public ClientCommunicator(String url) {
         serverUrl = url;
@@ -30,7 +30,7 @@ public class ClientCommunicator {
                 conn.setDoOutput(true);
                 OutputStream stream = conn.getOutputStream();
                 OutputStreamWriter writer = new OutputStreamWriter(stream);
-                writer.write(gson.toJson(req));
+                writer.write(GSON.toJson(req));
                 writer.flush();
                 stream.close();
             }
@@ -53,7 +53,7 @@ public class ClientCommunicator {
             }
 
             try {
-                return gson.fromJson(json, result);
+                return GSON.fromJson(json, result);
             } catch (JsonParseException var5) {
                 throw new ClientException(String.format("%s %s: Error parsing response. Expected JSON, got %s", method, path, json));
             }

@@ -81,17 +81,7 @@ public class ServerFacadeTests {
 
     @Test
     void logoutPositiveTest() {
-        String authToken=null;
-        try {
-            RegisterResponse res = facade.register(user);
-            LoginRequest req = new LoginRequest(user.username(), user.password());
-            LoginResponse loginRes = facade.login(req);
-            authToken = loginRes.authToken();
-            assertNotNull(loginRes.authToken());
-            assertNull(res.message());
-        } catch(ClientException ex) {
-            assertEquals(1, 0);
-        }
+        String authToken = doRegisterAndLogin();
         try {
             LogoutResponse res=facade.logout(authToken);
             assertNull(res.message());
@@ -101,17 +91,7 @@ public class ServerFacadeTests {
     }
     @Test
     void logoutNegativeTest() {
-        String authToken=null;
-        try {
-            RegisterResponse res = facade.register(user);
-            LoginRequest req = new LoginRequest(user.username(), user.password());
-            LoginResponse loginRes = facade.login(req);
-            authToken = loginRes.authToken();
-            assertNotNull(loginRes.authToken());
-            assertNull(res.message());
-        } catch(ClientException ex) {
-            assertEquals(1, 0);
-        }
+        String authToken = doRegisterAndLogin();
         try {
             LogoutResponse res=facade.logout(authToken);
             LogoutResponse res2 = facade.logout(authToken);
@@ -209,23 +189,8 @@ public class ServerFacadeTests {
 
     @Test
     void joinPlayerPositiveTest() {
-        String authToken=null;
-        int gameID=0;
-        try {
-            RegisterResponse res = facade.register(user);
-            authToken = res.authToken();
-        } catch(ClientException ex) {
-            assertEquals(1, 0);
-        }
-        try {
-            CreateGameRequest req = new CreateGameRequest(authToken, "game");
-            CreateGameResponse res = facade.createGame(req);
-            gameID = res.gameID();
-            assertNotEquals(0, res.gameID());
-            assertNull(res.message());
-        } catch(ClientException ex) {
-            assertEquals(2,0);
-        }
+        String authToken = register();
+        int gameID=create(authToken);
         try {
             JoinGameRequest req = new JoinGameRequest(authToken,"WHITE",gameID);
             JoinGameResponse res = facade.joinPlayer(req);
@@ -236,23 +201,8 @@ public class ServerFacadeTests {
     }
     @Test
     void joinPlayerNegativeTest() {
-        String authToken=null;
-        int gameID=0;
-        try {
-            RegisterResponse res = facade.register(user);
-            authToken = res.authToken();
-        } catch(ClientException ex) {
-            assertEquals(1, 0);
-        }
-        try {
-            CreateGameRequest req = new CreateGameRequest(authToken, "game");
-            CreateGameResponse res = facade.createGame(req);
-            gameID = res.gameID();
-            assertNotEquals(0, res.gameID());
-            assertNull(res.message());
-        } catch(ClientException ex) {
-            assertEquals(2,0);
-        }
+        String authToken = register();
+        int gameID = create(authToken);
         try {
             JoinGameRequest req = new JoinGameRequest("impostor","WHITE",gameID);
             JoinGameResponse res = facade.joinPlayer(req);
@@ -264,19 +214,8 @@ public class ServerFacadeTests {
 
     @Test
     void clearPositiveTest() {
-        String authToken=null;
-        try {
-            RegisterResponse res = facade.register(user);
-            authToken = res.authToken();
-        } catch(ClientException ex) {
-            assertEquals(1, 0);
-        }
-        try {
-            CreateGameRequest req = new CreateGameRequest(authToken, "game");
-            CreateGameResponse res = facade.createGame(req);
-        } catch(ClientException ex) {
-            assertEquals(2,0);
-        }
+        String authToken=register();
+        create(authToken);
         try {
             ClearAllResponse res = facade.clear();
             ListGamesResponse gameRes = facade.listGames(authToken);
@@ -290,6 +229,44 @@ public class ServerFacadeTests {
     @Test
     void clearNegativeTest() {
         assertEquals(1,1);
+    }
+
+    private String doRegisterAndLogin() {
+        String authToken=null;
+        try {
+            RegisterResponse res = facade.register(user);
+            LoginRequest req = new LoginRequest(user.username(), user.password());
+            LoginResponse loginRes = facade.login(req);
+            authToken = loginRes.authToken();
+            assertNotNull(loginRes.authToken());
+            assertNull(res.message());
+        } catch(ClientException ex) {
+            assertEquals(1, 0);
+        }
+        return authToken;
+    }
+    private String register() {
+        String authToken=null;
+        try {
+            RegisterResponse res = facade.register(user);
+            authToken = res.authToken();
+        } catch(ClientException ex) {
+            assertEquals(1, 0);
+        }
+        return authToken;
+    }
+    private int create(String authToken) {
+        int gameID=0;
+        try {
+            CreateGameRequest req = new CreateGameRequest(authToken, "game");
+            CreateGameResponse res = facade.createGame(req);
+            gameID = res.gameID();
+            assertNotEquals(0, res.gameID());
+            assertNull(res.message());
+        } catch(ClientException ex) {
+            assertEquals(2,0);
+        }
+        return gameID;
     }
 
 }
