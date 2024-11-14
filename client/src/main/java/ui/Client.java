@@ -134,7 +134,7 @@ public class Client {
         Scanner scanner = new Scanner(System.in);
         String existingUsername = scanner.nextLine();
         out.flush();
-        out.println("Type your new password:");
+        out.println("Type your password:");
         String password = scanner.nextLine();
         return new LoginRequest(existingUsername, password);
     }

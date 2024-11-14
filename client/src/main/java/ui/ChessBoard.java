@@ -25,20 +25,24 @@ public class ChessBoard {
 
         drawHeaderFooter();
         out.print(SET_TEXT_BOLD);
-        out.print(SET_BG_COLOR_BLACK);
+        out.print(RESET_BG_COLOR);
         out.print('\n');
-        for(int i = 7; i >= 0; i--) {
-            drawRow(i);
-            out.print(SET_BG_COLOR_BLACK);
-            out.print('\n');
+        if(teamColor == WHITE) {
+            for (int i=7; i >= 0; i--) {
+                drawRow(i);
+                out.print(RESET_BG_COLOR);
+                out.print('\n');
+            }
+        } else {
+            for (int i=0; i < 8; i++) {
+                drawRow(i);
+                out.print(RESET_BG_COLOR);
+                out.print('\n');
+            }
         }
         drawHeaderFooter();
-        out.print(SET_BG_COLOR_BLACK);
+        out.print(RESET_BG_COLOR);
         out.print('\n');
-
-        out.print(SET_BG_COLOR_BLACK);
-
-
     }
 
     private void drawHeaderFooter() {
@@ -68,16 +72,29 @@ public class ChessBoard {
     }
     private void drawSquares(int count) {
         for(int i = 0; i < 8; i++) {
-            if ((count+i) % 2 == 0) {
-                out.print(SET_BG_COLOR_WHITE);
+            if(teamColor == WHITE) {
+                if ((count + i) % 2 == 0) {
+                    out.print(SET_BG_COLOR_BLACK);
+                } else {
+                    out.print(SET_BG_COLOR_WHITE);
+                }
             } else {
-                out.print(SET_BG_COLOR_BLACK);
+                if ((count + i) % 2 == 0) {
+                    out.print(SET_BG_COLOR_WHITE);
+                } else {
+                    out.print(SET_BG_COLOR_BLACK);
+                }
             }
             placeChessPiece(count,i);
         }
     }
     private void placeChessPiece(int count, int i) {
-        ChessPiece piece = board[count][i];
+        ChessPiece piece;
+        if(teamColor == WHITE) {
+            piece=board[count][i];
+        } else {
+            piece=board[count][7-i];
+        }
         if(piece == null) {
             out.print("   ");
         } else {
@@ -90,14 +107,8 @@ public class ChessBoard {
         }
     }
     private void numColumns(int count) {
-        int rowNum;
+        int rowNum = 1 + count;
         setHeader();
-        if(teamColor == WHITE) {
-            rowNum = 8 - count;
-
-        } else {
-            rowNum = 1 + count;
-        }
         out.print(" " + rowNum + " ");
     }
     private void setHeader() {

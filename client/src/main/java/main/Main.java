@@ -1,5 +1,6 @@
 package main;
 
+import chess.ChessGame;
 import server.Server;
 import ui.Client;
 

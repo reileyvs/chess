@@ -109,6 +109,8 @@ public class ChessBoard implements Cloneable {
                 ChessPiece piece=board[i][j];
                 if (piece == null) {
                     boardString=boardString.concat("_");
+                } else {
+                    boardString=boardString.concat(piece.toString());
                 }
             }
             boardString=boardString.concat("\n ");
