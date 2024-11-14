@@ -188,6 +188,7 @@ public class Client {
         return quit;
     }
     private void printPostPrompt() {
+        out.print(EscapeSequences.RESET_TEXT_COLOR);
         out.println("\nType the number corresponding to the action you want:");
         out.println("1. Create game");
         out.println("2. List games");
@@ -232,7 +233,7 @@ public class Client {
     }
     private void playGame(String userAuthtoken) {
         Scanner scanner = new Scanner(System.in);
-        out.println("Type the game number you would like to play:");
+        out.println("Type the number of the game you would like to play:");
         int gameIndex = Integer.parseInt(scanner.nextLine());
         out.println("What color player do you want to be? WHITE or BLACK");
         String teamColor = scanner.nextLine();
@@ -264,6 +265,24 @@ public class Client {
         }
     }
     private void observeGame(String userAuthtoken) {
-
+        Scanner scanner = new Scanner(System.in);
+        out.println("Type the number of the game you would like to observe:");
+        int gameIndex = Integer.parseInt(scanner.nextLine());
+        try {
+            ListGamesResponse res = serverFacade.listGames(userAuthtoken);
+            if(res.message() != null) {
+                out.println(res.message());
+            } else {
+                if(gameIndex > res.games().size() || gameIndex < 1) {
+                    out.println("Invalid game number. There are currently only " + res.games().size() + " games");
+                } else {
+                    GameData game = res.games().get(gameIndex-1);
+                    out.println("Game joined. You are watching from white player's perspective");
+                    sendChessBoard("WHITE", game.game());
+                }
+            }
+        } catch(ClientException ex) {
+            out.println("There was an error joining the game");
+        }
     }
 }
