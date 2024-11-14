@@ -103,21 +103,8 @@ public class ServerFacadeTests {
 
     @Test
     void createGamePositiveTest() {
-        String authToken=null;
-        try {
-            RegisterResponse res = facade.register(user);
-            authToken = res.authToken();
-        } catch(ClientException ex) {
-            assertEquals(1, 0);
-        }
-        try {
-            CreateGameRequest req = new CreateGameRequest(authToken, "game");
-            CreateGameResponse res = facade.createGame(req);
-            assertNotEquals(0, res.gameID());
-            assertNull(res.message());
-        } catch(ClientException ex) {
-            assertEquals(2,0);
-        }
+        String authToken=register();
+        create(authToken);
     }
     @Test
     void createGameNegativeTest() {
@@ -137,21 +124,8 @@ public class ServerFacadeTests {
 
     @Test
     void listGamesPositiveTest() {
-        String authToken=null;
-        try {
-            RegisterResponse res = facade.register(user);
-            authToken = res.authToken();
-        } catch(ClientException ex) {
-            assertEquals(1, 0);
-        }
-        try {
-            CreateGameRequest req = new CreateGameRequest(authToken, "game");
-            CreateGameResponse res = facade.createGame(req);
-            assertNotEquals(0, res.gameID());
-            assertNull(res.message());
-        } catch(ClientException ex) {
-            assertEquals(2,0);
-        }
+        String authToken=register();
+        create(authToken);
         try {
             ListGamesResponse res = facade.listGames(authToken);
             assertNotNull(res.games());
@@ -162,21 +136,8 @@ public class ServerFacadeTests {
     }
     @Test
     void listGamesNegativeTest() {
-        String authToken=null;
-        try {
-            RegisterResponse res = facade.register(user);
-            authToken = res.authToken();
-        } catch(ClientException ex) {
-            assertEquals(1, 0);
-        }
-        try {
-            CreateGameRequest req = new CreateGameRequest(authToken, "game");
-            CreateGameResponse res = facade.createGame(req);
-            assertNotEquals(0, res.gameID());
-            assertNull(res.message());
-        } catch(ClientException ex) {
-            assertEquals(2,0);
-        }
+        String authToken=register();
+        create(authToken);
         try {
             ListGamesResponse res = facade.listGames("impostor");
             assertNull(res.games());
