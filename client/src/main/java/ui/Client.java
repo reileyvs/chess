@@ -22,8 +22,8 @@ public class Client {
     private ServerFacade serverFacade;
     private PrintStream out;
     private String userAuthtoken="";
-    public Client(String host, String port) {
-        serverFacade = new ServerFacade(host, port);
+    public Client(String host) {
+        serverFacade = new ServerFacade(host);
         out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
     }
     public void initialMenu() {

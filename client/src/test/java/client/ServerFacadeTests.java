@@ -25,10 +25,10 @@ public class ServerFacadeTests {
     @BeforeAll
     public static void init() throws DataAccessException {
         portNum = 3030;
-        facade = new ServerFacade("localhost",Integer.toString(portNum));
+        facade = new ServerFacade("localhost");
         server = new Server();
         user = new UserData("Joe", "password", "bob@gmail.com");
-        var port = server.run(portNum);
+        var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
     }
 

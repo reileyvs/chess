@@ -13,12 +13,16 @@ import requests.CreateGameRequest;
 import requests.JoinGameRequest;
 import requests.LoginRequest;
 import responses.*;
+import server.Server;
 
 public class ServerFacade {
     private ClientCommunicator client;
     private String url;
+    private Server server;
     private int statusCode;
-    public ServerFacade(String host, String port) {
+    public ServerFacade(String host) {
+        server = new Server();
+        var port = server.run(0);
         url = "http://" + host + ":" + port;
         client = new ClientCommunicator(url);
     }
