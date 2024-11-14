@@ -9,6 +9,7 @@ import model.UserData;
 import org.junit.jupiter.api.*;
 import requests.CreateGameRequest;
 import requests.JoinGameRequest;
+import requests.LoginRequest;
 import responses.*;
 import server.Server;
 
@@ -66,7 +67,8 @@ public class ServerFacadeTests {
             RegisterResponse res = facade.register(user);
         });
         assertDoesNotThrow(() -> {
-            LoginResponse res = facade.login(user);
+            LoginRequest req = new LoginRequest(user.username(), user.password());
+            LoginResponse res = facade.login(req);
             assertNotNull(res.authToken());
             assertNull(res.message());
         });
@@ -77,7 +79,7 @@ public class ServerFacadeTests {
             RegisterResponse res = facade.register(user);
         });
         assertDoesNotThrow(() -> {
-            LoginResponse res = facade.login(new UserData("Jake","wack", "notamail"));
+            LoginResponse res = facade.login(new LoginRequest("Jake","wack"));
             assertNull(res.authToken());
             assertNotNull(res.message());
         });
@@ -88,7 +90,8 @@ public class ServerFacadeTests {
         String authToken=null;
         try {
             RegisterResponse res = facade.register(user);
-            LoginResponse loginRes = facade.login(user);
+            LoginRequest req = new LoginRequest(user.username(), user.password());
+            LoginResponse loginRes = facade.login(req);
             authToken = loginRes.authToken();
             assertNotNull(loginRes.authToken());
             assertNull(res.message());
@@ -107,7 +110,8 @@ public class ServerFacadeTests {
         String authToken=null;
         try {
             RegisterResponse res = facade.register(user);
-            LoginResponse loginRes = facade.login(user);
+            LoginRequest req = new LoginRequest(user.username(), user.password());
+            LoginResponse loginRes = facade.login(req);
             authToken = loginRes.authToken();
             assertNotNull(loginRes.authToken());
             assertNull(res.message());

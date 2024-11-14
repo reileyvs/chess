@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 
 import requests.CreateGameRequest;
 import requests.JoinGameRequest;
+import requests.LoginRequest;
 import responses.*;
 
 public class ServerFacade {
@@ -30,8 +31,7 @@ public class ServerFacade {
         return client.makeCall("/user", "POST", null, user, RegisterResponse.class);
     }
 
-    public LoginResponse login(UserData user) throws ClientException {
-        user = new UserData(user.username(), user.password(), user.email());
+    public LoginResponse login(LoginRequest user) throws ClientException {
         return client.makeCall("/session", "POST", null, user, LoginResponse.class);
     }
 

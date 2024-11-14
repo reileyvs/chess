@@ -4,6 +4,8 @@ import chess.ChessGame;
 import client.ClientException;
 import client.ServerFacade;
 import model.UserData;
+import requests.LoginRequest;
+import responses.LoginResponse;
 import responses.RegisterResponse;
 
 import java.io.PrintStream;
@@ -52,7 +54,7 @@ public class Client {
                         register();
                         break;
                     case "2":
-                        //loginLoop();
+                        login();
                         break;
                     case "3":
                         printHelpPrompt();
@@ -64,7 +66,7 @@ public class Client {
                         out.println("Invalid input");
                         printHelpPrompt();
                 }
-            } catch(Throwable ex) {
+            } catch(Exception ex) {
                 out.println("That is invalid input");
             }
         }
@@ -91,5 +93,25 @@ public class Client {
         out.println("Type your email:");
         String email = scanner.nextLine();
         return new UserData(username, password, email);
+    }
+    private void login() {
+        try {
+            LoginRequest req = printLoginHelp();
+            LoginResponse res = serverFacade.login(req);
+            if(res.message() != null) {
+                out.println(res.message() + " (you probably put your username or password wrong)");
+            }
+        } catch(ClientException ex) {
+            out.println("There was an error logging you in");
+        }
+    }
+    private LoginRequest printLoginHelp() {
+        out.println("Type your username:");
+        Scanner scanner = new Scanner(System.in);
+        String existingUsername = scanner.nextLine();
+        out.flush();
+        out.println("Type your new password:");
+        String password = scanner.nextLine();
+        return new LoginRequest(existingUsername, password);
     }
 }
