@@ -1,4 +1,8 @@
 
 ˆ
-java:S1192&"FDefine a constant instead of duplicating this literal "WHITE" 3 times.(Ÿ½ûg8˜ýùØ²2J$77ae1d3a-a744-4fe5-80a1-524374ddab61
-r	java:S106"+Replace this use of System.out by a logger.(Üšžöüÿÿÿÿ8îýùØ²2J$ccfa49c2-dc88-4b44-9aed-8810402c0e7f
+java:S1192'"FDefine a constant instead of duplicating this literal "WHITE" 3 times.(Ÿ½ûg8Ô¼ðÛ²2J$2c0f0f70-e446-4a7c-8f69-b2df4c74c255
+|
+java:S2589Ø"8Remove this expression which always evaluates to "false"(É×ÁÑ8Ð½ðÛ²2J$d7adc4b7-0b91-45bb-b52f-294148fbb25f
+r	java:S106"+Replace this use of System.out by a logger.(Üšžöüÿÿÿÿ8Û½ðÛ²2J$76a861d7-450c-4256-bdb7-4f036e947333
+¾
+java:S2159Ø"zRemove this call to "equals"; comparisons against null always return false; consider using '== null' to check for nullity.(É×ÁÑ8þ½ðÛ²2J$fc0ea212-9c3c-4774-9702-c27dae239bd0
