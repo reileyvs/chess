@@ -5,7 +5,6 @@ import dataaccess.*;
 import exceptions.DataAccessException;
 import model.AuthData;
 import model.GameData;
-import model.SimpleGameData;
 import requests.*;
 import responses.ClearAllResponse;
 import responses.CreateGameResponse;

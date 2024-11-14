@@ -1,15 +1,14 @@
 package main;
 
-import chess.ChessGame;
-import server.Server;
+import exceptions.DataAccessException;
+//import server.Server;
 import ui.Client;
 
 public class Main {
-    public static void main(String[] args) {
-        Server server = new Server();
-        int port = 3030;
-        server.run(port);
-        Client client = new Client("localhost", Integer.toString(port));
+    public static void main(String[] args) throws DataAccessException {
+        //Server server = new Server();
+        //int port = server.run(0);
+        Client client = new Client("localhost");
         client.initialMenu();
     }
 }

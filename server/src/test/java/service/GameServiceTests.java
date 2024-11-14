@@ -4,7 +4,6 @@ import chess.ChessGame;
 import dataaccess.*;
 import exceptions.DataAccessException;
 import model.GameData;
-import model.SimpleGameData;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

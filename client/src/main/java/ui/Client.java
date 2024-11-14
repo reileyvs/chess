@@ -3,18 +3,16 @@ package ui;
 import chess.ChessGame;
 import client.ClientException;
 import client.ServerFacade;
+import exceptions.DataAccessException;
 import model.GameData;
-import model.SimpleGameData;
 import model.UserData;
 import requests.CreateGameRequest;
 import requests.JoinGameRequest;
-import requests.ListGamesRequest;
 import requests.LoginRequest;
 import responses.*;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class Client {
@@ -22,7 +20,7 @@ public class Client {
     private ServerFacade serverFacade;
     private PrintStream out;
     private String userAuthtoken="";
-    public Client(String host) {
+    public Client(String host) throws DataAccessException {
         serverFacade = new ServerFacade(host);
         out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
     }

@@ -1,29 +1,19 @@
 package client;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
+import exceptions.DataAccessException;
 import model.UserData;
-
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.logging.Logger;
 
 import requests.CreateGameRequest;
 import requests.JoinGameRequest;
 import requests.LoginRequest;
 import responses.*;
-import server.Server;
+//import server.Server;
 
 public class ServerFacade {
     private ClientCommunicator client;
-    private String url;
-    private Server server;
+    //private Server server;
     private int statusCode;
-    public ServerFacade(String host) {
-        server = new Server();
-        var port = server.run(0);
-        url = "http://" + host + ":" + port;
+    public ServerFacade(String url) throws DataAccessException {
         client = new ClientCommunicator(url);
     }
 

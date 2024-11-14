@@ -1,9 +1,5 @@
 package client;
 
-import dataaccess.MySqlAuthDAO;
-import dataaccess.MySqlGameDAO;
-import dataaccess.MySqlUserDAO;
-import dataaccess.UserDAO;
 import exceptions.DataAccessException;
 import model.UserData;
 import org.junit.jupiter.api.*;
@@ -20,15 +16,13 @@ public class ServerFacadeTests {
 
     private static Server server;
     private static ServerFacade facade;
-    static int portNum;
     static UserData user;
     @BeforeAll
     public static void init() throws DataAccessException {
-        portNum = 3030;
-        facade = new ServerFacade("localhost");
         server = new Server();
         user = new UserData("Joe", "password", "bob@gmail.com");
         var port = server.run(0);
+        facade = new ServerFacade("http://localhost:" + port);
         System.out.println("Started test HTTP server on " + port);
     }
 

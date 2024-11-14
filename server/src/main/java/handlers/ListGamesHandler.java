@@ -3,7 +3,6 @@ package handlers;
 import exceptions.DataAccessException;
 import dataaccess.*;
 import model.GameData;
-import model.SimpleGameData;
 import requests.ListGamesRequest;
 import responses.ListGamesResponse;
 import service.GameService;
