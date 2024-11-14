@@ -7,15 +7,14 @@ import model.GameData;
 import model.SimpleGameData;
 import model.UserData;
 import requests.CreateGameRequest;
+import requests.JoinGameRequest;
 import requests.ListGamesRequest;
 import requests.LoginRequest;
-import responses.CreateGameResponse;
-import responses.ListGamesResponse;
-import responses.LoginResponse;
-import responses.RegisterResponse;
+import responses.*;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Client {
@@ -36,10 +35,15 @@ public class Client {
         postLoginMenu();
         System.exit(0);
     }
-    public void sendChessBoard() {
-        chess.ChessGame game = new chess.ChessGame();
+    public void sendChessBoard(String teamColor, ChessGame game) {
+        ChessGame.TeamColor team;
+        if(teamColor.equals("WHITE")) {
+            team = ChessGame.TeamColor.WHITE;
+        } else {
+            team = ChessGame.TeamColor.BLACK;
+        }
         ChessBoard board = new ChessBoard(game.getBoard().getBoard());
-        board.drawChessBoard(ChessGame.TeamColor.WHITE);
+        board.drawChessBoard(team);
     }
     public void printInitPrompt() {
         out.println("\nType the number corresponding to the action you want:");
@@ -147,7 +151,7 @@ public class Client {
 
         printPostPrompt();
         line = scanner.nextLine();
-        boolean successful=false;
+        boolean quit=false;
         try {
             switch(line) {
                 //create game
@@ -158,27 +162,30 @@ public class Client {
                 case "2":
                     listGames(userAuthtoken);
                     break;
-                //join game
+                //play game
                 case "3":
-                    printInitHelpPrompt();
+                    playGame(userAuthtoken);
                     break;
                 //observe
                 case "4":
-                    System.exit(0);
+                    observeGame(userAuthtoken);
                     break;
                 //logout
                 case "5":
+                    break;
                 //quit
                 case "6":
+                    quit = true;
+                    break;
                 default:
                     out.println("Invalid input");
-                    printInitHelpPrompt();
+                    printPostPrompt();
             }
-            return successful;
+            return quit;
         } catch(Exception ex) {
             out.println("That is invalid input");
         }
-        return successful;
+        return quit;
     }
     private void printPostPrompt() {
         out.println("\nType the number corresponding to the action you want:");
@@ -213,7 +220,7 @@ public class Client {
             } else {
                 out.println("Game list:");
                 for(int i = 0; i < res.games().size(); i++) {
-                    SimpleGameData game = res.games().get(i);
+                    GameData game = res.games().get(i);
                     out.println(i+1 + ") " + game.gameName());
                     out.println("\tWhite player: " + game.whiteUsername());
                     out.println("\tBlack player: " + game.blackUsername());
@@ -222,5 +229,41 @@ public class Client {
         } catch(ClientException ex) {
             out.println("There was an error while creating your game");
         }
+    }
+    private void playGame(String userAuthtoken) {
+        Scanner scanner = new Scanner(System.in);
+        out.println("Type the game number you would like to play:");
+        int gameIndex = Integer.parseInt(scanner.nextLine());
+        out.println("What color player do you want to be? WHITE or BLACK");
+        String teamColor = scanner.nextLine();
+        if(!teamColor.equals("WHITE") && !teamColor.equals("BLACK")) {
+            out.println("Invalid color");
+            return;
+        }
+        try {
+            ListGamesResponse res = serverFacade.listGames(userAuthtoken);
+            if(res.message() != null) {
+                out.println(res.message());
+            } else {
+                if(gameIndex > res.games().size() || gameIndex < 1) {
+                    out.println("Invalid game number. There are currently only " + res.games().size() + " games");
+                } else {
+                    GameData game = res.games().get(gameIndex-1);
+                    JoinGameRequest joinReq = new JoinGameRequest(userAuthtoken, teamColor, game.gameID());
+                    JoinGameResponse joinRes = serverFacade.joinPlayer(joinReq);
+                    if(joinRes.message() != null) {
+                        out.println(joinRes.message());
+                    } else {
+                        out.println("Game joined");
+                        sendChessBoard(teamColor, game.game());
+                    }
+                }
+            }
+        } catch(ClientException ex) {
+            out.println("There was an error joining the game");
+        }
+    }
+    private void observeGame(String userAuthtoken) {
+
     }
 }

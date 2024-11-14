@@ -23,7 +23,7 @@ public interface GameDAO {
         //returns the game specified by its gameID
         return dao.getGame(gameID);
     }
-    static List<SimpleGameData> listGames(MySqlGameDAO dao) throws DataAccessException {
+    static List<GameData> listGames(MySqlGameDAO dao) throws DataAccessException {
         //returns all games from the database
         List<GameData> games = dao.getGames();
         List<SimpleGameData> gamesNoBoard=new ArrayList<>(List.of());
@@ -31,6 +31,6 @@ public interface GameDAO {
             gamesNoBoard.add(new SimpleGameData(game.gameID(),game.whiteUsername(),
                     game.blackUsername(),game.gameName()));
         }
-        return gamesNoBoard;
+        return games;
     }
 }

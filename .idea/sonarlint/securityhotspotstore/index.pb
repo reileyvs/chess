@@ -17,3 +17,19 @@ G
 src/main/java/Main.java,e\4\e44a8606ce010ad9b89aafdfcee2ab49afbf6d10
 L
 src/main/java/main/Main.java,7\f\7f08be4e9c62f2e5f8f02242af89b918cb9a135f
+W
+'src/main/java/model/SimpleGameData.java,8\a\8a30f7eac3ffd4420fab9166a7a0d200af1fce4c
+Z
+*src/test/java/dataaccess/AuthDAOTests.java,c\3\c344eef27fce3bec173f632f5864e5909ff6ad0d
+W
+'src/main/java/model/DoubleGameData.java,8\5\8577700f1e407f5409bd4a2ad4dd22c1963320c2
+U
+%src/main/java/dataaccess/GameDAO.java,a\5\a55d6678c343ed4095b6c2089c7368d4633eff97
+V
+&src/main/java/service/GameService.java,9\f\9fb869ea241e6fca6054397a70142c04b4036d07
+^
+.src/main/java/responses/ListGamesResponse.java,5\f\5f2c752d733760b81c30d47c8cde7f1634ff4ccc
+\
+,src/main/java/handlers/ListGamesHandler.java,a\d\ad98aee2e5196ede09cf8627a427249f6becbe12
+[
++src/test/java/service/GameServiceTests.java,2\2\22411add9652d3764f0e8a1478d03508a1879682

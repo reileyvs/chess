@@ -29,7 +29,7 @@ public class GameService {
         this.gameDAO = gameDAO;
     }
 
-    public List<SimpleGameData> listGames(ListGamesRequest request) throws DataAccessException {
+    public List<GameData> listGames(ListGamesRequest request) throws DataAccessException {
         if(AuthDAO.getAuthByToken(request.authToken(), dao) == null) {
             throw new DataAccessException(UNAUTHORIZED);
         }

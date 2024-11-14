@@ -16,6 +16,7 @@ public class AuthDAOTests {
         DatabaseManager.createDatabase();
         auth = new MySqlAuthDAO();
         authData = new AuthData("Job", "password");
+        AuthDAO.clear(auth);
     }
     @AfterEach
     void takeDown() {
