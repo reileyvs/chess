@@ -1,8 +1,0 @@
-
-
-java:S1192%"FDefine a constant instead of duplicating this literal "/game" 3 times.(Áğİœşÿÿÿÿ8Ûê†Ù²2J$b93c8f67-9925-44e0-a18b-993ed339bc80
-~	java:S125
-"<This block of commented-out lines of code should be removed.(ó½¥ú8ıëéÙ²2J$a1631782-1abc-4946-aa1d-3e99b5e98554
-ƒ	java:S125"<This block of commented-out lines of code should be removed.(âùĞüÿÿÿÿ8ñŒêÙ²2J$08e1dabb-d8ca-46ba-a1d8-64502d815bb2
-
-java:S1130"|Remove the declaration of thrown exception 'exceptions.DataAccessException', as it cannot be thrown from constructor's body.(‚ƒ‡»úÿÿÿÿ8ÜÎîÙ²2
