@@ -24,3 +24,7 @@ c
 client.iml,8\1\81276a78d81379d1349e1ff0f16babcbe4db95cc
 ]
 -src/test/java/passoff/server/TestFactory.java,0\0\000790cef0470da7bba7e8874c818ff77e08a3c9
+\
+,src/main/java/websocket/WebSocketClient.java,1\7\17b4abc0cd79b5582130d56c57702c5dad801b9d
+b
+2src/main/java/websocket/ServerMessageObserver.java,5\1\51a5addb0ce1261872162863043fd33af9e6628c
