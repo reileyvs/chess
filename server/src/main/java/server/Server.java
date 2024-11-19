@@ -3,6 +3,7 @@ package server;
 import exceptions.DataAccessException;
 import dataaccess.*;
 import handlers.*;
+import server.websocket.WebSocketHandler;
 import spark.*;
 
 import static java.lang.System.exit;
@@ -20,6 +21,9 @@ public class Server {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
+
+        Spark.webSocket("/ws", WebSocketHandler.class);
+
         MySqlAuthDAO authDAO=null;
         MySqlUserDAO userDAO=null;
         MySqlGameDAO gameDAO=null;

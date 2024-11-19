@@ -28,3 +28,17 @@ client.iml,8\1\81276a78d81379d1349e1ff0f16babcbe4db95cc
 ,src/main/java/websocket/WebSocketClient.java,1\7\17b4abc0cd79b5582130d56c57702c5dad801b9d
 b
 2src/main/java/websocket/ServerMessageObserver.java,5\1\51a5addb0ce1261872162863043fd33af9e6628c
+d
+4src/main/java/server/websocket/WebSocketHandler.java,a\1\a1e176380e02ea0e2874c86a0c686d03b73c8282
+e
+5src/main/java/server/websocket/ConnectionManager.java,b\e\be314f4208de966ff617bff95c8b5fbf2664e831
+^
+.src/main/java/server/websocket/Connection.java,3\7\37defc871c22d622968a9058e47ef697c0948f12
+]
+-src/main/java/websocket/commands/Connect.java,8\a\8a613a51b906138c348220e5ce894bf3decd04b9
+^
+.src/main/java/websocket/commands/MakeMove.java,e\d\ed4c005c34b3787a69c417a8c2e31ff8b5e87964
+[
++src/main/java/websocket/commands/Leave.java,0\3\03c5e85dbf6655bb523f4345544f8a84f97be107
+\
+,src/main/java/websocket/commands/Resign.java,3\b\3b8c24427076af15212aed4b73ab7417a0170e83
