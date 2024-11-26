@@ -44,7 +44,7 @@ public class Client implements ServerMessageObserver {
         postLoginMenu();
         System.exit(0);
     }
-    public void sendChessBoard(String teamColor, ChessGame game, boolean[][] validMoves) {
+    public void sendChessBoard(String teamColor, ChessGame game, boolean[][] validMoves, ChessPosition pos) {
         ChessGame.TeamColor team;
         if(teamColor.equals("WHITE")) {
             team = WHITE;
@@ -52,7 +52,7 @@ public class Client implements ServerMessageObserver {
             team = ChessGame.TeamColor.BLACK;
         }
         ChessBoard board = new ChessBoard(game.getBoard());
-        board.drawChessBoard(team, validMoves);
+        board.drawChessBoard(team, validMoves, pos);
     }
     public void printInitPrompt() {
         out.print(EscapeSequences.RESET_TEXT_COLOR);
@@ -290,7 +290,7 @@ public class Client implements ServerMessageObserver {
                     } else {
                         out.println("Game joined");
                         this.game = game.game();
-                        sendChessBoard(teamColor, game.game(), null);
+                        sendChessBoard(teamColor, game.game(), null, null);
                         this.teamColor = teamColor;
                         gameMenu();
                     }
@@ -318,7 +318,7 @@ public class Client implements ServerMessageObserver {
                     this.game = game.game();
                     this.teamColor = "WHITE";
                     out.println("Game joined. You are watching from white player's perspective");
-                    sendChessBoard("WHITE", game.game(), null);
+                    sendChessBoard("WHITE", game.game(), null, null);
                     gameMenu();
                 }
             }
@@ -356,7 +356,7 @@ public class Client implements ServerMessageObserver {
                 //Redraw board
                 case "1":
                     //reprint board
-                    sendChessBoard(teamColor, game, null);
+                    sendChessBoard(teamColor, game, null, null);
                     break;
                 //Make Move
                 case "2":
@@ -458,10 +458,11 @@ public class Client implements ServerMessageObserver {
             out.println("Column is out of range");
             return;
         }
-        ChessPiece piece = game.getBoard().getPiece(new ChessPosition(row, col));
-        var moves = piece.pieceMoves(game.getBoard(), new ChessPosition(row, col));
+        ChessPosition pos = new ChessPosition(row,col);
+        ChessPiece piece = game.getBoard().getPiece(pos);
+        var moves = piece.pieceMoves(game.getBoard(), pos);
         boolean[][] validMoves = setValidMoves((ArrayList<ChessMove>) moves);
-        sendChessBoard(teamColor, game, validMoves);
+        sendChessBoard(teamColor, game, validMoves, pos);
     }
 
     private boolean[][] setValidMoves(ArrayList<ChessMove> moves) {

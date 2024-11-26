@@ -2,6 +2,7 @@ package ui;
 
 import chess.ChessGame;
 import chess.ChessPiece;
+import chess.ChessPosition;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
@@ -13,12 +14,14 @@ public class ChessBoard {
     //All the board painting logic
     private ChessPiece[][] board;
     private ChessGame.TeamColor teamColor=null;
+    private ChessPosition pos=null;
     private PrintStream out;
     public ChessBoard(chess.ChessBoard chessBoard) {
         this.board = chessBoard.getBoard();
     }
 
-    public void drawChessBoard(ChessGame.TeamColor teamColor, boolean[][] validMoves) {
+    public void drawChessBoard(ChessGame.TeamColor teamColor, boolean[][] validMoves, ChessPosition pos) {
+        this.pos = pos;
         out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         this.teamColor = teamColor;
         out.print(ERASE_SCREEN);
@@ -72,33 +75,50 @@ public class ChessBoard {
     }
     private void drawSquares(int row, boolean[][] validMoves) {
         for(int i = 0; i < 8; i++) {
+            ChessPosition position = new ChessPosition(row+1,i+1);
             if (validMoves != null) {
                 if (teamColor == WHITE) {
                     if ((row + i) % 2 == 0) {
-                        if(validMoves[row][i]) {
-                            out.print(SET_BG_COLOR_DARK_GREY);
+                        if(position.equals(pos)) {
+                                out.print(SET_BG_COLOR_BLUE);
                         } else {
-                            out.print(SET_BG_COLOR_BLACK);
+                            if (validMoves[row][i]) {
+                                out.print(SET_BG_COLOR_DARK_GREY);
+                            } else {
+                                out.print(SET_BG_COLOR_BLACK);
+                            }
                         }
                     } else {
-                        if(validMoves[row][i]) {
-                            out.print(SET_BG_COLOR_LIGHT_GREY);
+                        if(position.equals(pos)) {
+                            out.print(SET_BG_COLOR_BLUE);
                         } else {
-                            out.print(SET_BG_COLOR_WHITE);
+                            if (validMoves[row][i]) {
+                                out.print(SET_BG_COLOR_LIGHT_GREY);
+                            } else {
+                                out.print(SET_BG_COLOR_WHITE);
+                            }
                         }
                     }
                 } else {
                     if ((row + i) % 2 == 0) {
-                        if(validMoves[row][i]) {
-                            out.print(SET_BG_COLOR_LIGHT_GREY);
+                        if(position.equals(pos)) {
+                            out.print(SET_BG_COLOR_BLUE);
                         } else {
-                            out.print(SET_BG_COLOR_WHITE);
+                            if (validMoves[row][i]) {
+                                out.print(SET_BG_COLOR_LIGHT_GREY);
+                            } else {
+                                out.print(SET_BG_COLOR_WHITE);
+                            }
                         }
                     } else {
-                        if(validMoves[row][i]) {
-                            out.print(SET_BG_COLOR_DARK_GREY);
+                        if(position.equals(pos)) {
+                            out.print(SET_BG_COLOR_BLUE);
                         } else {
-                            out.print(SET_BG_COLOR_BLACK);
+                            if (validMoves[row][i]) {
+                                out.print(SET_BG_COLOR_DARK_GREY);
+                            } else {
+                                out.print(SET_BG_COLOR_BLACK);
+                            }
                         }
                     }
                 }
