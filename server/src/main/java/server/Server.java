@@ -15,14 +15,14 @@ public class Server {
     public static final String UNAUTHORIZED = "{ \"message\": \"Error: unauthorized\" }";
     public static final String BAD_REQUEST = "{ \"message\": \"Error: bad request\" }";
     public static final String TAKEN = "{ \"message\": \"Error: already taken\" }";
-
+    private final WebSocketHandler webSocketHandler = new WebSocketHandler();
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
 
-        Spark.webSocket("/ws", WebSocketHandler.class);
+        Spark.webSocket("/ws", webSocketHandler);
 
         MySqlAuthDAO authDAO=null;
         MySqlUserDAO userDAO=null;
@@ -38,6 +38,7 @@ public class Server {
             ex.getStackTrace();
             exit(1);
         }
+
         createRoutes(authDAO, userDAO, gameDAO);
 
         Spark.awaitInitialization();
