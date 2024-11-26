@@ -14,6 +14,7 @@ import requests.JoinGameRequest;
 import requests.LoginRequest;
 import responses.*;
 import websocket.ServerMessageObserver;
+import websocket.WebSocketClient;
 import websocket.messages.ServerMessage;
 
 import java.io.PrintStream;
@@ -26,6 +27,7 @@ import static chess.ChessGame.TeamColor.WHITE;
 public class Client implements ServerMessageObserver {
     //All the menu logic and creates and sends chessboard to ChessBoard
     private ServerFacade serverFacade;
+    private WebSocketClient webSocketClient;
     private PrintStream out;
     private String userAuthtoken="";
     private String teamColor=null;

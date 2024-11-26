@@ -4,25 +4,45 @@ import com.google.gson.*;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.glassfish.tyrus.core.wsadl.model.Endpoint;
 import websocket.commands.*;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 
 @WebSocket
-public class WebSocketHandler {
+public class WebSocketHandler extends Endpoint {
     private final ConnectionManager connections = new ConnectionManager();
 
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) throws IOException {
-        //Todo: Make type adapter here
         GsonBuilder builder = new GsonBuilder();
+        System.out.println("Zoo-wee mama!");
         builder.registerTypeAdapter(UserGameCommand.class, new CommandDeserializer());
         Gson gson = builder.create();
         UserGameCommand command = gson.fromJson(msg, UserGameCommand.class);
         switch(command.getCommandType()) {
-
+            case CONNECT -> connect();
+            case MAKE_MOVE -> makeMove();
+            case LEAVE -> leave();
+            case RESIGN -> resign();
         }
+    }
+
+    private void connect() {
+        System.out.println("Let's connect!");
+    }
+
+    private void makeMove() {
+        System.out.println("Let's move!");
+    }
+
+    private void leave() {
+        System.out.println("Let's get outta here!");
+    }
+
+    private void resign() {
+        System.out.println("Let's resign!");
     }
 
     public static class CommandDeserializer implements JsonDeserializer<UserGameCommand> {
