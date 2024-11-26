@@ -15,6 +15,7 @@ import static java.lang.System.exit;
 public class ChessGame {
     private TeamColor teamTurn;
     private ChessBoard board;
+    private boolean[][] validMoves;
 
     public ChessGame() {
         teamTurn = TeamColor.WHITE;
@@ -57,7 +58,7 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        Collection<ChessMove> validMoves = new ArrayList<>();
+        ArrayList<ChessMove> validMoves = new ArrayList<>();
         if(board.getPiece(startPosition) == null) {
             return Collections.emptyList();
         }

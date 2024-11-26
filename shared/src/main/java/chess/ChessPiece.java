@@ -88,7 +88,7 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        Collection<ChessMove> moves = new ArrayList<>();
+        Collection<ChessMove> moves;
         if (pieceType == ChessPiece.PieceType.KING) {
             KingMoves kingMoves = new KingMoves(board, myPosition);
             moves = kingMoves.calculatePieceMoves();

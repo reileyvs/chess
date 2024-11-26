@@ -1,6 +1,9 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPiece;
+import chess.ChessPosition;
 import client.ClientException;
 import client.ServerFacade;
 import exceptions.DataAccessException;
@@ -10,16 +13,23 @@ import requests.CreateGameRequest;
 import requests.JoinGameRequest;
 import requests.LoginRequest;
 import responses.*;
+import websocket.ServerMessageObserver;
+import websocket.messages.ServerMessage;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Client {
+import static chess.ChessGame.TeamColor.WHITE;
+
+public class Client implements ServerMessageObserver {
     //All the menu logic and creates and sends chessboard to ChessBoard
     private ServerFacade serverFacade;
     private PrintStream out;
     private String userAuthtoken="";
+    private String teamColor=null;
+    private ChessGame game;
     public Client(String host) throws DataAccessException {
         serverFacade = new ServerFacade(host);
         out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
@@ -34,15 +44,15 @@ public class Client {
         postLoginMenu();
         System.exit(0);
     }
-    public void sendChessBoard(String teamColor, ChessGame game) {
+    public void sendChessBoard(String teamColor, ChessGame game, boolean[][] validMoves) {
         ChessGame.TeamColor team;
         if(teamColor.equals("WHITE")) {
-            team = ChessGame.TeamColor.WHITE;
+            team = WHITE;
         } else {
             team = ChessGame.TeamColor.BLACK;
         }
-        ChessBoard board = new ChessBoard(game.getBoard().getBoard());
-        board.drawChessBoard(team);
+        ChessBoard board = new ChessBoard(game.getBoard());
+        board.drawChessBoard(team, validMoves);
     }
     public void printInitPrompt() {
         out.print(EscapeSequences.RESET_TEXT_COLOR);
@@ -213,7 +223,7 @@ public class Client {
         Scanner scanner = new Scanner(System.in);
         out.println("What would you like to name this game?");
         String gameName = scanner.nextLine();
-        if(gameName.equals(null) || gameName.equals("")) {
+        if(gameName == null || gameName.isEmpty()) {
             out.print(EscapeSequences.SET_TEXT_COLOR_RED);
             out.println("Game was not created. You must put a game name!");
             return;
@@ -279,7 +289,10 @@ public class Client {
                         out.println(joinRes.message());
                     } else {
                         out.println("Game joined");
-                        sendChessBoard(teamColor, game.game());
+                        this.game = game.game();
+                        sendChessBoard(teamColor, game.game(), null);
+                        this.teamColor = teamColor;
+                        gameMenu();
                     }
                 }
             }
@@ -302,8 +315,11 @@ public class Client {
                     out.println("Invalid game number. There are currently only " + res.games().size() + " games");
                 } else {
                     GameData game = res.games().get(gameIndex-1);
+                    this.game = game.game();
+                    this.teamColor = "WHITE";
                     out.println("Game joined. You are watching from white player's perspective");
-                    sendChessBoard("WHITE", game.game());
+                    sendChessBoard("WHITE", game.game(), null);
+                    gameMenu();
                 }
             }
         } catch(ClientException ex) {
@@ -320,5 +336,147 @@ public class Client {
     }
     private void printPostHelp() {
         out.println("1 to create game, 2 to list games, 3 to play games, 4 to observe a game, 5 to logout, 6 to quit");
+    }
+
+    private void gameMenu() {
+        boolean quit=false;
+        while(!quit){
+            quit=checkGameInput();
+        }
+    }
+    private boolean checkGameInput() {
+        Scanner scanner = new Scanner(System.in);
+        String line="";
+
+        printGameMenu();
+        line = scanner.nextLine();
+        boolean quit=false;
+        try {
+            switch(line) {
+                //Redraw board
+                case "1":
+                    //reprint board
+                    sendChessBoard(teamColor, game, null);
+                    break;
+                //Make Move
+                case "2":
+                    //call make move ws endpoint
+                    break;
+                //Highlight legal moves
+                case "3":
+                    highlight();
+                    break;
+                //resign
+                case "4":
+                    //Call resign ws endpoint
+                    break;
+                //leave
+                case "5":
+                    quit = true;
+                    //Call leave ws endpoint
+                    break;
+                //help
+                case "6":
+                    printGameHelp();
+                    break;
+                default:
+                    out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+                    out.println("Invalid input");
+                    printGameHelp();
+                    printGameMenu();
+            }
+            return quit;
+        } catch(Exception ex) {
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            out.println("Something went wrong");
+        }
+        return quit;
+    }
+    private void printGameMenu() {
+        out.print(EscapeSequences.RESET_TEXT_COLOR);
+        out.println("\nType the number corresponding to the action you want:");
+        out.println("\t1. Redraw Chess Board");
+        out.println("\t2. Make Move");
+        out.println("\t3. Highlight Legal Moves");
+        out.println("\t4. Leave game");
+        out.println("\t5. Resign (Opponent wins)");
+        out.println("\t6. Help\n");
+    }
+    private void printGameHelp() {
+        out.println("1 to see the board, 2 to move a piece, 3 to see available moves of a piece, 4 to resign," +
+                " 5 to leave, and 6 to see this message again");
+    }
+
+    private void highlight() {
+        Scanner scanner = new Scanner(System.in);
+        out.println("What piece would you like to highlight? Ex. c4");
+        String piecePos = scanner.nextLine();
+        if(piecePos.length() != 2) {
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            out.println("Incorrect position");
+        } else if (!Character.isLetter(piecePos.charAt(0)) || !Character.isDigit(piecePos.charAt(1))) {
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            out.println("Wrong order, or incorrect values");
+        }
+        char letter = piecePos.charAt(0);
+        char number = piecePos.charAt(1);
+        int col = -1;
+        int row = -1;
+        switch(letter) {
+            case 'a','A':
+                col = 1;
+                break;
+            case 'b','B':
+                col = 2;
+                break;
+            case 'c','C':
+                col = 3;
+                break;
+            case 'd','D':
+                col = 4;
+                break;
+            case 'e','E':
+                col = 5;
+                break;
+            case 'f','F':
+                col = 6;
+                break;
+            case 'g','G':
+                col = 7;
+                break;
+            case 'h','H':
+                col = 8;
+                break;
+            default:
+                out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+                out.println("Row is out of range");
+                return;
+        }
+        row = number - '0';
+        if (row > 8 || row < 1) {
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            out.println("Column is out of range");
+            return;
+        }
+        ChessPiece piece = game.getBoard().getPiece(new ChessPosition(row, col));
+        var moves = piece.pieceMoves(game.getBoard(), new ChessPosition(row, col));
+        boolean[][] validMoves = setValidMoves((ArrayList<ChessMove>) moves);
+        sendChessBoard(teamColor, game, validMoves);
+    }
+
+    private boolean[][] setValidMoves(ArrayList<ChessMove> moves) {
+        boolean[][] moveBoard = new boolean[8][8];
+        for (ChessMove move : moves) {
+            ChessPosition start = move.getStartPosition();
+            ChessPosition end = move.getEndPosition();
+            moveBoard[start.getRow() - 1][start.getColumn() - 1] = true;
+            moveBoard[end.getRow() - 1][end.getColumn() - 1] = true;
+        }
+        return moveBoard;
+    }
+
+    @Override
+    public void notify(ServerMessage msg) {
+        //Todo: Implement this function
     }
 }

@@ -14,11 +14,11 @@ public class ChessBoard {
     private ChessPiece[][] board;
     private ChessGame.TeamColor teamColor=null;
     private PrintStream out;
-    public ChessBoard(ChessPiece[][] board) {
-        this.board = board;
+    public ChessBoard(chess.ChessBoard chessBoard) {
+        this.board = chessBoard.getBoard();
     }
 
-    public void drawChessBoard(ChessGame.TeamColor teamColor) {
+    public void drawChessBoard(ChessGame.TeamColor teamColor, boolean[][] validMoves) {
         out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         this.teamColor = teamColor;
         out.print(ERASE_SCREEN);
@@ -29,13 +29,13 @@ public class ChessBoard {
         out.print('\n');
         if(teamColor == WHITE) {
             for (int i=7; i >= 0; i--) {
-                drawRow(i);
+                drawRow(i, validMoves);
                 out.print(RESET_BG_COLOR);
                 out.print('\n');
             }
         } else {
             for (int i=0; i < 8; i++) {
-                drawRow(i);
+                drawRow(i, validMoves);
                 out.print(RESET_BG_COLOR);
                 out.print('\n');
             }
@@ -65,27 +65,60 @@ public class ChessBoard {
             }
             out.print("   ");
     }
-    private void drawRow(int count) {
+    private void drawRow(int count, boolean[][] validMoves) {
         numColumns(count);
-        drawSquares(count);
+        drawSquares(count, validMoves);
         numColumns(count);
     }
-    private void drawSquares(int count) {
+    private void drawSquares(int row, boolean[][] validMoves) {
         for(int i = 0; i < 8; i++) {
-            if(teamColor == WHITE) {
-                if ((count + i) % 2 == 0) {
-                    out.print(SET_BG_COLOR_BLACK);
+            if (validMoves != null) {
+                if (teamColor == WHITE) {
+                    if ((row + i) % 2 == 0) {
+                        if(validMoves[row][i]) {
+                            out.print(SET_BG_COLOR_DARK_GREY);
+                        } else {
+                            out.print(SET_BG_COLOR_BLACK);
+                        }
+                    } else {
+                        if(validMoves[row][i]) {
+                            out.print(SET_BG_COLOR_LIGHT_GREY);
+                        } else {
+                            out.print(SET_BG_COLOR_WHITE);
+                        }
+                    }
                 } else {
-                    out.print(SET_BG_COLOR_WHITE);
+                    if ((row + i) % 2 == 0) {
+                        if(validMoves[row][i]) {
+                            out.print(SET_BG_COLOR_LIGHT_GREY);
+                        } else {
+                            out.print(SET_BG_COLOR_WHITE);
+                        }
+                    } else {
+                        if(validMoves[row][i]) {
+                            out.print(SET_BG_COLOR_DARK_GREY);
+                        } else {
+                            out.print(SET_BG_COLOR_BLACK);
+                        }
+                    }
                 }
+                placeChessPiece(row, i);
             } else {
-                if ((count + i) % 2 == 0) {
-                    out.print(SET_BG_COLOR_WHITE);
+                if (teamColor == WHITE) {
+                    if ((row + i) % 2 == 0) {
+                        out.print(SET_BG_COLOR_BLACK);
+                    } else {
+                        out.print(SET_BG_COLOR_WHITE);
+                    }
                 } else {
-                    out.print(SET_BG_COLOR_BLACK);
+                    if ((row + i) % 2 == 0) {
+                        out.print(SET_BG_COLOR_WHITE);
+                    } else {
+                        out.print(SET_BG_COLOR_BLACK);
+                    }
                 }
+                placeChessPiece(row, i);
             }
-            placeChessPiece(count,i);
         }
     }
     private void placeChessPiece(int count, int i) {

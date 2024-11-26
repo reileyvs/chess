@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -11,6 +12,7 @@ import java.util.Objects;
  */
 public class ChessBoard implements Cloneable {
     private ChessPiece[][] board = new ChessPiece[8][8];
+    private boolean[][] validMoves = new boolean[8][8];
     public ChessBoard() {}
     public ChessBoard(ChessPiece[][] board) {
         this.board = board;
@@ -100,6 +102,13 @@ public class ChessBoard implements Cloneable {
         board1[0][7] = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.ROOK);
 
         board = board1;
+    }
+
+    public void setValidMoves(boolean[][] moves) {
+        this.validMoves = moves;
+    }
+    public boolean[][] getValidMoves() {
+        return validMoves;
     }
 
     public String toString() {
