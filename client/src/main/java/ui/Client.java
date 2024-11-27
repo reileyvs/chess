@@ -481,6 +481,8 @@ public class Client implements ServerMessageObserver {
 
     @Override
     public void notify(ServerMessage msg) {
-        //Todo: Implement this function
+        out.print(EscapeSequences.SET_TEXT_COLOR_YELLOW);
+        out.println(msg.getMsg());
+        out.print(EscapeSequences.RESET_TEXT_COLOR);
     }
 }
