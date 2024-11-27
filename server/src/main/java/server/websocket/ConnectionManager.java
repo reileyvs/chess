@@ -11,21 +11,21 @@ import java.util.concurrent.ConcurrentMap;
 public class ConnectionManager {
     public final ConcurrentMap<String, Connection> connections = new ConcurrentHashMap<>();
 
-    public void add(String username, Session session) {
-        var connection = new Connection(username, session);
-        connections.put(username, connection);
+    public void add(String authToken, Session session) {
+        var connection = new Connection(authToken, session);
+        connections.put(authToken, connection);
     }
 
-    public void remove(String username) {
-        connections.remove(username);
+    public void remove(String authToken) {
+        connections.remove(authToken);
     }
 
     public void broadcast(String notifier, ServerMessage msg) throws IOException {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
-                if (!c.username.equals(notifier)) {
-                    c.send("Notification to string");
+                if (!c.authToken.equals(notifier)) {
+                    c.send(msg.getMsg());
                 }
             } else {
                 removeList.add(c);
@@ -33,7 +33,27 @@ public class ConnectionManager {
         }
 
         for (var c : removeList) {
-            connections.remove(c.username);
+            connections.remove(c.authToken);
+        }
+    }
+
+    /**
+     * Sends a message to all connections, including the notifier
+     * @param notifier
+     * @param msg
+     */
+    public void announce(String notifier, ServerMessage msg) throws IOException {
+        var removeList = new ArrayList<Connection>();
+        for (var c : connections.values()) {
+            if (c.session.isOpen()) {
+                c.send(msg.getMsg());
+            } else {
+                removeList.add(c);
+            }
+        }
+
+        for (var c : removeList) {
+            connections.remove(c.authToken);
         }
     }
 }

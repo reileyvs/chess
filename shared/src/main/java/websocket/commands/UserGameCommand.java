@@ -14,11 +14,14 @@ public class UserGameCommand {
 
     private final String authToken;
 
+    private final String username;
+
     private final Integer gameID;
 
-    public UserGameCommand(CommandType commandType, String authToken, Integer gameID) {
+    public UserGameCommand(CommandType commandType, String authToken, String username, Integer gameID) {
         this.commandType = commandType;
         this.authToken = authToken;
+        this.username = username;
         this.gameID = gameID;
     }
 
@@ -35,6 +38,10 @@ public class UserGameCommand {
 
     public String getAuthToken() {
         return authToken;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public Integer getGameID() {

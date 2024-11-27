@@ -17,6 +17,7 @@ import websocket.ServerMessageObserver;
 import websocket.WebSocketClient;
 import websocket.messages.ServerMessage;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -30,10 +31,12 @@ public class Client implements ServerMessageObserver {
     private WebSocketClient webSocketClient;
     private PrintStream out;
     private String userAuthtoken="";
+    private String username="";
     private String teamColor=null;
     private ChessGame game;
-    public Client(String host) throws DataAccessException {
-        serverFacade = new ServerFacade(host);
+    public Client(String url) throws Exception {
+        serverFacade = new ServerFacade(url);
+        webSocketClient = new WebSocketClient(url, this);
         out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
     }
     public void initialMenu() {
@@ -108,6 +111,7 @@ public class Client implements ServerMessageObserver {
                 out.println(res.message() + " (this user may already be taken)");
             } else {
                 userAuthtoken = res.authToken();
+                username = res.username();
                 return true;
             }
         } catch(ClientException ex) {
@@ -137,6 +141,7 @@ public class Client implements ServerMessageObserver {
                 out.println(res.message() + " (you probably put your username or password wrong)");
             } else {
                 userAuthtoken = res.authToken();
+                username = res.username();
                 return true;
             }
         } catch(ClientException ex) {
@@ -168,7 +173,6 @@ public class Client implements ServerMessageObserver {
         printPostPrompt();
         line = scanner.nextLine();
         boolean quit=false;
-        try {
             switch(line) {
                 //create game
                 case "1":
@@ -180,11 +184,11 @@ public class Client implements ServerMessageObserver {
                     break;
                 //play game
                 case "3":
-                    playGame(userAuthtoken);
+                    playGame(userAuthtoken, username);
                     break;
                 //observe
                 case "4":
-                    observeGame(userAuthtoken);
+                    observeGame(userAuthtoken, username);
                     break;
                 //logout
                 case "5":
@@ -203,11 +207,6 @@ public class Client implements ServerMessageObserver {
                     printPostHelp();
                     printPostPrompt();
             }
-            return quit;
-        } catch(Exception ex) {
-            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
-            out.println("That is invalid input");
-        }
         return quit;
     }
     private void printPostPrompt() {
@@ -264,7 +263,7 @@ public class Client implements ServerMessageObserver {
             out.println("There was an error while creating your game");
         }
     }
-    private void playGame(String userAuthtoken) {
+    private void playGame(String userAuthtoken, String username) {
         Scanner scanner = new Scanner(System.in);
         out.println("Type the number of the game you would like to play:");
         int gameIndex = Integer.parseInt(scanner.nextLine());
@@ -294,6 +293,7 @@ public class Client implements ServerMessageObserver {
                         this.game = game.game();
                         sendChessBoard(teamColor, game.game(), null, null);
                         this.teamColor = teamColor;
+                        webSocketClient.connect(userAuthtoken, username, game.gameID());
                         gameMenu();
                     }
                 }
@@ -303,7 +303,7 @@ public class Client implements ServerMessageObserver {
             out.println("There was an error joining the game");
         }
     }
-    private void observeGame(String userAuthtoken) {
+    private void observeGame(String userAuthtoken, String username) {
         Scanner scanner = new Scanner(System.in);
         out.println("Type the number of the game you would like to observe:");
         int gameIndex = Integer.parseInt(scanner.nextLine());
@@ -319,6 +319,7 @@ public class Client implements ServerMessageObserver {
                     GameData game = res.games().get(gameIndex-1);
                     this.game = game.game();
                     this.teamColor = "WHITE";
+                    webSocketClient.connect(userAuthtoken, username, game.gameID());
                     out.println("Game joined. You are watching from white player's perspective");
                     sendChessBoard("WHITE", game.game(), null, null);
                     gameMenu();

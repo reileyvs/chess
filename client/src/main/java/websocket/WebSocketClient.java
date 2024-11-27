@@ -45,33 +45,33 @@ public class WebSocketClient extends Endpoint {
     }
 
     //Todo: Put websocket endpoint calls here
-    public void connect() {
+    public void connect(String authToken, String username, int gameID) {
         try {
-            var command=new Connect(UserGameCommand.CommandType.CONNECT, "abc", 123);
+            var command=new Connect(UserGameCommand.CommandType.CONNECT, authToken, username, gameID);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch(IOException ex) {
             System.out.println("There was an error: " + ex.getMessage());
         }
     }
-    public void makeMove() {
+    public void makeMove(String authToken, String username, int gameID) {
         try {
-            var command = new MakeMove(UserGameCommand.CommandType.MAKE_MOVE, "abc", 123);
+            var command = new MakeMove(UserGameCommand.CommandType.MAKE_MOVE, authToken, username, gameID);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch(IOException ex) {
             System.out.println("There was an error moving: " + ex.getMessage());
         }
     }
-    public void leave() {
+    public void leave(String authToken, String username, int gameID) {
         try {
-            var command = new Leave(UserGameCommand.CommandType.LEAVE, "abc", 123);
+            var command = new Leave(UserGameCommand.CommandType.LEAVE, authToken, username, gameID);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch(IOException ex) {
             System.out.println("There was an error leaving: " + ex.getMessage());
         }
     }
-    public void resign() {
+    public void resign(String authToken, String username, int gameID) {
         try {
-            var command = new Resign(UserGameCommand.CommandType.RESIGN, "abc", 123);
+            var command = new Resign(UserGameCommand.CommandType.RESIGN, authToken, username, gameID);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch(IOException ex) {
             System.out.println("There was an error resigning: " + ex.getMessage());
