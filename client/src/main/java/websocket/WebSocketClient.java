@@ -1,5 +1,6 @@
 package websocket;
 
+import chess.ChessMove;
 import com.google.gson.Gson;
 import exceptions.DataAccessException;
 import websocket.commands.*;
@@ -43,7 +44,6 @@ public class WebSocketClient extends Endpoint {
         System.out.println("Socket opened");
     }
 
-    //Todo: Put websocket endpoint calls here
     public void connect(String authToken, String username, int gameID) {
         try {
             var command=new Connect(UserGameCommand.CommandType.CONNECT, authToken, username, gameID);
@@ -52,9 +52,9 @@ public class WebSocketClient extends Endpoint {
             System.out.println("There was an error: " + ex.getMessage());
         }
     }
-    public void makeMove(String authToken, String username, int gameID) {
+    public void makeMove(String authToken, String username, int gameID, ChessMove move) {
         try {
-            var command = new MakeMove(UserGameCommand.CommandType.MAKE_MOVE, authToken, username, gameID);
+            var command = new MakeMove(UserGameCommand.CommandType.MAKE_MOVE, authToken, username, gameID, move);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch(IOException ex) {
             System.out.println("There was an error moving: " + ex.getMessage());

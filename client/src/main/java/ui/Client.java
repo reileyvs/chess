@@ -34,6 +34,7 @@ public class Client implements ServerMessageObserver {
     private String username="";
     private String teamColor=null;
     private ChessGame game;
+    private GameData gameData;
     public Client(String url) throws Exception {
         serverFacade = new ServerFacade(url);
         webSocketClient = new WebSocketClient(url, this);
@@ -318,6 +319,7 @@ public class Client implements ServerMessageObserver {
                 } else {
                     GameData game = res.games().get(gameIndex-1);
                     this.game = game.game();
+                    this.gameData = game;
                     this.teamColor = "WHITE";
                     webSocketClient.connect(userAuthtoken, username, game.gameID());
                     out.println("Game joined. You are watching from white player's perspective");
@@ -364,6 +366,7 @@ public class Client implements ServerMessageObserver {
                 //Make Move
                 case "2":
                     //call make move ws endpoint
+                    makeMove();
                     break;
                 //Highlight legal moves
                 case "3":
@@ -372,11 +375,13 @@ public class Client implements ServerMessageObserver {
                 //resign
                 case "4":
                     //Call resign ws endpoint
+                    //resign();
                     break;
                 //leave
                 case "5":
                     quit = true;
                     //Call leave ws endpoint
+                    //leave();
                     break;
                 //help
                 case "6":
@@ -409,66 +414,92 @@ public class Client implements ServerMessageObserver {
         out.println("1 to see the board, 2 to move a piece, 3 to see available moves of a piece, 4 to resign," +
                 " 5 to leave, and 6 to see this message again");
     }
-
+    private void makeMove() {
+        Scanner scanner = new Scanner(System.in);
+        out.println("What piece would you like to move? Ex. c4");
+        String piecePos = scanner.nextLine();
+        ChessPosition initPos = getPosition(piecePos);
+        if (initPos == null) {
+            return;
+        }
+        out.println("Where do you want to move your piece?");
+        String movePos = scanner.nextLine();
+        ChessPosition finalPos = getPosition(movePos);
+        if (finalPos == null) {
+            return;
+        }
+        ChessPiece piece = game.getBoard().getPiece(initPos);
+        var moves = piece.pieceMoves(game.getBoard(), initPos);
+        ChessPiece.PieceType promoPiece = null;
+        boolean isValid = false;
+        for (var move : moves) {
+            if (move.getStartPosition() == initPos && move.getEndPosition() == finalPos) {
+                promoPiece = move.getPromotionPiece();
+                isValid = true;
+                break;
+            }
+        }
+        if (!isValid) {
+            out.println("Not a valid movement");
+            return;
+        }
+        ChessMove move = new ChessMove(initPos, finalPos, promoPiece);
+        webSocketClient.makeMove(userAuthtoken, username, gameData.gameID(), move);
+    }
     private void highlight() {
         Scanner scanner = new Scanner(System.in);
         out.println("What piece would you like to highlight? Ex. c4");
         String piecePos = scanner.nextLine();
-        if(piecePos.length() != 2) {
-            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
-            out.println("Incorrect position");
-        } else if (!Character.isLetter(piecePos.charAt(0)) || !Character.isDigit(piecePos.charAt(1))) {
-            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
-            out.println("Wrong order, or incorrect values");
-        }
-        char letter = piecePos.charAt(0);
-        char number = piecePos.charAt(1);
-        int col = -1;
-        int row = -1;
-        switch(letter) {
-            case 'a','A':
-                col = 1;
-                break;
-            case 'b','B':
-                col = 2;
-                break;
-            case 'c','C':
-                col = 3;
-                break;
-            case 'd','D':
-                col = 4;
-                break;
-            case 'e','E':
-                col = 5;
-                break;
-            case 'f','F':
-                col = 6;
-                break;
-            case 'g','G':
-                col = 7;
-                break;
-            case 'h','H':
-                col = 8;
-                break;
-            default:
-                out.print(EscapeSequences.SET_TEXT_COLOR_RED);
-                out.println("Row is out of range");
-                return;
-        }
-        row = number - '0';
-        if (row > 8 || row < 1) {
-            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
-            out.println("Column is out of range");
+        ChessPosition pos = getPosition(piecePos);
+        if(pos == null) {
             return;
         }
-        ChessPosition pos = new ChessPosition(row,col);
         ChessPiece piece = game.getBoard().getPiece(pos);
         var moves = piece.pieceMoves(game.getBoard(), pos);
         boolean[][] validMoves = setValidMoves((ArrayList<ChessMove>) moves);
         sendChessBoard(teamColor, game, validMoves, pos);
     }
-
-    private boolean[][] setValidMoves(ArrayList<ChessMove> moves) {
+    private ChessPosition getPosition(String piecePos) {
+        if (piecePos.length() != 2) {
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            out.println("Incorrect position");
+            return null;
+        } else if (!Character.isLetter(piecePos.charAt(0)) || !Character.isDigit(piecePos.charAt(1))) {
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            out.println("Wrong order, or incorrect values");
+            return null;
+        }
+        return stringToPosition(piecePos);
+    }
+    private ChessPosition stringToPosition(final String piecePos) {
+        char letter = piecePos.charAt(0);
+        char number = piecePos.charAt(1);
+        int col = -1;
+        int row = -1;
+        switch (letter) {
+            case 'a', 'A' -> col = 1;
+            case 'b', 'B' -> col = 2;
+            case 'c', 'C' -> col = 3;
+            case 'd', 'D' -> col = 4;
+            case 'e', 'E' -> col = 5;
+            case 'f', 'F' -> col = 6;
+            case 'g', 'G' -> col = 7;
+            case 'h', 'H' -> col = 8;
+            default -> {
+                out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+                out.println("Row is out of range");
+                return null;
+            }
+        }
+        row = number - '0';
+        if (row > 8 || row < 1) {
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            out.println("Column is out of range");
+            return null;
+        }
+        return new ChessPosition(row, col);
+    }
+    private boolean[][] setValidMoves(final ArrayList<ChessMove> moves) {
         boolean[][] moveBoard = new boolean[8][8];
         for (ChessMove move : moves) {
             ChessPosition start = move.getStartPosition();
@@ -480,7 +511,7 @@ public class Client implements ServerMessageObserver {
     }
 
     @Override
-    public void notify(ServerMessage msg) {
+    public void notify(final ServerMessage msg) {
         out.print(EscapeSequences.SET_TEXT_COLOR_YELLOW);
         out.println(msg.getMsg());
         out.print(EscapeSequences.RESET_TEXT_COLOR);

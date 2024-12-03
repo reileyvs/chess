@@ -1,6 +1,9 @@
 package server.websocket;
 
 import com.google.gson.*;
+import dataaccess.MySqlAuthDAO;
+import dataaccess.MySqlGameDAO;
+import dataaccess.MySqlUserDAO;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -13,7 +16,18 @@ import java.lang.reflect.Type;
 
 @WebSocket
 public class WebSocketHandler extends Endpoint {
+    private int port = 0;
+    private MySqlAuthDAO auth;
+    private MySqlUserDAO user;
+    private MySqlGameDAO game;
     private final ConnectionManager connections = new ConnectionManager();
+
+    public WebSocketHandler(int port, MySqlAuthDAO auth, MySqlUserDAO user, MySqlGameDAO game) {
+        this.port = port;
+        this.auth = auth;
+        this.user = user;
+        this.game = game;
+    }
 
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) {
@@ -43,6 +57,7 @@ public class WebSocketHandler extends Endpoint {
 
     private void makeMove(Session session, MakeMove makeMove) {
         System.out.println("Let's move!");
+        ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, "A player moved");
     }
 
     private void leave(Session session, Leave leave) {
