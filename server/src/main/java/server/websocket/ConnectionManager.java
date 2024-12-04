@@ -25,7 +25,7 @@ public class ConnectionManager {
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
                 if (!c.authToken.equals(notifier)) {
-                    c.send(msg.getMsg());
+                        c.send(msg);
                 }
             } else {
                 removeList.add(c);
@@ -46,7 +46,7 @@ public class ConnectionManager {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
-                c.send(msg.getMsg());
+                c.send(msg);
             } else {
                 removeList.add(c);
             }

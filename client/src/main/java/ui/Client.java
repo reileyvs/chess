@@ -6,7 +6,6 @@ import chess.ChessPiece;
 import chess.ChessPosition;
 import client.ClientException;
 import client.ServerFacade;
-import exceptions.DataAccessException;
 import model.GameData;
 import model.UserData;
 import requests.CreateGameRequest;
@@ -17,10 +16,10 @@ import websocket.ServerMessageObserver;
 import websocket.WebSocketClient;
 import websocket.messages.ServerMessage;
 
-import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Scanner;
 
 import static chess.ChessGame.TeamColor.WHITE;
@@ -32,7 +31,7 @@ public class Client implements ServerMessageObserver {
     private PrintStream out;
     private String userAuthtoken="";
     private String username="";
-    private String teamColor=null;
+    private String orientationColor=null;
     private ChessGame game;
     private GameData gameData;
     public Client(String url) throws Exception {
@@ -292,8 +291,9 @@ public class Client implements ServerMessageObserver {
                     } else {
                         out.println("Game joined");
                         this.game = game.game();
+                        this.gameData = game;
                         sendChessBoard(teamColor, game.game(), null, null);
-                        this.teamColor = teamColor;
+                        this.orientationColor= teamColor;
                         webSocketClient.connect(userAuthtoken, username, game.gameID());
                         gameMenu();
                     }
@@ -319,8 +319,7 @@ public class Client implements ServerMessageObserver {
                 } else {
                     GameData game = res.games().get(gameIndex-1);
                     this.game = game.game();
-                    this.gameData = game;
-                    this.teamColor = "WHITE";
+                    this.orientationColor= "WHITE";
                     webSocketClient.connect(userAuthtoken, username, game.gameID());
                     out.println("Game joined. You are watching from white player's perspective");
                     sendChessBoard("WHITE", game.game(), null, null);
@@ -361,7 +360,7 @@ public class Client implements ServerMessageObserver {
                 //Redraw board
                 case "1":
                     //reprint board
-                    sendChessBoard(teamColor, game, null, null);
+                    sendChessBoard(orientationColor, game, null, null);
                     break;
                 //Make Move
                 case "2":
@@ -429,19 +428,23 @@ public class Client implements ServerMessageObserver {
             return;
         }
         ChessPiece piece = game.getBoard().getPiece(initPos);
-        var moves = piece.pieceMoves(game.getBoard(), initPos);
+        Collection<ChessMove> moves = null;
         ChessPiece.PieceType promoPiece = null;
-        boolean isValid = false;
-        for (var move : moves) {
-            if (move.getStartPosition() == initPos && move.getEndPosition() == finalPos) {
-                promoPiece = move.getPromotionPiece();
-                isValid = true;
-                break;
+        if(piece != null) {
+            moves = piece.pieceMoves(game.getBoard(), initPos);
+            boolean promo = false;
+            for (var move : moves) {
+                if (move.getStartPosition() == initPos && move.getEndPosition() == finalPos) {
+                    promo = true;
+                    break;
+                }
             }
-        }
-        if (!isValid) {
-            out.println("Not a valid movement");
-            return;
+            if (promo) {
+                out.println("Promo piece");
+                //TODO: Make promo piece choice
+                //What piece? Q, ... etc.
+                //promoPiece = switch statement
+            }
         }
         ChessMove move = new ChessMove(initPos, finalPos, promoPiece);
         webSocketClient.makeMove(userAuthtoken, username, gameData.gameID(), move);
@@ -457,7 +460,7 @@ public class Client implements ServerMessageObserver {
         ChessPiece piece = game.getBoard().getPiece(pos);
         var moves = piece.pieceMoves(game.getBoard(), pos);
         boolean[][] validMoves = setValidMoves((ArrayList<ChessMove>) moves);
-        sendChessBoard(teamColor, game, validMoves, pos);
+        sendChessBoard(orientationColor, game, validMoves, pos);
     }
     private ChessPosition getPosition(String piecePos) {
         if (piecePos.length() != 2) {
@@ -511,9 +514,18 @@ public class Client implements ServerMessageObserver {
     }
 
     @Override
-    public void notify(final ServerMessage msg) {
-        out.print(EscapeSequences.SET_TEXT_COLOR_YELLOW);
-        out.println(msg.getMsg());
+    public void notify(ServerMessage msg) {
+        if(msg.getServerMessageType().equals(ServerMessage.ServerMessageType.LOAD_GAME)) {
+            this.game = msg.getGame();
+            sendChessBoard(orientationColor, msg.getGame(), null, null);
+        }
+        if(msg.getMsg() != null) {
+            out.print(EscapeSequences.SET_TEXT_COLOR_YELLOW);
+            out.println(msg.getMsg());
+        } else {
+            out.print(EscapeSequences.SET_TEXT_COLOR_RED);
+            out.println(msg.getError());
+        }
         out.print(EscapeSequences.RESET_TEXT_COLOR);
     }
 }

@@ -1,5 +1,7 @@
 package dataaccess;
 
+import chess.ChessMove;
+import chess.InvalidMoveException;
 import exceptions.DataAccessException;
 import model.GameData;
 import model.SimpleGameData;
@@ -26,7 +28,7 @@ public interface GameDAO {
     static List<GameData> listGames(MySqlGameDAO dao) throws DataAccessException {
         //returns all games from the database
         List<GameData> games = dao.getGames();
-        List<SimpleGameData> gamesNoBoard=new ArrayList<>(List.of());
+        List<SimpleGameData> gamesNoBoard = new ArrayList<>(List.of());
         for (GameData game : games) {
             gamesNoBoard.add(new SimpleGameData(game.gameID(),game.whiteUsername(),
                     game.blackUsername(),game.gameName()));

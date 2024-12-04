@@ -1,13 +1,14 @@
 package server.websocket;
 
 import com.google.gson.*;
-import dataaccess.MySqlAuthDAO;
-import dataaccess.MySqlGameDAO;
-import dataaccess.MySqlUserDAO;
+import dataaccess.*;
 import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.glassfish.tyrus.core.wsadl.model.Endpoint;
+import server.Server;
+import service.GameService;
 import websocket.commands.*;
 import websocket.messages.ServerMessage;
 
@@ -16,23 +17,18 @@ import java.lang.reflect.Type;
 
 @WebSocket
 public class WebSocketHandler extends Endpoint {
-    private int port = 0;
-    private MySqlAuthDAO auth;
-    private MySqlUserDAO user;
-    private MySqlGameDAO game;
+    int port;
+    private GameService gameService;
     private final ConnectionManager connections = new ConnectionManager();
 
     public WebSocketHandler(int port, MySqlAuthDAO auth, MySqlUserDAO user, MySqlGameDAO game) {
         this.port = port;
-        this.auth = auth;
-        this.user = user;
-        this.game = game;
+        gameService = new GameService(auth, user, game);
     }
 
     @OnWebSocketMessage
     public void onMessage(Session session, String msg) {
         GsonBuilder builder = new GsonBuilder();
-        System.out.println("Zoo-wee mama!");
         builder.registerTypeAdapter(UserGameCommand.class, new CommandDeserializer());
         Gson gson = builder.create();
         UserGameCommand command = gson.fromJson(msg, UserGameCommand.class);
@@ -45,19 +41,22 @@ public class WebSocketHandler extends Endpoint {
     }
 
     private void connect(Session session, Connect connect) {
-        System.out.println("Let's connect!");
         connections.add(connect.getAuthToken(), session);
-        ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, "A player connected");
+        ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, "A player connected");
         try {
-            connections.broadcast(connect.getAuthToken(), msg);
+            connections.announce(connect.getAuthToken(), msg);
         } catch (IOException ex) {
             System.out.println("There was an error when broadcasting");
         }
     }
 
     private void makeMove(Session session, MakeMove makeMove) {
-        System.out.println("Let's move!");
-        ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, "A player moved");
+        ServerMessage msg = gameService.makeMove(makeMove);
+        try {
+            connections.announce(makeMove.getAuthToken(), msg);
+        } catch (IOException ex) {
+            System.out.println("There was an error notifying the other players");
+        }
     }
 
     private void leave(Session session, Leave leave) {
@@ -72,6 +71,11 @@ public class WebSocketHandler extends Endpoint {
         } catch (IOException ex) {
             System.out.println("There was an error when broadcasting");
         }
+    }
+
+    @OnWebSocketError
+    public void error(Session session, Throwable msg) {
+        System.out.println(msg.getMessage());
     }
 
     public static class CommandDeserializer implements JsonDeserializer<UserGameCommand> {

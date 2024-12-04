@@ -17,12 +17,6 @@ public class Server {
     public static final String TAKEN = "{ \"message\": \"Error: already taken\" }";
 
     public int run(int desiredPort) {
-        Spark.port(desiredPort);
-
-
-        Spark.staticFiles.location("web");
-
-
         MySqlAuthDAO authDAO=null;
         MySqlUserDAO userDAO=null;
         MySqlGameDAO gameDAO=null;
@@ -38,9 +32,13 @@ public class Server {
             exit(1);
         }
 
-        var webSocketHandler = new WebSocketHandler(Spark.port(), authDAO, userDAO, gameDAO);
+        Spark.port(desiredPort);
+
+        var webSocketHandler = new WebSocketHandler(desiredPort, authDAO, userDAO, gameDAO);
 
         Spark.webSocket("/ws", webSocketHandler);
+
+        Spark.staticFiles.location("web");
 
         createRoutes(authDAO, userDAO, gameDAO);
 

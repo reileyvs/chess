@@ -1,6 +1,8 @@
 package service;
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.InvalidMoveException;
 import dataaccess.*;
 import exceptions.DataAccessException;
 import model.AuthData;
@@ -9,6 +11,8 @@ import requests.*;
 import responses.ClearAllResponse;
 import responses.CreateGameResponse;
 import responses.JoinGameResponse;
+import websocket.commands.MakeMove;
+import websocket.messages.ServerMessage;
 
 import java.util.List;
 import java.util.Objects;
@@ -84,6 +88,70 @@ public class GameService {
         return new ClearAllResponse(null);
     }
 
+    public ServerMessage makeMove(MakeMove makeMove) {
+        GameData game = null;
+        ChessGame.TeamColor turn;
+
+        try {
+            game = GameDAO.getGame(makeMove.getGameID(), gameDAO);
+            turn = game.game().getTeamTurn();
+            /*if(turn == ChessGame.TeamColor.WHITE) {
+                if (!makeMove.getUsername().equals(game.whiteUsername())) {
+                    return makeError("It is not your turn");
+                }
+            } else {
+                if (!makeMove.getUsername().equals(game.blackUsername())) {
+                    return makeError("It is not your turn");
+                }
+            }*/
+            game.game().makeMove(makeMove.getMove());
+        } catch (DataAccessException ex) {
+            return makeError("Game could not be retrieved from database");
+        } catch (InvalidMoveException ex) {
+            return makeError("You tried making an invalid move: " + ex.getMessage());
+        }
+        try {
+            GameDAO.createGame(game, gameDAO);
+        } catch (DataAccessException ex) {
+            return makeError("Move could not be registered to the database");
+        }
+        return new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, makeMove.getUsername()
+                + " made a move: " + makeMoveString(makeMove.getMove()), game.game());
+    }
+
+    private ServerMessage makeError(String error) {
+        var msg = new ServerMessage(ServerMessage.ServerMessageType.ERROR, null);
+        msg.setError(error);
+        return msg;
+    }
+
+    private String makeMoveString(ChessMove move) {
+        var initPos = move.getStartPosition();
+        var endPos = move.getEndPosition();
+        char initCol;
+        char endCol;
+        int initRow;
+        int endRow;
+        initCol = intToChar(initPos.getColumn());
+        endCol = intToChar(endPos.getColumn());
+        initRow = initPos.getRow();
+        endRow = endPos.getRow();
+        return "" + initCol + initRow + "->" + endCol + endRow;
+    }
+    private char intToChar(int col) {
+        char charCol = 'z';
+        switch (col) {
+            case 1 -> charCol = 'a';
+            case 2 -> charCol = 'b';
+            case 3 -> charCol = 'c';
+            case 4 -> charCol = 'd';
+            case 5 -> charCol = 'e';
+            case 6 -> charCol = 'f';
+            case 7 -> charCol = 'g';
+            case 8 -> charCol = 'h';
+        }
+        return charCol;
+    }
 
 
 }
