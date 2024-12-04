@@ -359,12 +359,10 @@ public class Client implements ServerMessageObserver {
             switch(line) {
                 //Redraw board
                 case "1":
-                    //reprint board
                     sendChessBoard(orientationColor, game, null, null);
                     break;
                 //Make Move
                 case "2":
-                    //call make move ws endpoint
                     makeMove();
                     break;
                 //Highlight legal moves
@@ -428,22 +426,20 @@ public class Client implements ServerMessageObserver {
             return;
         }
         ChessPiece piece = game.getBoard().getPiece(initPos);
-        Collection<ChessMove> moves = null;
+        Collection<ChessMove> moves;
         ChessPiece.PieceType promoPiece = null;
-        if(piece != null) {
+        if(piece != null && piece.getPieceType() == ChessPiece.PieceType.PAWN) {
             moves = piece.pieceMoves(game.getBoard(), initPos);
             boolean promo = false;
             for (var move : moves) {
-                if (move.getStartPosition() == initPos && move.getEndPosition() == finalPos) {
+                if (move.getStartPosition() == initPos && move.getPromotionPiece() != null) {
                     promo = true;
                     break;
                 }
             }
             if (promo) {
                 out.println("Promo piece");
-                //TODO: Make promo piece choice
-                //What piece? Q, ... etc.
-                //promoPiece = switch statement
+                promoPiece = promotionPieceMenu();
             }
         }
         ChessMove move = new ChessMove(initPos, finalPos, promoPiece);
@@ -511,6 +507,37 @@ public class Client implements ServerMessageObserver {
             moveBoard[end.getRow() - 1][end.getColumn() - 1] = true;
         }
         return moveBoard;
+    }
+
+    private ChessPiece.PieceType promotionPieceMenu() {
+        ChessPiece.PieceType promoPiece = null;
+        boolean chosen=false;
+        while (!chosen) {
+            Scanner scanner=new Scanner(System.in);
+            out.println("What do you want your pawn to become?\n1: Queen\n2: Bishop\n3: Rook (Castle)\n4: Knight (Horsey)");
+            int type=Integer.getInteger(scanner.nextLine());
+            switch (type) {
+                case 1:
+                    promoPiece=ChessPiece.PieceType.QUEEN;
+                    chosen=true;
+                    break;
+                case 2:
+                    promoPiece=ChessPiece.PieceType.BISHOP;
+                    chosen=true;
+                    break;
+                case 3:
+                    promoPiece=ChessPiece.PieceType.ROOK;
+                    chosen=true;
+                    break;
+                case 4:
+                    promoPiece=ChessPiece.PieceType.KNIGHT;
+                    chosen=true;
+                    break;
+                default:
+                    out.println("Invalid type. Try again");
+            }
+        }
+        return promoPiece;
     }
 
     @Override
