@@ -1,19 +1,14 @@
 
-º
-java:S1192B"wDefine a constant instead of duplicating this literal "
-Type the number corresponding to the action you want:" 3 times.(©î¹8¥›—Å¹2J$e809340c-78a9-4344-83be-db314cf98329
 ˆ
-java:S11928"FDefine a constant instead of duplicating this literal "WHITE" 3 times.(Ÿ½ûg8¥›—Å¹2J$061e30eb-92a8-449a-9ea9-18f7ab026e31
+java:S11926"FDefine a constant instead of duplicating this literal "WHITE" 3 times.(Ÿ½ûg8½ŠÈ¹2J$f91e3e71-5d6f-45ac-9a06-835615882ed3
 –
-java:S1192a"NDefine a constant instead of duplicating this literal "Invalid input" 3 times.(‡»€õşÿÿÿÿ8¥›—Å¹2J$05f6cc44-38c8-4684-ae31-955f49846fd0
-r	java:S106*"+Replace this use of System.out by a logger.(Üšöüÿÿÿÿ8ç›—Å¹2J$87e36ddc-9359-477e-baec-755f007ba4e1
-€
-java:S1117€"<Rename "username" which hides the field declared at line 34.(ÀÎÚŞ8ê›—Å¹2J$c034e8de-df10-4cd6-83f0-b0117e143d7f
+java:S1192S"NDefine a constant instead of duplicating this literal "Invalid input" 3 times.(‡»€õşÿÿÿÿ8¾ŠÈ¹2J$69506118-8818-4d8e-ae2c-339e1c93f329
+r	java:S106("+Replace this use of System.out by a logger.(Üšöüÿÿÿÿ8úŠÈ¹2J$cf310e07-8579-4fa6-8a62-523413745911
 |
-java:S1117ÿ"8Rename "game" which hides the field declared at line 37.(‰¹è8î›—Å¹2J$4c5b1ee7-e172-47f8-b4fb-f8bdbe6b345f
+java:S1117È"8Rename "game" which hides the field declared at line 35.(‰¹è8„ŠÈ¹2J$4cf47555-df76-4a95-98bf-5e2f09f32ac5
 |
-java:S1117§"8Rename "game" which hides the field declared at line 37.(°Ş’‡8ö›—Å¹2J$17294ca6-9c90-442c-a136-7839c36af0a5
+java:S1117ğ"8Rename "game" which hides the field declared at line 35.(°Ş’‡8ˆŠÈ¹2J$63220ce6-84c1-42b2-9f24-05bf8ed332ee
 |
-java:S1117É"8Rename "game" which hides the field declared at line 37.(°Ş’‡8ø›—Å¹2J$cf960bc7-02dc-4d31-89cb-ae04b15bb3d2
+java:S1117’"8Rename "game" which hides the field declared at line 35.(°Ş’‡8ŒŠÈ¹2J$ff1f9f48-13fa-4e6f-ae89-a189611b0255
 w
-java:S1068$"/Remove this unused "playerColor" private field.(Úğ—àüÿÿÿÿ8ªÊ§Ç¹2J$956a2007-8b53-4910-81d9-f8274604e4a9
+java:S1068""/Remove this unused "playerColor" private field.(Úğ—àüÿÿÿÿ8›ŠÈ¹2J$8dea3551-c8b4-455a-8f1b-9035b26339b0

@@ -65,40 +65,23 @@ public class ConnectionManager {
      * @throws IOException
      */
     public void errorate(String notifier, ServerMessage msg, int gameID, Session session) throws IOException {
-        var removeList = new ArrayList<Connection>();
         var game = games.get(gameID);
         for (int i = 1; i < game.size(); i++) {
             Connection c = (Connection)game.get(i);
-            //if (c.session.isOpen()) {
                 if (c.authToken.equals(notifier)) {
                     c.send(msg);
                 }
-            //} else {
-                //removeList.add(c);
-            //}
         }
 
-        for (var c : removeList) {
-            connections.remove(c.authToken);
-        }
     }
 
     public void broadcast(String notifier, ServerMessage msg, int gameID, Session session) throws IOException {
-        var removeList = new ArrayList<Connection>();
         var game = games.get(gameID);
         for (int i = 1; i < game.size(); i++) {
             Connection c = (Connection)game.get(i);
-            //if (c.session.isOpen()) {
                 if (!c.authToken.equals(notifier)) {
                     c.send(msg);
                 }
-            //} else {
-                //removeList.add(c);
-            //}
-        }
-
-        for (var c : removeList) {
-            connections.remove(c.authToken);
         }
     }
 
@@ -108,18 +91,10 @@ public class ConnectionManager {
      * @param msg
      */
     public void announce(String notifier, ServerMessage msg, int gameID, Session session) throws IOException {
-        var removeList = new ArrayList<Connection>();
         var game = games.get(gameID);
         for (int i = 1; i < game.size(); i++) {
             Connection c = (Connection)game.get(i);
             c.send(msg);
-            //} else {
-                //removeList.add(c);
-            //}
-        }
-
-        for (var c : removeList) {
-            connections.remove(c.authToken);
         }
     }
 }

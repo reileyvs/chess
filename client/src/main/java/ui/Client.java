@@ -15,7 +15,6 @@ import responses.*;
 import websocket.ServerMessageObserver;
 import websocket.WebSocketClient;
 import websocket.messages.ServerMessage;
-
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ import java.util.Objects;
 import java.util.Scanner;
 
 import static chess.ChessGame.TeamColor.WHITE;
-
 public class Client implements ServerMessageObserver {
     //All the menu logic and creates and sends chessboard to ChessBoard
     private ServerFacade serverFacade;
@@ -61,22 +59,10 @@ public class Client implements ServerMessageObserver {
         ChessBoard board = new ChessBoard(game.getBoard());
         board.drawChessBoard(team, validMoves, pos);
     }
-    public void printInitPrompt() {
-        out.print(EscapeSequences.RESET_TEXT_COLOR);
-        out.println("\nType the number corresponding to the action you want:");
-        out.println("1. Register");
-        out.println("2. Log in");
-        out.println("3. Help");
-        out.println("4. Quit\n");
-    }
-    private void printInitHelpPrompt() {
-        out.println("Type 1 to register, 2 to log in, 3 for help, and 4 to quit");
-    }
     private boolean checkInitInput() {
         Scanner scanner = new Scanner(System.in);
         String line="";
-
-        printInitPrompt();
+        HelpPrompts.printInitPrompt();
         line = scanner.nextLine();
         boolean successful=false;
         try {
@@ -88,14 +74,14 @@ public class Client implements ServerMessageObserver {
                     successful = login();
                     break;
                 case "3":
-                    printInitHelpPrompt();
+                    HelpPrompts.printInitHelpPrompt();
                     break;
                 case "4":
                     System.exit(0);
                     break;
                 default:
                     out.println("Invalid input");
-                    printInitHelpPrompt();
+                    HelpPrompts.printInitHelpPrompt();
             }
             return successful;
         } catch(Exception ex) {
@@ -103,9 +89,8 @@ public class Client implements ServerMessageObserver {
         }
         return successful;
     }
-
     private boolean register() {
-        UserData user = printRegisterHelp();
+        UserData user = HelpPrompts.printRegisterHelp();
         try {
             RegisterResponse res = serverFacade.register(user);
             if(res.message() != null) {
@@ -122,21 +107,9 @@ public class Client implements ServerMessageObserver {
         }
         return false;
     }
-    private UserData printRegisterHelp() {
-        out.println("Type your username:");
-        Scanner scanner = new Scanner(System.in);
-        String username = scanner.nextLine();
-        out.println("Type your new password:");
-        out.flush();
-        String password = scanner.nextLine();
-        out.println("Type your email:");
-        String email = scanner.nextLine();
-        return new UserData(username, password, email);
-    }
-
     private boolean login() {
         try {
-            LoginRequest req = printLoginHelp();
+            LoginRequest req = HelpPrompts.printLoginHelp();
             LoginResponse res = serverFacade.login(req);
             if(res.message() != null) {
                 out.print(EscapeSequences.SET_TEXT_COLOR_RED);
@@ -152,16 +125,6 @@ public class Client implements ServerMessageObserver {
         }
         return false;
     }
-    private LoginRequest printLoginHelp() {
-        out.println("Type your username:");
-        Scanner scanner = new Scanner(System.in);
-        String existingUsername = scanner.nextLine();
-        out.flush();
-        out.println("Type your password:");
-        String password = scanner.nextLine();
-        return new LoginRequest(existingUsername, password);
-    }
-
     private void postLoginMenu() {
         boolean quit=false;
         while(!quit){
@@ -171,56 +134,38 @@ public class Client implements ServerMessageObserver {
     private boolean checkPostInput() {
         Scanner scanner = new Scanner(System.in);
         String line="";
-
-        printPostPrompt();
+        HelpPrompts.printPostPrompt();
         line = scanner.nextLine();
         boolean quit=false;
             switch(line) {
-                //create game
                 case "1":
                     createGame(userAuthtoken);
                     break;
-                //list game
                 case "2":
                     listGames(userAuthtoken);
                     break;
-                //play game
                 case "3":
                     playGame(userAuthtoken, username);
                     break;
-                //observe
                 case "4":
                     observeGame(userAuthtoken, username);
                     break;
-                //logout
                 case "5":
                     logout();
                     break;
-                //quit
                 case "6":
                     quit = true;
                     break;
                 case "7":
-                    printPostHelp();
+                    HelpPrompts.printPostHelp();
                     break;
                 default:
                     out.print(EscapeSequences.SET_TEXT_COLOR_RED);
                     out.println("Invalid input");
-                    printPostHelp();
-                    printPostPrompt();
+                    HelpPrompts.printPostHelp();
+                    HelpPrompts.printPostPrompt();
             }
         return quit;
-    }
-    private void printPostPrompt() {
-        out.print(EscapeSequences.RESET_TEXT_COLOR);
-        out.println("\nType the number corresponding to the action you want:");
-        out.println("1. Create game");
-        out.println("2. List games");
-        out.println("3. Play game");
-        out.println("4. Observe game");
-        out.println("5. Logout");
-        out.println("6. Quit");
-        out.println("7. Help\n");
     }
     private void createGame(String userAuthtoken) {
         Scanner scanner = new Scanner(System.in);
@@ -346,10 +291,6 @@ public class Client implements ServerMessageObserver {
         }
         initialMenu();
     }
-    private void printPostHelp() {
-        out.println("1 to create game, 2 to list games, 3 to play games, 4 to observe a game, 5 to logout, 6 to quit");
-    }
-
     private void gameMenu() {
         boolean quit=false;
         while(!quit){
@@ -358,41 +299,35 @@ public class Client implements ServerMessageObserver {
     }
     private boolean checkGameInput() {
         Scanner scanner = new Scanner(System.in);
-        printGameMenu();
+        HelpPrompts.printGameMenu();
         String line = scanner.nextLine();
         boolean quit=false;
         try {
             switch(line) {
-                //Redraw board
                 case "1":
                     sendChessBoard(orientationColor, game, null, null);
                     break;
-                //Make Move
                 case "2":
                     makeMove();
                     break;
-                //Highlight legal moves
                 case "3":
                     highlight();
                     break;
-                //leave
                 case "4":
                     quit = true;
                     leave();
                     break;
-                //resign
                 case "5":
                     resign();
                 break;
-                //help
                 case "6":
-                    printGameHelp();
+                    HelpPrompts.printGameHelp();
                     break;
                 default:
                     out.print(EscapeSequences.SET_TEXT_COLOR_RED);
                     out.println("Invalid input");
-                    printGameHelp();
-                    printGameMenu();
+                    HelpPrompts.printGameHelp();
+                    HelpPrompts.printGameMenu();
             }
             return quit;
         } catch(Exception ex) {
@@ -401,34 +336,16 @@ public class Client implements ServerMessageObserver {
         }
         return quit;
     }
-    private void printGameMenu() {
-        out.print(EscapeSequences.RESET_TEXT_COLOR);
-        out.println("\nType the number corresponding to the action you want:");
-        out.println("\t1. Redraw Chess Board");
-        out.println("\t2. Make Move");
-        out.println("\t3. Highlight Legal Moves");
-        out.println("\t4. Leave game");
-        out.println("\t5. Resign (Opponent wins)");
-        out.println("\t6. Help\n");
-    }
-    private void printGameHelp() {
-        out.println("1 to see the board, 2 to move a piece, 3 to see available moves of a piece, 4 to resign," +
-                " 5 to leave, and 6 to see this message again");
-    }
     private void makeMove() {
         Scanner scanner = new Scanner(System.in);
         out.println("What piece would you like to move? Ex. c4");
         String piecePos = scanner.nextLine();
         ChessPosition initPos = getPosition(piecePos);
-        if (initPos == null) {
-            return;
-        }
+        if (initPos == null) { return; }
         out.println("Where do you want to move your piece?");
         String movePos = scanner.nextLine();
         ChessPosition finalPos = getPosition(movePos);
-        if (finalPos == null) {
-            return;
-        }
+        if (finalPos == null) { return; }
         ChessPiece piece = game.getBoard().getPiece(initPos);
         Collection<ChessMove> moves;
         ChessPiece.PieceType promoPiece = null;
@@ -529,7 +446,6 @@ public class Client implements ServerMessageObserver {
         }
         return moveBoard;
     }
-
     private ChessPiece.PieceType promotionPieceMenu() {
         ChessPiece.PieceType promoPiece = null;
         boolean chosen=false;
@@ -560,7 +476,6 @@ public class Client implements ServerMessageObserver {
         }
         return promoPiece;
     }
-
     @Override
     public void notify(ServerMessage msg) {
         if(msg.getServerMessageType().equals(ServerMessage.ServerMessageType.LOAD_GAME)) {

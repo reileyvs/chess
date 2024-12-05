@@ -78,3 +78,7 @@ Z
 *src/test/java/dataaccess/UserDAOTests.java,c\f\cf17a52c625302bc435327442d4ac52c04541845
 ]
 -src/main/java/websocket/commands/Connect.java,8\a\8a613a51b906138c348220e5ce894bf3decd04b9
+U
+%src/main/java/ui/ClientContinued.java,1\f\1f16082f65260c57a31a4392d4e17a255ae5f513
+Q
+!src/main/java/ui/HelpPrompts.java,3\d\3d301a081d2eb006fb50cc45903c889944df7fe5

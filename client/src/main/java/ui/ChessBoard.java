@@ -77,70 +77,63 @@ public class ChessBoard {
         for(int i = 0; i < 8; i++) {
             ChessPosition position = new ChessPosition(row+1,i+1);
             if (validMoves != null) {
-                if (teamColor == WHITE) {
-                    if ((row + i) % 2 == 0) {
-                        if(position.equals(pos)) {
-                                out.print(SET_BG_COLOR_BLUE);
-                        } else {
-                            if (validMoves[row][i]) {
-                                out.print(SET_BG_COLOR_DARK_GREY);
-                            } else {
-                                out.print(SET_BG_COLOR_BLACK);
-                            }
-                        }
-                    } else {
-                        if(position.equals(pos)) {
-                            out.print(SET_BG_COLOR_BLUE);
-                        } else {
-                            if (validMoves[row][i]) {
-                                out.print(SET_BG_COLOR_LIGHT_GREY);
-                            } else {
-                                out.print(SET_BG_COLOR_WHITE);
-                            }
-                        }
-                    }
-                } else {
-                    if ((row + i) % 2 == 0) {
-                        if(position.equals(pos)) {
-                            out.print(SET_BG_COLOR_BLUE);
-                        } else {
-                            if (validMoves[row][i]) {
-                                out.print(SET_BG_COLOR_LIGHT_GREY);
-                            } else {
-                                out.print(SET_BG_COLOR_WHITE);
-                            }
-                        }
-                    } else {
-                        if(position.equals(pos)) {
-                            out.print(SET_BG_COLOR_BLUE);
-                        } else {
-                            if (validMoves[row][i]) {
-                                out.print(SET_BG_COLOR_DARK_GREY);
-                            } else {
-                                out.print(SET_BG_COLOR_BLACK);
-                            }
-                        }
-                    }
-                }
+                checking(row, validMoves, i, position);
                 placeChessPiece(row, i);
             } else {
-                if (teamColor == WHITE) {
-                    if ((row + i) % 2 == 0) {
-                        out.print(SET_BG_COLOR_BLACK);
-                    } else {
-                        out.print(SET_BG_COLOR_WHITE);
-                    }
-                } else {
-                    if ((row + i) % 2 == 0) {
-                        out.print(SET_BG_COLOR_WHITE);
-                    } else {
-                        out.print(SET_BG_COLOR_BLACK);
-                    }
-                }
+                squares(row, i);
                 placeChessPiece(row, i);
             }
         }
     }
+
+    private void squares(int row, int i) {
+        if (teamColor == WHITE) {
+            if ((row + i) % 2 == 0) {
+                out.print(SET_BG_COLOR_BLACK);
+            } else {
+                out.print(SET_BG_COLOR_WHITE);
+            }
+        } else {
+            if ((row + i) % 2 == 0) {
+                out.print(SET_BG_COLOR_WHITE);
+            } else {
+                out.print(SET_BG_COLOR_BLACK);
+            }
+        }
+    }
+
+    private void checking(int row, boolean[][] validMoves, int i, ChessPosition position) {
+        if (teamColor == WHITE) {
+            checkThings(row, validMoves, i, position, SET_BG_COLOR_DARK_GREY, SET_BG_COLOR_BLACK,
+                    SET_BG_COLOR_LIGHT_GREY, SET_BG_COLOR_WHITE);
+        } else {
+            checkThings(row, validMoves, i, position, SET_BG_COLOR_LIGHT_GREY, SET_BG_COLOR_WHITE,
+                    SET_BG_COLOR_DARK_GREY, SET_BG_COLOR_BLACK);
+        }
+    }
+
+    private void checkThings(int row, boolean[][] validMoves, int i, ChessPosition position,
+                             String setBgColorDarkGrey, String setBgColorBlack,
+                             String setBgColorLightGrey, String setBgColorWhite) {
+        if ((row + i) % 2 == 0) {
+            extracted(row, validMoves, i, position, setBgColorDarkGrey, setBgColorBlack);
+        } else {
+            extracted(row, validMoves, i, position, setBgColorLightGrey, setBgColorWhite);
+        }
+    }
+
+    private void extracted(int row, boolean[][] validMoves, int i, ChessPosition position, String setBgColorDarkGrey, String setBgColorBlack) {
+        if(position.equals(pos)) {
+                out.print(SET_BG_COLOR_BLUE);
+        } else {
+            if (validMoves[row][i]) {
+                out.print(setBgColorDarkGrey);
+            } else {
+                out.print(setBgColorBlack);
+            }
+        }
+    }
+
     private void placeChessPiece(int count, int i) {
         ChessPiece piece;
         if(teamColor == WHITE) {

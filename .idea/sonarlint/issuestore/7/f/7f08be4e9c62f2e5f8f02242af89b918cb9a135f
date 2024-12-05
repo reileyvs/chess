@@ -1,17 +1,5 @@
 
-~	java:S125"<This block of commented-out lines of code should be removed.(ó½¥ú8Óœ‘Ç¹2J$fc9cfec5-77c0-476e-bb8f-bfcc9908c59c
-{
-java:S1854"8Remove this useless assignment to local variable "host".(±é÷8Ü’Ç¹2J$f8a6ef2c-584d-46ad-9c41-2598b40d445b
-´
-java:S1130	"lRemove the declaration of thrown exception 'java.lang.Exception', as it cannot be thrown from method's body.(ÙØ¤Şıÿÿÿÿ8Ü’Ç¹2J$190fd30f-ce19-4514-88bf-a1471a880538
-~	java:S125
-"<This block of commented-out lines of code should be removed.(¼ŠËØ8âÂ‘Ç¹2J$3ec6f4b7-798e-4620-8f5b-6258ee8ea053
-l
-java:S1481")Remove this unused "host" local variable.(±é÷8Ü’Ç¹2J$a5cdf03d-0f34-4848-8932-6d4e308cd577
-~	java:S125"<This block of commented-out lines of code should be removed.(Ï¦Ÿ¥8Ü’Ç¹2J$6e868122-af3a-4105-b391-54194463cb21
-ƒ
-java:S1128";Remove this unused import 'exceptions.DataAccessException'.(§ÆÎÊúÿÿÿÿ8Ü’Ç¹2J$67068ced-62aa-4893-aeaf-67b587137624
-n
-java:S1128"&Remove this unused import 'ui.Client'.(³éùôøÿÿÿÿ8Ü’Ç¹2J$a815529a-20bb-4208-b014-654a3800a4cc
-y
-java:S1128"6Remove this unused import 'websocket.WebSocketClient'.(”¬—Š8Ü’Ç¹2J$593f2461-5a6c-4926-bb22-30dd4f1d3a01
+]
+java:S1128";Remove this unused import 'exceptions.DataAccessException'.(§ÆÎÊúÿÿÿÿ8øŒ¶È¹2
+S
+java:S1128"6Remove this unused import 'websocket.WebSocketClient'.(”¬—Š8ùŒ¶È¹2
