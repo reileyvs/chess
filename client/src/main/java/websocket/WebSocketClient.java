@@ -55,10 +55,10 @@ public class WebSocketClient extends Endpoint {
             System.out.println("There was an error: " + ex.getMessage());
         }
     }
-    public void makeMove(String authToken, String username, int gameID, ChessMove move, String playerColor) {
+    public void makeMove(String authToken, String username, int gameID, ChessMove move) {
         try {
             var command = new MakeMove(UserGameCommand.CommandType.MAKE_MOVE, authToken, username,
-                    gameID, move, playerColor);
+                    gameID, move);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch(IOException ex) {
             System.out.println("There was an error moving: " + ex.getMessage());
@@ -72,9 +72,9 @@ public class WebSocketClient extends Endpoint {
             System.out.println("There was an error leaving: " + ex.getMessage());
         }
     }
-    public void resign(String authToken, String username, int gameID, String playerColor) {
+    public void resign(String authToken, String username, int gameID) {
         try {
-            var command = new Resign(UserGameCommand.CommandType.RESIGN, authToken, username, gameID, playerColor);
+            var command = new Resign(UserGameCommand.CommandType.RESIGN, authToken, username, gameID);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch(IOException ex) {
             System.out.println("There was an error resigning: " + ex.getMessage());

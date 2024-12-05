@@ -447,7 +447,7 @@ public class Client implements ServerMessageObserver {
             }
         }
         ChessMove move = new ChessMove(initPos, finalPos, promoPiece);
-        webSocketClient.makeMove(userAuthtoken, username, gameData.gameID(), move, playerColor);
+        webSocketClient.makeMove(userAuthtoken, username, gameData.gameID(), move);
     }
     private void highlight() {
         Scanner scanner = new Scanner(System.in);
@@ -467,7 +467,7 @@ public class Client implements ServerMessageObserver {
         out.println("Are you sure you want to resign?\n Type 1 for yes and anything else for no");
         String line = scanner.nextLine();
         if(line.equals("1")) {
-            webSocketClient.resign(userAuthtoken, username, gameData.gameID(), playerColor);
+            webSocketClient.resign(userAuthtoken, username, gameData.gameID());
         }
     }
     private void leave() {

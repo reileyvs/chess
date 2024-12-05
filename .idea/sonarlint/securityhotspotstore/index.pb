@@ -56,3 +56,25 @@ V
 :
 
 client.iml,8\1\81276a78d81379d1349e1ff0f16babcbe4db95cc
+[
++src/test/java/client/ServerFacadeTests.java,1\5\15ed76843373412ef09df4eda6fd4f94cd64533b
+\
+,src/main/java/client/ClientCommunicator.java,f\5\f5d0bca886b809c64c8ebbf433b66dbea9b70928
+Y
+)src/main/java/client/ClientException.java,1\9\19883e8b83fa5d65659fad146ed56f229fe2ae3c
+a
+1src/main/java/exceptions/DataAccessException.java,3\3\332a3302b5889da206160be7e40e19ca72a57829
+P
+ src/main/java/ui/ChessBoard.java,0\5\05068a4daa2156246d27534183442ee47536b832
+U
+%src/main/java/ui/EscapeSequences.java,f\5\f5164a7694d7bc0ec5a278873d5b206d75837ac4
+b
+2src/main/java/websocket/ServerMessageObserver.java,5\1\51a5addb0ce1261872162863043fd33af9e6628c
+Z
+*src/test/java/dataaccess/AuthDAOTests.java,c\3\c344eef27fce3bec173f632f5864e5909ff6ad0d
+Z
+*src/test/java/dataaccess/GameDAOTests.java,0\3\03233ea134cfc25fea6cf8c8e3ff8faa2b5bdbb4
+Z
+*src/test/java/dataaccess/UserDAOTests.java,c\f\cf17a52c625302bc435327442d4ac52c04541845
+]
+-src/main/java/websocket/commands/Connect.java,8\a\8a613a51b906138c348220e5ce894bf3decd04b9
