@@ -20,6 +20,7 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Scanner;
 
 import static chess.ChessGame.TeamColor.WHITE;
@@ -32,14 +33,13 @@ public class Client implements ServerMessageObserver {
     private String userAuthtoken="";
     private String username="";
     private String orientationColor=null;
+    private String playerColor=null;
     private ChessGame game;
     private GameData gameData;
-    private boolean gameFinal;
     public Client(String url) throws Exception {
         serverFacade = new ServerFacade(url);
         webSocketClient = new WebSocketClient(url, this);
         out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
-        gameFinal = false;
     }
     public void initialMenu() {
         out.print(EscapeSequences.RESET_TEXT_COLOR);
@@ -268,7 +268,14 @@ public class Client implements ServerMessageObserver {
     private void playGame(String userAuthtoken, String username) {
         Scanner scanner = new Scanner(System.in);
         out.println("Type the number of the game you would like to play:");
-        int gameIndex = Integer.parseInt(scanner.nextLine());
+        int gameIndex;
+        String gameNum = scanner.nextLine();
+        if(!Objects.equals(gameNum, "")) {
+            gameIndex=Integer.parseInt(gameNum);
+        } else {
+            out.println("Error");
+            return;
+        }
         out.println("What color player do you want to be? WHITE or BLACK");
         String teamColor = scanner.nextLine();
         if(!teamColor.equals("WHITE") && !teamColor.equals("BLACK")) {
@@ -294,7 +301,7 @@ public class Client implements ServerMessageObserver {
                         out.println("Game joined");
                         this.game = game.game();
                         this.gameData = game;
-                        sendChessBoard(teamColor, game.game(), null, null);
+                        playerColor = teamColor;
                         this.orientationColor= teamColor;
                         webSocketClient.connect(userAuthtoken, username, game.gameID());
                         gameMenu();
@@ -324,7 +331,6 @@ public class Client implements ServerMessageObserver {
                     this.orientationColor= "WHITE";
                     webSocketClient.connect(userAuthtoken, username, game.gameID());
                     out.println("Game joined. You are watching from white player's perspective");
-                    sendChessBoard("WHITE", game.game(), null, null);
                     gameMenu();
                 }
             }
@@ -363,11 +369,7 @@ public class Client implements ServerMessageObserver {
                     break;
                 //Make Move
                 case "2":
-                    if(!gameFinal) {
-                        makeMove();
-                    } else {
-                        out.println("Game has ended");
-                    }
+                    makeMove();
                     break;
                 //Highlight legal moves
                 case "3":
@@ -380,11 +382,7 @@ public class Client implements ServerMessageObserver {
                     break;
                 //resign
                 case "5":
-                if(!gameFinal) {
                     resign();
-                } else {
-                    out.println("Game has ended");
-                }
                 break;
                 //help
                 case "6":
@@ -449,7 +447,7 @@ public class Client implements ServerMessageObserver {
             }
         }
         ChessMove move = new ChessMove(initPos, finalPos, promoPiece);
-        webSocketClient.makeMove(userAuthtoken, username, gameData.gameID(), move);
+        webSocketClient.makeMove(userAuthtoken, username, gameData.gameID(), move, playerColor);
     }
     private void highlight() {
         Scanner scanner = new Scanner(System.in);
@@ -469,7 +467,7 @@ public class Client implements ServerMessageObserver {
         out.println("Are you sure you want to resign?\n Type 1 for yes and anything else for no");
         String line = scanner.nextLine();
         if(line.equals("1")) {
-            webSocketClient.resign(userAuthtoken, username, gameData.gameID());
+            webSocketClient.resign(userAuthtoken, username, gameData.gameID(), playerColor);
         }
     }
     private void leave() {
@@ -479,6 +477,7 @@ public class Client implements ServerMessageObserver {
         if(line.equals("1")) {
             webSocketClient.leave(userAuthtoken, username, gameData.gameID());
         }
+        playerColor=null;
     }
     private ChessPosition getPosition(String piecePos) {
         if (piecePos.length() != 2) {
@@ -565,17 +564,18 @@ public class Client implements ServerMessageObserver {
     @Override
     public void notify(ServerMessage msg) {
         if(msg.getServerMessageType().equals(ServerMessage.ServerMessageType.LOAD_GAME)) {
-            this.game = msg.getGame();
-            sendChessBoard(orientationColor, msg.getGame(), null, null);
-        } else if (msg.isGameEnd()) {
-            gameFinal = true;
+            if (msg.getGame() != null) {
+                this.game = msg.getGame();
+            }
+            sendChessBoard(orientationColor, this.game, null, null);
+            return;
         }
-        if(msg.getMsg() != null) {
+        if(msg.getMessage() != null) {
             out.print(EscapeSequences.SET_TEXT_COLOR_YELLOW);
-            out.println(msg.getMsg());
+            out.println(msg.getMessage());
         } else {
             out.print(EscapeSequences.SET_TEXT_COLOR_RED);
-            out.println(msg.getError());
+            out.println(msg.getErrorMessage());
         }
         out.print(EscapeSequences.RESET_TEXT_COLOR);
     }

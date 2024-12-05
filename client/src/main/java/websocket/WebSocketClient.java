@@ -6,7 +6,6 @@ import exceptions.DataAccessException;
 import websocket.commands.*;
 import websocket.messages.ServerMessage;
 
-import javax.management.Notification;
 import javax.websocket.*;
 import java.io.IOException;
 import java.net.URI;
@@ -15,6 +14,7 @@ public class WebSocketClient extends Endpoint {
 
     Session session;
     ServerMessageObserver notificationHandler;
+    boolean isGameEnd;
 
     public WebSocketClient(String url, ServerMessageObserver notificationHandler) throws Exception {
         try {
@@ -31,6 +31,9 @@ public class WebSocketClient extends Endpoint {
                 @Override
                 public void onMessage(String message) {
                     ServerMessage notification = new Gson().fromJson(message, ServerMessage.class);
+                    if(notification.isGameEnd()) {
+                        isGameEnd = true;
+                    }
                     notificationHandler.notify(notification);
                 }
             });
@@ -52,9 +55,10 @@ public class WebSocketClient extends Endpoint {
             System.out.println("There was an error: " + ex.getMessage());
         }
     }
-    public void makeMove(String authToken, String username, int gameID, ChessMove move) {
+    public void makeMove(String authToken, String username, int gameID, ChessMove move, String playerColor) {
         try {
-            var command = new MakeMove(UserGameCommand.CommandType.MAKE_MOVE, authToken, username, gameID, move);
+            var command = new MakeMove(UserGameCommand.CommandType.MAKE_MOVE, authToken, username,
+                    gameID, move, playerColor);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch(IOException ex) {
             System.out.println("There was an error moving: " + ex.getMessage());
@@ -68,9 +72,9 @@ public class WebSocketClient extends Endpoint {
             System.out.println("There was an error leaving: " + ex.getMessage());
         }
     }
-    public void resign(String authToken, String username, int gameID) {
+    public void resign(String authToken, String username, int gameID, String playerColor) {
         try {
-            var command = new Resign(UserGameCommand.CommandType.RESIGN, authToken, username, gameID);
+            var command = new Resign(UserGameCommand.CommandType.RESIGN, authToken, username, gameID, playerColor);
             this.session.getBasicRemote().sendText(new Gson().toJson(command));
         } catch(IOException ex) {
             System.out.println("There was an error resigning: " + ex.getMessage());

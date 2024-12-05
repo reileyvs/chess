@@ -5,12 +5,14 @@ import chess.ChessMove;
 import chess.InvalidMoveException;
 import dataaccess.*;
 import exceptions.DataAccessException;
+import exceptions.RecordException;
 import model.AuthData;
 import model.GameData;
 import requests.*;
 import responses.ClearAllResponse;
 import responses.CreateGameResponse;
 import responses.JoinGameResponse;
+import websocket.commands.Leave;
 import websocket.commands.MakeMove;
 import websocket.messages.ServerMessage;
 
@@ -81,6 +83,35 @@ public class GameService {
         return new JoinGameResponse(null);
     }
 
+    public ServerMessage updateGame(Leave leave) {
+        GameData game;
+        AuthData user=null;
+        try {
+            user = dao.getAuthDataByToken(leave.getAuthToken());
+        } catch (DataAccessException ex) {
+            return makeError("No valid user found");
+        }
+        try {
+            game = gameDAO.getGame(leave.getGameID());
+        } catch (DataAccessException ex) {
+            return makeError("No game was found to be edited");
+        }
+        assert game != null;
+        try {
+            if (Objects.equals(game.whiteUsername(), user.username())) {
+                GameDAO.createGame(new GameData(game.gameID(), null,
+                        game.blackUsername(), game.gameName(), game.game()), gameDAO);
+            } else if (Objects.equals(game.blackUsername(), user.username())) {
+                GameDAO.createGame(new GameData(game.gameID(), game.whiteUsername(), null,
+                        game.gameName(), game.game()), gameDAO);
+            }
+        } catch (DataAccessException ex) {
+            return makeError("Trouble updating existing game");
+        }
+        return new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                leave.getUsername() + " has left the game.");
+    }
+
     public ClearAllResponse clearAll(ClearAllRequest request) throws DataAccessException {
         AuthDAO.clear(dao);
         GameDAO.clear(gameDAO);
@@ -89,22 +120,37 @@ public class GameService {
     }
 
     public ServerMessage makeMove(MakeMove makeMove) {
-        GameData game = null;
-        ChessGame.TeamColor turn;
-
+        try {
+            if(AuthDAO.getAuthByToken(makeMove.getAuthToken(), dao) == null) {
+                return makeError("Unauthorized");
+            }
+        } catch (RecordException ex) {
+            return makeError("Unauthorized");
+        }
+        GameData game;
+        ChessGame.TeamColor white = ChessGame.TeamColor.WHITE;
+        ChessGame.TeamColor black = ChessGame.TeamColor.BLACK;
+        boolean whiteCheck;
+        boolean whiteCheckmate;
+        boolean whiteStalemate;
+        boolean blackCheck;
+        boolean blackCheckmate;
+        boolean blackStalemate;
         try {
             game = GameDAO.getGame(makeMove.getGameID(), gameDAO);
-            turn = game.game().getTeamTurn();
-            /*if(turn == ChessGame.TeamColor.WHITE) {
-                if (!makeMove.getUsername().equals(game.whiteUsername())) {
-                    return makeError("It is not your turn");
-                }
-            } else {
-                if (!makeMove.getUsername().equals(game.blackUsername())) {
-                    return makeError("It is not your turn");
-                }
-            }*/
-            game.game().makeMove(makeMove.getMove());
+            assert game != null;
+            ServerMessage msg = isValidPlayer(makeMove, game);
+            if (msg != null) {
+                return msg;
+            }
+            var board = game.game();
+            board.makeMove(makeMove.getMove());
+            whiteCheck = board.isInCheck(white);
+            whiteCheckmate = board.isInCheckmate(white);
+            whiteStalemate = board.isInStalemate(white);
+            blackCheck = board.isInCheck(black);
+            blackCheckmate = board.isInCheckmate(black);
+            blackStalemate = board.isInStalemate(black);
         } catch (DataAccessException ex) {
             return makeError("Game could not be retrieved from database");
         } catch (InvalidMoveException ex) {
@@ -115,13 +161,74 @@ public class GameService {
         } catch (DataAccessException ex) {
             return makeError("Move could not be registered to the database");
         }
+        if (whiteCheck) {
+            ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, makeMove.getUsername()
+                    + " made a move: " + makeMoveString(makeMove.getMove()), game.game());
+            msg.setWhiteCheck(true);
+            return msg;
+        } else if (whiteCheckmate) {
+            ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, makeMove.getUsername()
+                    + " made a move: " + makeMoveString(makeMove.getMove()), game.game());
+            msg.setWhiteCheckmate(true);
+            msg.setGameEnd(true);
+            return msg;
+        } else if (whiteStalemate) {
+            ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, makeMove.getUsername()
+                    + " made a move: " + makeMoveString(makeMove.getMove()), game.game());
+            msg.setWhiteStalemate(true);
+            msg.setGameEnd(true);
+            return msg;
+        } else if (blackCheck) {
+            ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, makeMove.getUsername()
+                    + " made a move: " + makeMoveString(makeMove.getMove()), game.game());
+            msg.setBlackCheck(true);
+            return msg;
+        } else if (blackCheckmate) {
+            ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, makeMove.getUsername()
+                    + " made a move: " + makeMoveString(makeMove.getMove()), game.game());
+            msg.setBlackCheckmate(true);
+            msg.setGameEnd(true);
+            return msg;
+        } else if (blackStalemate) {
+            ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, makeMove.getUsername()
+                    + " made a move: " + makeMoveString(makeMove.getMove()), game.game());
+            msg.setBlackStalemate(true);
+            msg.setGameEnd(true);
+            return msg;
+        }
         return new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, makeMove.getUsername()
                 + " made a move: " + makeMoveString(makeMove.getMove()), game.game());
     }
-
+    private ServerMessage isValidPlayer(MakeMove cmd, GameData game) {
+        ServerMessage msg;
+        String user = null;
+        AuthData auth = null;
+        try {
+            auth = AuthDAO.getAuthByToken(cmd.getAuthToken(), dao);
+            user = auth.username();
+        } catch (DataAccessException ex) {
+            System.out.println("Bleh");
+        }
+        if (user == null) {
+            return null;
+        }
+        var piece = game.game().getBoard().getPiece(cmd.getMove().getStartPosition());
+        if (Objects.equals(user, game.whiteUsername()) && piece != null) {
+            if (piece.getTeamColor() == ChessGame.TeamColor.WHITE) {
+                return null;
+            }
+        } else if (Objects.equals(user, game.blackUsername()) && piece != null) {
+            if (piece.getTeamColor() == ChessGame.TeamColor.BLACK) {
+                return null;
+            }
+        }
+        msg = new ServerMessage(ServerMessage.ServerMessageType.ERROR, null);
+        msg.setErrorMessage("Not authorized to do this");
+        return msg;
+    }
     private ServerMessage makeError(String error) {
         var msg = new ServerMessage(ServerMessage.ServerMessageType.ERROR, null);
-        msg.setError(error);
+        msg.setErrorMessage("Error: " + error);
         return msg;
     }
 

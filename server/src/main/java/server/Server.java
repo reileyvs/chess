@@ -34,7 +34,7 @@ public class Server {
 
         Spark.port(desiredPort);
 
-        var webSocketHandler = new WebSocketHandler(desiredPort, authDAO, userDAO, gameDAO);
+        var webSocketHandler = new WebSocketHandler(authDAO, userDAO, gameDAO);
 
         Spark.webSocket("/ws", webSocketHandler);
 

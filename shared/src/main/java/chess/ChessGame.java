@@ -15,7 +15,6 @@ import static java.lang.System.exit;
 public class ChessGame {
     private TeamColor teamTurn;
     private ChessBoard board;
-    private boolean[][] validMoves;
 
     public ChessGame() {
         teamTurn = TeamColor.WHITE;
@@ -189,13 +188,15 @@ public class ChessGame {
             if (board.getPiece(move.getStartPosition()) != null
                     && board.getPiece(move.getStartPosition()).getTeamColor() == teamColor) {
                 ChessBoard clone=tryClone();
-                movePiece(move, board, move.getPromotionPiece());
+                ChessBoard cloneSafe = tryClone();
+                movePiece(move, clone, move.getPromotionPiece());
+                setBoard(clone);
                 if(!isInCheck(teamColor)) {
                     inCheckMate = false;
+                    setBoard(cloneSafe);
                     break;
                 }
-                isInCheck(piece.getTeamColor());
-                setBoard(clone);
+                setBoard(cloneSafe);
             }
         }
         return inCheckMate;
