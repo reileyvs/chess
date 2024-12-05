@@ -117,7 +117,9 @@ public class WebSocketHandler {
                 System.out.println("Make move error unsent");
             }
         }
-        if (checkValidToken(session, makeMove.getAuthToken(), makeMove)) return;
+        if (checkValidToken(session, makeMove.getAuthToken(), makeMove)) {
+            return;
+        }
         ServerMessage msg = gameService.makeMove(makeMove);
         if (msg.getServerMessageType() == ServerMessage.ServerMessageType.ERROR) {
             try {
