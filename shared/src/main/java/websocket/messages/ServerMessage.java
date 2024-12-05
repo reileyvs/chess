@@ -15,6 +15,7 @@ public class ServerMessage {
     String msg;
     String error;
     ChessGame game;
+    boolean gameEnd;
 
     public enum ServerMessageType {
         LOAD_GAME,
@@ -33,7 +34,12 @@ public class ServerMessage {
         this.error = null;
         this.game = game;
     }
-
+    public ServerMessage(ServerMessageType type, String msg, boolean gameEnd) {
+        this.serverMessageType = type;
+        this.msg = msg;
+        this.error = null;
+        this.gameEnd = gameEnd;
+    }
     public ServerMessageType getServerMessageType() {
         return this.serverMessageType;
     }
@@ -49,6 +55,9 @@ public class ServerMessage {
     }
     public ChessGame getGame() {
         return game;
+    }
+    public boolean isGameEnd() {
+        return gameEnd;
     }
 
     @Override

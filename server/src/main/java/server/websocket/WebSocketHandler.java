@@ -2,18 +2,23 @@ package server.websocket;
 
 import com.google.gson.*;
 import dataaccess.*;
+import exceptions.DataAccessException;
+import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.glassfish.tyrus.core.wsadl.model.Endpoint;
+import requests.ListGamesRequest;
 import server.Server;
 import service.GameService;
 import websocket.commands.*;
 import websocket.messages.ServerMessage;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Objects;
 
 @WebSocket
 public class WebSocketHandler extends Endpoint {
@@ -60,16 +65,47 @@ public class WebSocketHandler extends Endpoint {
     }
 
     private void leave(Session session, Leave leave) {
+        GameData game;
+        try {
+            game = gameService.gameDAO.getGame(leave.getGameID());
+            if (game.whiteUsername().equals(leave.getUsername())) {
+                game = new GameData(game.gameID(), null, game.blackUsername(),
+                        game.gameName(), game.game());
+            } else if (game.blackUsername().equals(leave.getUsername())) {
+                game = new GameData(game.gameID(), game.whiteUsername(), null,
+                        game.gameName(), game.game());
+            }
+            gameService.gameDAO.addGame(game);
+        } catch (DataAccessException ex) {
+            System.out.println("There was an error updating the game");
+        }
+        connections.remove(leave.getAuthToken());
         System.out.println("Let's get outta here!");
     }
 
     private void resign(Session session, Resign resign) {
-        System.out.println("Let's resign!");
-        ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, "A player resigned");
+        var req = new ListGamesRequest(resign.getAuthToken());
+        String winner = null;
         try {
-            connections.broadcast(resign.getAuthToken(), msg);
+            var games = gameService.listGames(req);
+            for (var game : games) {
+                if (game.gameID() == resign.getGameID()) {
+                    if(Objects.equals(game.whiteUsername(), resign.getUsername())) {
+                        winner = game.blackUsername();
+                    } else if (Objects.equals(game.blackUsername(), resign.getUsername())) {
+                        winner = game.whiteUsername();
+                    }
+                }
+            }
+        } catch (DataAccessException ex) {
+            System.out.println("There was an error getting games");
+        }
+        ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                resign.getUsername() + " resigned!\n" + winner + " has won the game!!!", true);
+        try {
+            connections.announce(resign.getAuthToken(), msg);
         } catch (IOException ex) {
-            System.out.println("There was an error when broadcasting");
+            System.out.println("There was an error when announcing");
         }
     }
 

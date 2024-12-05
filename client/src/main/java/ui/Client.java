@@ -34,10 +34,12 @@ public class Client implements ServerMessageObserver {
     private String orientationColor=null;
     private ChessGame game;
     private GameData gameData;
+    private boolean gameFinal;
     public Client(String url) throws Exception {
         serverFacade = new ServerFacade(url);
         webSocketClient = new WebSocketClient(url, this);
         out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
+        gameFinal = false;
     }
     public void initialMenu() {
         out.print(EscapeSequences.RESET_TEXT_COLOR);
@@ -350,10 +352,8 @@ public class Client implements ServerMessageObserver {
     }
     private boolean checkGameInput() {
         Scanner scanner = new Scanner(System.in);
-        String line="";
-
         printGameMenu();
-        line = scanner.nextLine();
+        String line = scanner.nextLine();
         boolean quit=false;
         try {
             switch(line) {
@@ -363,23 +363,29 @@ public class Client implements ServerMessageObserver {
                     break;
                 //Make Move
                 case "2":
-                    makeMove();
+                    if(!gameFinal) {
+                        makeMove();
+                    } else {
+                        out.println("Game has ended");
+                    }
                     break;
                 //Highlight legal moves
                 case "3":
                     highlight();
                     break;
-                //resign
-                case "4":
-                    //Call resign ws endpoint
-                    //resign();
-                    break;
                 //leave
-                case "5":
+                case "4":
                     quit = true;
-                    //Call leave ws endpoint
-                    //leave();
+                    leave();
                     break;
+                //resign
+                case "5":
+                if(!gameFinal) {
+                    resign();
+                } else {
+                    out.println("Game has ended");
+                }
+                break;
                 //help
                 case "6":
                     printGameHelp();
@@ -457,6 +463,22 @@ public class Client implements ServerMessageObserver {
         var moves = piece.pieceMoves(game.getBoard(), pos);
         boolean[][] validMoves = setValidMoves((ArrayList<ChessMove>) moves);
         sendChessBoard(orientationColor, game, validMoves, pos);
+    }
+    private void resign() {
+        Scanner scanner = new Scanner(System.in);
+        out.println("Are you sure you want to resign?\n Type 1 for yes and anything else for no");
+        String line = scanner.nextLine();
+        if(line.equals("1")) {
+            webSocketClient.resign(userAuthtoken, username, gameData.gameID());
+        }
+    }
+    private void leave() {
+        Scanner scanner = new Scanner(System.in);
+        out.println("Are you sure you want to leave?\n Type 1 for yes and anything else for no");
+        String line = scanner.nextLine();
+        if(line.equals("1")) {
+            webSocketClient.leave(userAuthtoken, username, gameData.gameID());
+        }
     }
     private ChessPosition getPosition(String piecePos) {
         if (piecePos.length() != 2) {
@@ -545,6 +567,8 @@ public class Client implements ServerMessageObserver {
         if(msg.getServerMessageType().equals(ServerMessage.ServerMessageType.LOAD_GAME)) {
             this.game = msg.getGame();
             sendChessBoard(orientationColor, msg.getGame(), null, null);
+        } else if (msg.isGameEnd()) {
+            gameFinal = true;
         }
         if(msg.getMsg() != null) {
             out.print(EscapeSequences.SET_TEXT_COLOR_YELLOW);
