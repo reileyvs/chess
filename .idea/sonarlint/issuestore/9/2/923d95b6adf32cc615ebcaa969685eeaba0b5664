@@ -1,17 +1,19 @@
 
 º
 java:S1192B"wDefine a constant instead of duplicating this literal "
-Type the number corresponding to the action you want:" 3 times.(©î¹8¥›—Å¹2J$568144c9-7648-4b3b-949b-d7f364aa6f7c
+Type the number corresponding to the action you want:" 3 times.(©î¹8¥›—Å¹2J$e809340c-78a9-4344-83be-db314cf98329
 ˆ
-java:S11928"FDefine a constant instead of duplicating this literal "WHITE" 3 times.(Ÿ½ûg8¥›—Å¹2J$fdef69dd-10ce-42c1-9078-260b6a275440
+java:S11928"FDefine a constant instead of duplicating this literal "WHITE" 3 times.(Ÿ½ûg8¥›—Å¹2J$061e30eb-92a8-449a-9ea9-18f7ab026e31
 –
-java:S1192a"NDefine a constant instead of duplicating this literal "Invalid input" 3 times.(‡»€õşÿÿÿÿ8¥›—Å¹2J$89127bd3-b128-4e2a-97c4-c10bd6a535b2
-r	java:S106*"+Replace this use of System.out by a logger.(Üšöüÿÿÿÿ8ç›—Å¹2J$426733c7-d336-4962-8ad6-9b4650d9974b
+java:S1192a"NDefine a constant instead of duplicating this literal "Invalid input" 3 times.(‡»€õşÿÿÿÿ8¥›—Å¹2J$05f6cc44-38c8-4684-ae31-955f49846fd0
+r	java:S106*"+Replace this use of System.out by a logger.(Üšöüÿÿÿÿ8ç›—Å¹2J$87e36ddc-9359-477e-baec-755f007ba4e1
 €
-java:S1117€"<Rename "username" which hides the field declared at line 34.(ÀÎÚŞ8ê›—Å¹2J$6902b3a0-6f5c-4755-80a6-1a4dd130e58b
+java:S1117€"<Rename "username" which hides the field declared at line 34.(ÀÎÚŞ8ê›—Å¹2J$c034e8de-df10-4cd6-83f0-b0117e143d7f
 |
-java:S1117ÿ"8Rename "game" which hides the field declared at line 37.(‰¹è8î›—Å¹2J$45d256c5-faa1-4c00-ae25-380dbe634f47
+java:S1117ÿ"8Rename "game" which hides the field declared at line 37.(‰¹è8î›—Å¹2J$4c5b1ee7-e172-47f8-b4fb-f8bdbe6b345f
 |
-java:S1117§"8Rename "game" which hides the field declared at line 37.(°Ş’‡8ö›—Å¹2J$21a4a2cd-9309-4f4d-ab0e-e9c3a7f20474
+java:S1117§"8Rename "game" which hides the field declared at line 37.(°Ş’‡8ö›—Å¹2J$17294ca6-9c90-442c-a136-7839c36af0a5
 |
-java:S1117É"8Rename "game" which hides the field declared at line 37.(°Ş’‡8ø›—Å¹2J$cf305a15-0cd5-4a94-9fdd-1c605844f496
+java:S1117É"8Rename "game" which hides the field declared at line 37.(°Ş’‡8ø›—Å¹2J$cf960bc7-02dc-4d31-89cb-ae04b15bb3d2
+w
+java:S1068$"/Remove this unused "playerColor" private field.(Úğ—àüÿÿÿÿ8ªÊ§Ç¹2J$956a2007-8b53-4910-81d9-f8274604e4a9

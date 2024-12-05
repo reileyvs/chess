@@ -9,7 +9,6 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.glassfish.tyrus.core.wsadl.model.Endpoint;
 import requests.ListGamesRequest;
 import service.GameService;
 import service.UserService;
@@ -22,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 @WebSocket
-public class WebSocketHandler extends Endpoint {
+public class WebSocketHandler {
 
     private GameService gameService;
     private UserService userService;
