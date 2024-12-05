@@ -1,0 +1,22 @@
+
+{
+java:S1117*"8Rename "gson" which hides the field declared at line 29.(†ó³Ë8‚³ÙÆ¹2J$179dad5c-6754-4ff6-b613-c69bb5a9a8a6
+l	java:S106O"+Replace this use of System.out by a logger.(à‹šx8‚³ÙÆ¹2J$230815a6-61de-4e12-8bef-8001219e8613
+m	java:S106Y"+Replace this use of System.out by a logger.(ª€¨Û8‚³ÙÆ¹2J$b8f4f51c-70e4-4580-9c5e-93f9aa3ec907
+r
+java:S1172]"*Remove this unused method parameter "cmd".(€·öŒÿÿÿÿÿ8³ÙÆ¹2J$df0290e0-2a2b-40d9-84ae-cd4c782c7fd8
+r	java:S106i"+Replace this use of System.out by a logger.(òõØÏûÿÿÿÿ8³ÙÆ¹2J$4badbe92-2f66-4ade-a3ac-ef80f5b8ff61
+r	java:S106v"+Replace this use of System.out by a logger.(í–œÀûÿÿÿÿ8’³ÙÆ¹2J$9884042b-fed0-46d3-ad52-8c6586f6b0eb
+r	java:S106"+Replace this use of System.out by a logger.(æ€ªÃùÿÿÿÿ8“³ÙÆ¹2J$b22ff202-ec06-4d86-9d61-d2bde6d45aa5
+s	java:S106Œ"+Replace this use of System.out by a logger.(îùÈ·ÿÿÿÿÿ8”³ÙÆ¹2J$f31a47ca-0c0d-46ac-a89c-08c0741e56bb
+s	java:S106¨"+Replace this use of System.out by a logger.(®…÷ğúÿÿÿÿ8•³ÙÆ¹2J$a06715f0-8c55-4fd1-ab92-947bc1b13242
+s	java:S106®"+Replace this use of System.out by a logger.(ØÈÿİÿÿÿÿÿ8•³ÙÆ¹2J$602befc9-3edf-4eb8-bb4e-f268e0f1a590
+›
+java:S3776´"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(ºè¸­ùÿÿÿÿ8—³ÙÆ¹2J$1211fac1-a640-45cb-9830-2235baeb6a66
+s	java:S106º"+Replace this use of System.out by a logger.(”±š®şÿÿÿÿ8—³ÙÆ¹2J$0785503e-518e-4dbc-8161-f490b30d9b11
+n	java:S106Ã"+Replace this use of System.out by a logger.(ÚöÏØ8—³ÙÆ¹2J$82610777-ad4d-4bb2-96c4-5067d24e087b
+s	java:S106Ô"+Replace this use of System.out by a logger.(²ìŠñøÿÿÿÿ8—³ÙÆ¹2J$7fd34e28-e06c-483b-ab09-96ed5a8bee6b
+n	java:S106Ù"+Replace this use of System.out by a logger.(Ó–»8—³ÙÆ¹2J$27f746e2-e20a-4407-9d4f-01d83c56caab
+s	java:S106â"+Replace this use of System.out by a logger.(ØÈÿİÿÿÿÿÿ8—³ÙÆ¹2J$1b1d508a-01d5-4a1d-b4ea-3df8d0753ab6
+m	java:S106ò"+Replace this use of System.out by a logger.(à‹šx8—³ÙÆ¹2J$628d3269-1919-425b-be7b-b51ce3665193
+s	java:S106–"+Replace this use of System.out by a logger.(şêªúÿÿÿÿ8—³ÙÆ¹2J$1f451424-f65e-472f-89c6-c4dde34b8f29
