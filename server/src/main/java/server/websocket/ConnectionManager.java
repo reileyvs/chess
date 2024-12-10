@@ -2,7 +2,6 @@ package server.websocket;
 
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.commands.Leave;
-import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;

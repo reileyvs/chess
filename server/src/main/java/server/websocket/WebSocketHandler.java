@@ -9,6 +9,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import org.jetbrains.annotations.Nullable;
 import requests.ListGamesRequest;
 import service.GameService;
 import service.UserService;
@@ -53,10 +54,9 @@ public class WebSocketHandler {
             return;
         }
         connections.add(connect.getAuthToken(), connect.getGameID(), session);
-        ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                connect.getUsername() + " joined the game");
         ListGamesRequest req = new ListGamesRequest(connect.getAuthToken());
         GameData game = null;
+        ServerMessage msg=null;
         try {
             List<GameData> res = gameService.listGames(req);
             for (var games : res) {
@@ -68,6 +68,16 @@ public class WebSocketHandler {
             if (game == null) {
                 throw new DataAccessException("");
             }
+            String as;
+            if(Objects.equals(connect.getUsername(), game.whiteUsername())) {
+                as = "as White";
+            } else if (Objects.equals(connect.getUsername(), game.blackUsername())) {
+                as = "as Black";
+            } else {
+                as = "as an Observer";
+            }
+            msg = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                    connect.getUsername() + " joined the game " + as);
         } catch (DataAccessException ex) {
             ServerMessage message = new ServerMessage(ServerMessage.ServerMessageType.ERROR,
                     null);
@@ -130,7 +140,8 @@ public class WebSocketHandler {
         } else {
             ServerMessage notif = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, msg.getMessage());
             msg.setMessage(null);
-            ServerMessage specialMsg = checkIfEvent(msg);
+            String winner = getWinner(session, makeMove);
+            ServerMessage specialMsg = checkIfEvent(msg, winner);
             try {
                 connections.announce(makeMove.getAuthToken(), msg, makeMove.getGameID(), session);
                 connections.broadcast(makeMove.getAuthToken(), notif, makeMove.getGameID(), session);
@@ -142,19 +153,19 @@ public class WebSocketHandler {
             }
         }
     }
-    private ServerMessage checkIfEvent(ServerMessage msg) {
-        if(msg.isWhiteCheck()) {
-            return new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, "White is in check");
-        } else if (msg.isWhiteCheckmate()) {
-            return new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, "White is in checkmate");
+    private ServerMessage checkIfEvent(ServerMessage msg, String winner) {
+        if (msg.isWhiteCheckmate()) {
+            return new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, "White is in checkmate. " + winner + " wins!");
         } else if (msg.isWhiteStalemate()) {
-            return new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, "White is in stalemate");
+            return new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, "White is in stalemate. No one wins.");
+        } else if(msg.isWhiteCheck()) {
+            return new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, "White is in check");
+        } else if (msg.isBlackCheckmate()) {
+            return new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, "Black is in checkmate. " + winner + " wins!");
+        } else if (msg.isBlackStalemate()) {
+            return new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, "Black is in stalemate. No one wins.");
         } else if (msg.isBlackCheck()) {
             return new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, "Black is in check");
-        } else if (msg.isBlackCheckmate()) {
-            return new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, "Black is in checkmate");
-        } else if (msg.isBlackStalemate()) {
-            return new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION, "Black is in stalemate");
         } else {
             return null;
         }
@@ -196,6 +207,18 @@ public class WebSocketHandler {
                 System.out.println("Resign error not sent");
             }
         }
+        String winner = getWinner(session, resign);
+        ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
+                resign.getUsername() + " resigned!\n" + winner + " has won the game!!!", true);
+        try {
+            connections.announce(resign.getAuthToken(), msg, resign.getGameID(), session);
+            connections.setFinal(resign.getGameID());
+        } catch (IOException ex) {
+            System.out.println("There was an error when announcing");
+        }
+    }
+
+    private @Nullable String getWinner(Session session, UserGameCommand resign) {
         var req = new ListGamesRequest(resign.getAuthToken());
         String winner = null;
         try {
@@ -203,9 +226,9 @@ public class WebSocketHandler {
             for (var game : games) {
                 if (game.gameID() == resign.getGameID()) {
                     if(Objects.equals(game.whiteUsername(), resign.getUsername())) {
-                        winner = game.blackUsername();
-                    } else if (Objects.equals(game.blackUsername(), resign.getUsername())) {
                         winner = game.whiteUsername();
+                    } else if (Objects.equals(game.blackUsername(), resign.getUsername())) {
+                        winner = game.blackUsername();
                     }
                 }
             }
@@ -218,15 +241,9 @@ public class WebSocketHandler {
                 System.out.println("A problem with errorating");
             }
         }
-        ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION,
-                resign.getUsername() + " resigned!\n" + winner + " has won the game!!!", true);
-        try {
-            connections.announce(resign.getAuthToken(), msg, resign.getGameID(), session);
-            connections.setFinal(resign.getGameID());
-        } catch (IOException ex) {
-            System.out.println("There was an error when announcing");
-        }
+        return winner;
     }
+
     private ServerMessage gameEndError() {
         ServerMessage error = new ServerMessage(ServerMessage.ServerMessageType.ERROR, null);
         error.setErrorMessage("Error: Game has ended");

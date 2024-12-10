@@ -161,39 +161,39 @@ public class GameService {
         } catch (DataAccessException ex) {
             return makeError("Move could not be registered to the database");
         }
-        if (whiteCheck) {
+        if (whiteCheckmate) {
             ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, makeMove.getUsername()
-                    + " made a move: " + makeMoveString(makeMove.getMove()), game.game());
-            msg.setWhiteCheck(true);
-            return msg;
-        } else if (whiteCheckmate) {
-            ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, makeMove.getUsername()
-                    + " made a move: " + makeMoveString(makeMove.getMove()), game.game());
+                    + " made a move: " + makeMoveString(makeMove.getMove()) + ". Game has ended.", game.game());
             msg.setWhiteCheckmate(true);
             msg.setGameEnd(true);
             return msg;
         } else if (whiteStalemate) {
             ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, makeMove.getUsername()
-                    + " made a move: " + makeMoveString(makeMove.getMove()), game.game());
+                    + " made a move: " + makeMoveString(makeMove.getMove()) + ". Game has ended.", game.game());
             msg.setWhiteStalemate(true);
             msg.setGameEnd(true);
             return msg;
-        } else if (blackCheck) {
+        } else if (whiteCheck) {
             ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, makeMove.getUsername()
                     + " made a move: " + makeMoveString(makeMove.getMove()), game.game());
-            msg.setBlackCheck(true);
+            msg.setWhiteCheck(true);
             return msg;
         } else if (blackCheckmate) {
             ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, makeMove.getUsername()
-                    + " made a move: " + makeMoveString(makeMove.getMove()), game.game());
+                    + " made a move: " + makeMoveString(makeMove.getMove()) + ". Game has ended.", game.game());
             msg.setBlackCheckmate(true);
             msg.setGameEnd(true);
             return msg;
         } else if (blackStalemate) {
             ServerMessage msg = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, makeMove.getUsername()
-                    + " made a move: " + makeMoveString(makeMove.getMove()), game.game());
+                    + " made a move: " + makeMoveString(makeMove.getMove()) + ". Game has ended.", game.game());
             msg.setBlackStalemate(true);
             msg.setGameEnd(true);
+            return msg;
+        } else if (blackCheck) {
+            ServerMessage msg=new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, makeMove.getUsername()
+                    + " made a move: " + makeMoveString(makeMove.getMove()), game.game());
+            msg.setBlackCheck(true);
             return msg;
         }
         return new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME, makeMove.getUsername()

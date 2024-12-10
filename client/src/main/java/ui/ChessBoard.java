@@ -7,6 +7,7 @@ import chess.ChessPosition;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
+import static chess.ChessGame.TeamColor.BLACK;
 import static chess.ChessGame.TeamColor.WHITE;
 import static ui.EscapeSequences.*;
 
@@ -123,13 +124,24 @@ public class ChessBoard {
     }
 
     private void extracted(int row, boolean[][] validMoves, int i, ChessPosition position, String setBgColorDarkGrey, String setBgColorBlack) {
-        if(position.equals(pos)) {
+        var posBlack = new ChessPosition(pos.getRow(), 9-pos.getColumn());
+        if(teamColor == WHITE && position.equals(pos)) {
                 out.print(SET_BG_COLOR_BLUE);
+        } else if (teamColor == BLACK && position.equals(posBlack)) {
+            out.print(SET_BG_COLOR_BLUE);
         } else {
-            if (validMoves[row][i]) {
-                out.print(setBgColorDarkGrey);
+            if(teamColor == BLACK) {
+                if (validMoves[row][7 - i]) {
+                    out.print(setBgColorDarkGrey);
+                } else {
+                    out.print(setBgColorBlack);
+                }
             } else {
-                out.print(setBgColorBlack);
+                if (validMoves[row][i]) {
+                    out.print(setBgColorDarkGrey);
+                } else {
+                    out.print(setBgColorBlack);
+                }
             }
         }
     }

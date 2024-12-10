@@ -1,6 +1,5 @@
 package main;
 
-//import server.Server;
 import ui.Client;
 
 public class MainNoServer {

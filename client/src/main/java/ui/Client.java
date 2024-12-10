@@ -272,6 +272,7 @@ public class Client implements ServerMessageObserver {
                     out.println("Invalid game number. There are currently only " + res.games().size() + " games");
                 } else {
                     GameData game = res.games().get(gameIndex-1);
+                    this.gameData = game;
                     this.game = game.game();
                     this.orientationColor= "WHITE";
                     webSocketClient.connect(userAuthtoken, username, game.gameID());
@@ -375,7 +376,7 @@ public class Client implements ServerMessageObserver {
             return;
         }
         ChessPiece piece = game.getBoard().getPiece(pos);
-        var moves = piece.pieceMoves(game.getBoard(), pos);
+        var moves = game.validMoves(pos);
         boolean[][] validMoves = setValidMoves((ArrayList<ChessMove>) moves);
         sendChessBoard(orientationColor, game, validMoves, pos);
     }
@@ -452,21 +453,21 @@ public class Client implements ServerMessageObserver {
         while (!chosen) {
             Scanner scanner=new Scanner(System.in);
             out.println("What do you want your pawn to become?\n1: Queen\n2: Bishop\n3: Rook (Castle)\n4: Knight (Horsey)");
-            int type=Integer.getInteger(scanner.nextLine());
-            switch (type) {
-                case 1:
+            String input = scanner.nextLine();
+            switch (input) {
+                case "1":
                     promoPiece=ChessPiece.PieceType.QUEEN;
                     chosen=true;
                     break;
-                case 2:
+                case "2":
                     promoPiece=ChessPiece.PieceType.BISHOP;
                     chosen=true;
                     break;
-                case 3:
+                case "3":
                     promoPiece=ChessPiece.PieceType.ROOK;
                     chosen=true;
                     break;
-                case 4:
+                case "4":
                     promoPiece=ChessPiece.PieceType.KNIGHT;
                     chosen=true;
                     break;
